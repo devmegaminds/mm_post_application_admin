@@ -1,0 +1,165 @@
+.remove-image-button {
+    font-size: 25px;
+    color: red;
+    position: absolute;
+    top: -20px;
+    left: 57px;
+    cursor: pointer;
+}
+
+.kw-insurance-type-custom-card-row {
+    margin-right: 12px !important;
+    margin-left: 12px !important;
+}
+.kw-insurance-type-custom-card{
+    border: 1px solid #EBEDF3  !important;
+    margin-bottom: 10px  !important;
+}
+
+.kiwi-dashboard-card-icons{
+    margin-right: 15px;
+    font-size: 20px;
+}
+.kiwi-dashboard-card-icons i{
+    color: #2572c8;
+}
+.kiwi-dashboard-card-values{
+    font-size: 20px;
+}
+.Form-css{
+    border-bottom-left-radius: 0% !important;
+    border-Top-left-radius: 0% !important;
+}
+.Collapsible{
+    cursor: default !important;
+    font-size: 14px !important;
+     font-weight: 500px !important;
+     border: groove;
+     border: ridge;
+    background-color: #f7f7f7;
+    border-radius: 6px;
+    border-color: #f7f7f7;
+    line-height: 35px;
+    margin-top: 0.3%
+}
+.MuiTable-root{
+    color: #040404;
+    border: 1px;
+    background-color: #f7fbff;
+}
+.tablehead{
+    background: #f7f7f7;
+}
+.datePickerinput{
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #e4e6ef;
+    border-radius: .42rem;
+    box-shadow: none;
+    width: 100%;
+    height: calc(1.5em + 1.3rem + 2px);
+    padding: .65rem 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #3f4254;
+    display: block;
+}
+.Collapsible__trigger{
+    margin-left: 1% !important;
+    margin-right: 70% !important;
+    height: 50px;
+    
+}
+
+.page-item.active .page-link{
+    color: white !important;
+    background-color: #3699FF!important;
+    height: calc(1.35em + 1.1rem + 2px);
+    width: calc(1.35em + 1.1rem + 2px);
+}
+.page-item{
+   
+    height: calc(1.35em + 1.1rem + 2px);
+    width: calc(1.35em + 1.1rem + 2px);
+    cursor: pointer !important;
+    color: #7e8299 !important;
+    background-color: #F3F6F9 !important;
+    border-color: #f3f6f9!important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: .25rem!important;
+    margin-right: .5rem!important;
+    font-size: .925rem;
+    border-radius: 0.42rem !important;
+    box-shadow: none;
+    display: inline-block;
+    color: #3f4254;
+    text-align: center;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    font-size: 1rem!important;
+  transition: color .3s ease-in-out,background-color .3s ease-in-out,border-color .3s ease-in-out,box-shadow .3s ease-in-out;
+}
+
+.page-link{
+    padding-left: 5px;
+    height: calc(1.35em + 1.1rem + 2px);
+    width: calc(1.35em + 1.1rem + 2px);
+   border-radius: 0.42rem !important;
+    display: inline-block;
+    color: #3f4254!important;
+    text-align: center;
+    background-color: #f3f6f9!important;
+    border-color: #f3f6f9!important;
+    border-radius: 5.48px;
+    padding: 0%;
+     align-items: center !important;
+     justify-content: center !important;
+        display: inline-flex !important;
+}
+.active{
+    color: #f3f6f9!important;
+}
+.react-bootstrap-table-pagination-list{
+    position: relative;
+    width: 100%;
+    padding-right: 12.5px;
+    padding-left: 12.5px;
+}
+.page-item.disabled .page-link{
+    padding-left: 5px;
+}
+.page-item:last-child .page-link {
+
+ padding-left: 5px;
+}
+.react-bootstrap-table-pagination-list{
+    min-width: 70%;
+    margin-top: -2% !important;
+}
+.react-bootstrap-table-page-btns-ul{
+    float: left!important;
+   
+}
+.col-md-6 .col-xs-6 .col-sm-6 .col-lg-6{
+    min-width: 100% !important;
+    flex: 0 0 100% !important;
+  
+}
+.react-bs-table-sizePerPage-dropdown{
+   margin-left: 84% !important;
+    z-index: 1 !important;
+}
+.react-bootstrap-table-pagination-total{
+    float: right!important;
+    margin-top: 9px !important;
+}
+
+.col-lg-6 {
+    min-width: 100% !important;
+    flex: 0 0 100% !important;
+}
