@@ -25,7 +25,7 @@ const renderFields = ({
 const validate = values => {
     const errors = {}
     const requiredFields = [
-        'stTag'
+        'stCategoryName'
     ]
     requiredFields.forEach(field => {
         if (!values[field]) {
@@ -40,20 +40,21 @@ class AddCategoryPage extends Component {
         super(props)
         this.state = {
             isError: false,
-            currentUserData : {}
+            currentUserData: {}
         }
         this.onSubmit = this.onSubmit.bind(this);
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
+        debugger
         this.setState({ isLoading: true });
         var data = {
-            inTagId: formValues.inTagId == undefined || formValues.inTagId == "" ? 0 : formValues.inTagId,
-            stTags: formValues.stTag,
-            inCreatedBy:  this.state.currentUserData.inUserID
+            inCategoryId: formValues.inCategoryId == undefined || formValues.inCategoryId == "" ? 0 : formValues.inCategoryId,
+            stCategoryName: formValues.stCategoryName,
+            inCreatedBy: this.state.currentUserData.inUserID
         }
         //this.props.SaveTag(data);
-        this.props.AddTag(data);
+        this.props.AddCategory(data);
     }
 
     hideModel = () => {
@@ -63,25 +64,25 @@ class AddCategoryPage extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        if (nextProps.getInsuranceTypeByIdResponse) {
-            if (nextProps.getInsuranceTypeByIdResponse && nextProps.getInsuranceTypeByIdResponse != this.props.getInsuranceTypeByIdResponse) {
-                if (nextProps.getInsuranceTypeByIdResponse.statusCode == 200) {
+        if (nextProps.getCategoryInfoByIDResponse) {
+            if (nextProps.getCategoryInfoByIDResponse && nextProps.getCategoryInfoByIDResponse != this.props.getCategoryInfoByIDResponse) {
+                if (nextProps.getCategoryInfoByIDResponse.statusCode == 200) {
 
                 }
-                else if (nextProps.getInsuranceTypeByIdResponse.Code == 200) {
+                else if (nextProps.getCategoryInfoByIDResponse.Code == 200) {
 
                 }
                 else
                     this.SuccessFailSweetAlert("getting error", "error");
             }
         }
-        if (nextProps.tagResponse) {
-            if (nextProps.tagResponse && nextProps.tagResponse != this.props.tagResponse) {
-                if (nextProps.tagResponse.statusCode == 200) {
+        if (nextProps.categoryResponse) {
+            if (nextProps.categoryResponse && nextProps.categoryResponse != this.props.categoryResponse) {
+                if (nextProps.categoryResponse.statusCode == 200) {
                     this.setState({ isLoading: false, isRedirect: true });
                 }
-                else if (nextProps.tagResponse.status == "Error") {
-                    this.setState({ Message: nextProps.tagResponse.errorMessage });
+                else if (nextProps.categoryResponse.status == "Error") {
+                    this.setState({ Message: nextProps.categoryResponse.errorMessage });
                     this.setState({ showModal: true });
                     this.setState({ isLoading: false });
                 }
@@ -99,13 +100,14 @@ class AddCategoryPage extends Component {
         })
     }
     componentDidMount() {
+        debugger
         var id = window.location.href.split("/").pop();
-        if (id != "Tag")
-            this.props.GetTagById(id)
+        if (id != "Category")
+            this.props.GetCategoryInfoByID(id)
         else {
             var data = {
-                inTagId: "",
-                stTags: "",
+                inCategoryId: "",
+                stCategoryName: "",
                 inCreatedBy: "",
                 Code: 200
             }
@@ -144,20 +146,20 @@ class AddCategoryPage extends Component {
         var $this = this;
         const { handleSubmit, pristine, reset, submitting, formValues, change } = this.props;
         if (this.state.isRedirect) {
-            return <Redirect to="/Tags" />
+            return <Redirect to="/ManageCategory" />
         }
         return (
             <div className="card card-custom gutter-b example example-compact">
                 {this.state.alert}
                 <div className="card-body">
                     <form className="form-horizontal" onSubmit={handleSubmit(this.onSubmit)}>
-                        <input type="hidden" name="inTagId" />
+                        <input type="hidden" name="inCategoryId" />
                         <div className="row">
                             <div className="col-sm-6">
                                 <label >Category Name <span className="text-danger">*</span></label>
                                 <Field
                                     type="text"
-                                    name="stTag"
+                                    name="stCategoryName"
                                     placeholder="Enter Category Name"
                                     component={renderFields}
                                 />
@@ -182,7 +184,7 @@ class AddCategoryPage extends Component {
                                     overlay={<Tooltip>Cancel</Tooltip>}>
                                     <Link className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/Tags">
                                         Cancel
-                                </Link>
+                                    </Link>
                                 </OverlayTrigger>
                             </div>
 
@@ -210,22 +212,23 @@ class AddCategoryPage extends Component {
 }
 
 AddCategoryPage = reduxForm({
-    form: 'Tag',
+    form: 'Category',
     validate,
     enableReinitialize: true,
     destroyOnUnmount: true
 })(AddCategoryPage);
 
 function mapStateToProps(state) {
+    debugger
     return {
         initialValues: {
-            inTagId: state.auth.getInsuranceTypeByIdResponse != undefined && state.auth.getInsuranceTypeByIdResponse.data != undefined ? state.auth.getInsuranceTypeByIdResponse.data[0].inTagId : "",
-            stTag: state.auth.getInsuranceTypeByIdResponse != undefined && state.auth.getInsuranceTypeByIdResponse.data != undefined ? state.auth.getInsuranceTypeByIdResponse.data[0].stTags : ""
+            inCategoryId: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0].inCategoryId : "",
+            stCategoryName: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0].stCategoryName : ""
 
         },
         // insuranceTypeResponse: state.auth.insuranceTypeResponse,
-        tagResponse: state.auth.tagResponse,
-        getInsuranceTypeByIdResponse: state.auth.getInsuranceTypeByIdResponse,
+        categoryResponse: state.auth.categoryResponse,
+        GetCategoryInfoByIDResponse: state.auth.GetCategoryInfoByIDResponse,
         randomNumbers: state.auth.randomNumbers
 
     }
@@ -233,9 +236,9 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
     return {
         ResetTag: (data) => dispatch(auth.actions.ResetInsuranceType(data)),
-        GetTagById: (data) => dispatch(auth.actions.GetInsuranceTypeById(data)),
+        GetCategoryInfoByID: (data) => dispatch(auth.actions.GetCategoryInfoByID(data)),
         //SaveTag: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
-        AddTag: (data) => dispatch(auth.actions.AddTag(data)),
+        AddCategory: (data) => dispatch(auth.actions.AddCategory(data)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AddCategoryPage);

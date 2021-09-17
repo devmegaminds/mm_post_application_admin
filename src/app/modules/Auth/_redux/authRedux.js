@@ -18,7 +18,7 @@ export const actionTypes = {
 
   //::Get Insurance Type By Id::
 
-
+  
   //::for Reset Insurance Type :://
   ResetInsuranceType: "[ResetInsuranceType] Action",
   ResetInsuranceTypeResponse: "[ResetInsuranceTypeResponse] Action",
@@ -34,31 +34,48 @@ export const actionTypes = {
   GetUserData: "[GetUserData] Action",
   GetUserDataResponse: "[GetUserDataResponse] Action",
 
-  GetUseFavoriteVideoData: "[GetUseFavoriteVideoData] Action",
-  GetUseFavoriteVideoDataResponse: "[GetUseFavoriteVideoDataResponse] Action",
+  // GetUseFavoriteVideoData: "[GetUseFavoriteVideoData] Action",
+  // GetUseFavoriteVideoDataResponse: "[GetUseFavoriteVideoDataResponse] Action",
 
   UpdateProfile: "[UpdateProfile] Action",
   UpdateProfileResponse: "[UpdateProfileResponse] Action",
   //#endregion End Manage Profile
 
-  //#region Manage Tags
-  GetTags: "[GetTags] Action",
-  GetTagResponse: "[GetTagResponse] Action",
+  //#region Manage Application
+  AddApplication: "[AddApplication] Action",
+  AddApplicationResponse: "[AddApplicationResponse] Action",
 
-  GetInsuranceTypes: "[GetInsuranceTypes] Action",
-  GetInsuranceTypeResponse: "[GetInsuranceTypeResponse] Action",
+  GetApplication: "[GetApplication] Action",
+  GetApplicationResponse: "[GetApplicationResponse] Action",
 
-  GetInsuranceTypeById: "[GetInsuranceTypeById] Action",
-  GetInsuranceTypeByIdResponse: "[GetInsuranceTypeByIdResponse] Action",
+  DeleteApplicationById: "[DeleteApplicationById] Action",
+  DeleteApplicationByIdResponse: "[DeleteApplicationByIdResponse] Action",
 
-  AddTag: "[AddTag] Action",
-  AddTagResponse: "[AddTagResponse] Action",
+  GetApplicationInfoById: "[GetApplicationInfoById] Action",
+  GetApplicationInfoByIdResponse: "[GetApplicationInfoByIdResponse] Action",
 
-  DeleteTagById: "[DeleteTagById] Action",
-  DeleteTagByIdResponse: "[DeleteTagByIdResponse] Action",
+  //#endregion Manage Application 
 
-  //#endregion End Manage Tags
+  //#region Manage Category
+  AddCategory: "[AddCategory] Action",
+  AddCategoryResponse: "[AddCategoryResponse] Action",
 
+  GetCategory: "[GetCategory] Action",
+  GetCategoryResponse: "[GetCategoryResponse] Action",
+
+  GetCategoryById: "[GetCategoryById] Action",
+  GetCategoryByIdResponse: "[GetCategoryByIdResponse] Action",
+  
+  GetCategoryInfoByID: "[GetCategoryInfoByID] Action",
+  GetCategoryInfoByIDResponse: "[GetCategoryInfoByIDResponse] Action",
+
+  DeleteCategoryById: "[DeleteCategoryById] Action",
+  DeleteCategoryByIdResponse: "[DeleteCategoryByIdResponse] Action",
+
+  // GetInsuranceTypes: "[GetInsuranceTypes] Action",
+  // GetInsuranceTypeResponse: "[GetInsuranceTypeResponse] Action",
+
+  //#endregion End Manage Category
 
   //#region Manage Video
   GetVideos: "[GetVideos] Action",
@@ -84,8 +101,8 @@ export const actionTypes = {
 
 };
 
-const BASE_URL = "http://megaminds-001-site9.itempurl.com/api/";
-// const BASE_URL = "http://localhost:4200/api/"
+// const BASE_URL = "http://megaminds-001-site9.itempurl.com/api/";
+const BASE_URL = "http://localhost:4200/api/"
 
 
 const initialAuthState = {
@@ -106,7 +123,6 @@ export const reducer = persistReducer(
 
       case actionTypes.Register: {
         const { authToken } = action.payload;
-
         return { authToken, user: undefined };
       }
 
@@ -194,8 +210,7 @@ export const reducer = persistReducer(
 
       //::For the Save Insurance Type::
 
-
-
+//#region 
       // //:: for the reset insurance type:://
       // case actionTypes.ResetInsuranceType: {
       //   const { ResetInsuranceType } = action.payload;
@@ -217,9 +232,6 @@ export const reducer = persistReducer(
       //#endregion
 
       //#region Manage User
-
-
-
       case actionTypes.GetErrorlogs: {
         const { RequestParmUserData } = action.payload;
         return { ...state, RequestParmUserData };
@@ -255,7 +267,6 @@ export const reducer = persistReducer(
 
       //#endregion
 
-
       //#region Manage Profile 
 
       case actionTypes.GetUserData: {
@@ -286,139 +297,190 @@ export const reducer = persistReducer(
       }
       //#endregion End Manage Profile 
 
-      //#region  Manage Tags
-      case actionTypes.GetTags: {
+      //#region Manage Application
+      //--------------------------------------------------------//
+      case actionTypes.AddApplication: {
+        const { application } = action.payload;
+        return { ...state, application };
+      }
+      case actionTypes.AddApplicationResponse: {
+        const applicationResponse = action.payload.applicationResponse.data && action.payload.applicationResponse.data;
+        return { ...state, applicationResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+
+      case actionTypes.GetApplication: {
+        const { RequestParmApplication } = action.payload;
+        return { ...state, RequestParmApplication };
+      }
+      case actionTypes.GetApplicationResponse: {
+        const GetApplicationResponse = action.payload.GetApplicationResponse.data && action.payload.GetApplicationResponse.data;
+        return { ...state, GetApplicationResponse };
+      }
+
+      case actionTypes.DeleteApplicationById: {
+        const RequestParmDeleteApplicationId = action.payload;
+        return { ...state, RequestParmDeleteApplicationId };
+      }
+      
+      case actionTypes.DeleteApplicationByIdResponse: {
+        const DeleteApplicationByIdResponse = action.payload.DeleteApplicationByIdResponse && action.payload.DeleteApplicationByIdResponse;
+        return { ...state, DeleteApplicationByIdResponse };
+      }
+      
+      //--------------------------------------------------------//
+
+      //#endregion Manage Application
+
+
+      //#region  Manage Category
+      //--------------------------------------------------------//
+      case actionTypes.AddCategory: {
+        const { category } = action.payload;
+        return { ...state, category };
+      }
+      case actionTypes.AddCategoryResponse: {
+        const categoryResponse = action.payload.categoryResponse.data && action.payload.categoryResponse.data;
+        return { ...state, categoryResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+
+      case actionTypes.GetCategory: {
         const { RequestParmTag } = action.payload;
         return { ...state, RequestParmTag };
       }
-
-      case actionTypes.GetTagResponse: {
-        const GetTagResponse = action.payload.GetTagResponse.data && action.payload.GetTagResponse.data;
-        return { ...state, GetTagResponse };
+      case actionTypes.GetCategoryResponse: {
+        const GetCategoryResponse = action.payload.GetCategoryResponse.data && action.payload.GetCategoryResponse.data;
+        return { ...state, GetCategoryResponse };
       }
+
+      case actionTypes.GetCategoryById: {
+        const { RequestParmInsuranceTypeData } = action.payload;
+        return { ...state, RequestParmInsuranceTypeData };
+      }
+      case actionTypes.GetCategoryByIdResponse: {
+        const getInsuranceTypeByIdResponse = action.payload.GetCategoryByIdResponse.data && action.payload.GetCategoryByIdResponse.data;
+        return { ...state, getInsuranceTypeByIdResponse };
+      }
+
+       case actionTypes.DeleteCategoryById: {
+        const RequestParmDeleteCategoryId = action.payload;
+        return { ...state, RequestParmDeleteCategoryId };
+      }
+
+      case actionTypes.DeleteCategoryByIdResponse: {
+        const DeleteCategoryByIdResponse = action.payload.DeleteCategoryByIdResponse && action.payload.DeleteCategoryByIdResponse;
+        return { ...state, DeleteCategoryByIdResponse };
+      }
+
+      case actionTypes.GetCategoryInfoByIDResponse: {
+
+        const GetCategoryInfoByIDResponse = action.payload.GetCategoryInfoByIDResponse.data && action.payload.GetCategoryInfoByIDResponse.data;
+        return { ...state, GetCategoryInfoByIDResponse };
+      }
+
+      case actionTypes.ResetInsuranceTypeResponse: {
+
+        const GetCategoryInfoByIDResponse = action.payload.ResetInsuranceTypeResponse && action.payload.ResetInsuranceTypeResponse;
+        return { ...state, GetCategoryInfoByIDResponse };
+      }
+
+      case actionTypes.GetApplicationInfoByIdResponse: {
+
+        const GetApplicationInfoByIdResponse = action.payload.GetApplicationInfoByIdResponse.data && action.payload.GetApplicationInfoByIdResponse.data;
+        return { ...state, GetApplicationInfoByIdResponse };
+      }
+
+      // case actionTypes.ResetInsuranceTypeResponse: {
+
+      //   const GetCategoryInfoByIDResponse = action.payload.ResetInsuranceTypeResponse && action.payload.ResetInsuranceTypeResponse;
+      //   return { ...state, GetCategoryInfoByIDResponse };
+      // }
 
       case actionTypes.GetInsuranceTypes: {
         const { RequestParmInsuranceTypeName } = action.payload;
         return { ...state, RequestParmInsuranceTypeName };
       }
-
       case actionTypes.GetInsuranceTypeResponse: {
         const GetInsuranceTypeResponse = action.payload.data && action.payload.data;
         return { ...state, GetInsuranceTypeResponse };
       }
 
-
-      case actionTypes.GetInsuranceTypeById: {
-        const { RequestParmInsuranceTypeData } = action.payload;
-        return { ...state, RequestParmInsuranceTypeData };
-      }
-
-      case actionTypes.GetInsuranceTypeByIdResponse: {
-        const getInsuranceTypeByIdResponse = action.payload.GetInsuranceTypeByIdResponse.data && action.payload.GetInsuranceTypeByIdResponse.data;
-        return { ...state, getInsuranceTypeByIdResponse };
-      }
-
       case actionTypes.ResetInsuranceTypeResponse: {
-
         const getInsuranceTypeByIdResponse = action.payload.ResetInsuranceTypeResponse && action.payload.ResetInsuranceTypeResponse;
         return { ...state, getInsuranceTypeByIdResponse };
       }
-
-      case actionTypes.AddTag: {
-        const { tag } = action.payload;
-        return { ...state, tag };
-      }
-      case actionTypes.AddTagResponse: {
-        const tagResponse = action.payload.tagResponse.data && action.payload.tagResponse.data;
-        return { ...state, tagResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
-      }
-
-      case actionTypes.DeleteTagById: {
-        const RequestParmDeleteTagId = action.payload;
-        return { ...state, RequestParmDeleteTagId };
-      }
-
-      case actionTypes.DeleteTagByIdResponse: {
-        const DeleteTagByIdResponse = action.payload.DeleteTagByIdResponse && action.payload.DeleteTagByIdResponse;
-        return { ...state, DeleteTagByIdResponse };
-      }
-
-
-      //#endregion End Manage Tags
-
+     
+// -------------
+      //#endregion End Manage Category
 
       //#region Manage Videos
-      case actionTypes.GetVideos: {
-        const { RequestParmVideo } = action.payload;
-        return { ...state, RequestParmVideo };
-      }
+      // case actionTypes.GetVideos: {
+      //   const { RequestParmVideo } = action.payload;
+      //   return { ...state, RequestParmVideo };
+      // }
 
-      case actionTypes.GetVideosResponse: {
-        const GetVideosResponse = action.payload.GetVideosResponse.data && action.payload.GetVideosResponse.data;
-        return { ...state, GetVideosResponse };
-      }
+      // case actionTypes.GetVideosResponse: {
+      //   const GetVideosResponse = action.payload.GetVideosResponse.data && action.payload.GetVideosResponse.data;
+      //   return { ...state, GetVideosResponse };
+      // }
 
-      case actionTypes.GetVideoById: {
-        const { RequestParmVideoByIdData } = action.payload;
-        return { ...state, RequestParmVideoByIdData };
-      }
+      // case actionTypes.GetVideoById: {
+      //   const { RequestParmVideoByIdData } = action.payload;
+      //   return { ...state, RequestParmVideoByIdData };
+      // }
 
-      case actionTypes.GetVideoByIdResponse: {
-        const GetVideoByIdResponse = action.payload.GetVideoByIdResponse.data && action.payload.GetVideoByIdResponse.data;
-        return { ...state, GetVideoByIdResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
-      }
-
-
-      case actionTypes.GetMasterTags: {
-        const { RequestParmTagData } = action.payload;
-        return { ...state, RequestParmTagData };
-      }
-
-      case actionTypes.GetMasterTagsResponse: {
-        const GetMasterTagsResponse = action.payload.GetMasterTagsResponse.data && action.payload.GetMasterTagsResponse.data;
-        return { ...state, GetMasterTagsResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
-      }
-
-      case actionTypes.ResetVideo: {
-        const { ResetVideo } = action.payload;
-        return { ...state, ResetVideo };
-      }
+      // case actionTypes.GetVideoByIdResponse: {
+      //   const GetVideoByIdResponse = action.payload.GetVideoByIdResponse.data && action.payload.GetVideoByIdResponse.data;
+      //   return { ...state, GetVideoByIdResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      // }
 
 
-      case actionTypes.ResetVideo: {
-        const { ResetVideo } = action.payload;
-        return { ...state, ResetVideo };
-      }
+      // case actionTypes.GetMasterTags: {
+      //   const { RequestParmTagData } = action.payload;
+      //   return { ...state, RequestParmTagData };
+      // }
 
-      case actionTypes.ResetVideoResponse: {
+      // case actionTypes.GetMasterTagsResponse: {
+      //   const GetMasterTagsResponse = action.payload.GetMasterTagsResponse.data && action.payload.GetMasterTagsResponse.data;
+      //   return { ...state, GetMasterTagsResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      // }
 
-        const GetVideoByIdResponse = action.payload.ResetVideoResponse && action.payload.ResetVideoResponse;
-        return { ...state, GetVideoByIdResponse };
-      }
-
-
-      case actionTypes.AddEditVideo: {
-        const { addeditVideo } = action.payload;
-        return { ...state, addeditVideo };
-      }
-      case actionTypes.AddEditVideoResponse: {
-        const addEditVideoResponse = action.payload.addEditVideoResponse.data && action.payload.addEditVideoResponse.data;
-        return { ...state, addEditVideoResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
-      }
+      // case actionTypes.ResetVideo: {
+      //   const { ResetVideo } = action.payload;
+      //   return { ...state, ResetVideo };
+      // }
 
 
-      case actionTypes.DeleteVideoById: {
-        const RequestParmDeleteVideoId = action.payload;
-        return { ...state, RequestParmDeleteVideoId };
-      }
+      // case actionTypes.ResetVideo: {
+      //   const { ResetVideo } = action.payload;
+      //   return { ...state, ResetVideo };
+      // }
 
-      case actionTypes.DeleteVideoByIdResponse: {
-        const DeleteVideoByIdResponse = action.payload.DeleteVideoByIdResponse && action.payload.DeleteVideoByIdResponse;
-        return { ...state, DeleteVideoByIdResponse };
-      }
+      // case actionTypes.ResetVideoResponse: {
+
+      //   const GetVideoByIdResponse = action.payload.ResetVideoResponse && action.payload.ResetVideoResponse;
+      //   return { ...state, GetVideoByIdResponse };
+      // }
 
 
+      // case actionTypes.AddEditVideo: {
+      //   const { addeditVideo } = action.payload;
+      //   return { ...state, addeditVideo };
+      // }
+      // case actionTypes.AddEditVideoResponse: {
+      //   const addEditVideoResponse = action.payload.addEditVideoResponse.data && action.payload.addEditVideoResponse.data;
+      //   return { ...state, addEditVideoResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      // }
 
+
+      // case actionTypes.DeleteVideoById: {
+      //   const RequestParmDeleteVideoId = action.payload;
+      //   return { ...state, RequestParmDeleteVideoId };
+      // }
+
+      // case actionTypes.DeleteVideoByIdResponse: {
+      //   const DeleteVideoByIdResponse = action.payload.DeleteVideoByIdResponse && action.payload.DeleteVideoByIdResponse;
+      //   return { ...state, DeleteVideoByIdResponse };
+      // }
       //#endregion End Manage Videos
 
       default:
@@ -440,32 +502,33 @@ export const actions = {
   // }),
   fulfillUser: (user) => ({ type: actionTypes.UserLoaded, payload: { user } }),
   setUser: (user) => ({ type: actionTypes.SetUser, payload: { user } }),
-  SaveCarrier: (carrier) => ({ type: actionTypes.SaveCarrier, payload: { carrier } }),
-  SaveCarrierResponse: (carrierResponse) => ({ type: actionTypes.SaveCarrierResponse, payload: { carrierResponse } }),
 
-  UpdateCarrier: (carrier) => ({ type: actionTypes.UpdateCarrier, payload: { carrier } }),
-  UpdateCarrierResponse: (UpdateCarrierResponse) => ({ type: actionTypes.UpdateCarrierResponse, payload: { UpdateCarrierResponse } }),
+  // SaveCarrier: (carrier) => ({ type: actionTypes.SaveCarrier, payload: { carrier } }),
+  // SaveCarrierResponse: (carrierResponse) => ({ type: actionTypes.SaveCarrierResponse, payload: { carrierResponse } }),
 
-  SaveRewardSetting: (RewardSetting) => ({ type: actionTypes.SaveRewardSetting, payload: { RewardSetting } }),
-  SaveRewardSettingResponse: (RewardSettingResponse) => ({ type: actionTypes.SaveRewardSettingResponse, payload: { RewardSettingResponse } }),
+  // UpdateCarrier: (carrier) => ({ type: actionTypes.UpdateCarrier, payload: { carrier } }),
+  // UpdateCarrierResponse: (UpdateCarrierResponse) => ({ type: actionTypes.UpdateCarrierResponse, payload: { UpdateCarrierResponse } }),
+
+  // SaveRewardSetting: (RewardSetting) => ({ type: actionTypes.SaveRewardSetting, payload: { RewardSetting } }),
+  // SaveRewardSettingResponse: (RewardSettingResponse) => ({ type: actionTypes.SaveRewardSettingResponse, payload: { RewardSettingResponse } }),
 
   SaveProfile: (ProfileSetting) => ({ type: actionTypes.SaveProfile, payload: { ProfileSetting } }),
   SaveProfileResponse: (SaveProfileResponse) => ({ type: actionTypes.SaveProfileResponse, payload: { SaveProfileResponse } }),
 
-  ResetRewardSetting: (RewardSetting) => ({ type: actionTypes.ResetRewardSetting, payload: { RewardSetting } }),
-  ResetRewardSettingResponse: (RewardSettingResponse) => ({ type: actionTypes.ResetRewardSettingResponse, payload: { RewardSettingResponse } }),
-  GetRewardSetting: (RewardSetting) => ({ type: actionTypes.GetRewardSetting, payload: { RewardSetting } }),
-  GetRewardSettingResponse: (RewardSettingResponse) => ({ type: actionTypes.GetRewardSettingResponse, payload: { RewardSettingResponse } }),
+  // ResetRewardSetting: (RewardSetting) => ({ type: actionTypes.ResetRewardSetting, payload: { RewardSetting } }),
+  // ResetRewardSettingResponse: (RewardSettingResponse) => ({ type: actionTypes.ResetRewardSettingResponse, payload: { RewardSettingResponse } }),
 
+  // GetRewardSetting: (RewardSetting) => ({ type: actionTypes.GetRewardSetting, payload: { RewardSetting } }),
+  // GetRewardSettingResponse: (RewardSettingResponse) => ({ type: actionTypes.GetRewardSettingResponse, payload: { RewardSettingResponse } }),
 
-  GetCarrier: (RequestParmCarrierName) => ({ type: actionTypes.GetCarrier, payload: { RequestParmCarrierName } }),
-  GetCarrierResponse: (getCarrierResponse) => ({ type: actionTypes.GetCarrierResponse, payload: { getCarrierResponse } }),
+  // GetCarrier: (RequestParmCarrierName) => ({ type: actionTypes.GetCarrier, payload: { RequestParmCarrierName } }),
+  // GetCarrierResponse: (getCarrierResponse) => ({ type: actionTypes.GetCarrierResponse, payload: { getCarrierResponse } }),
 
-  GetCarrierById: (RequestParmCarrierData) => ({ type: actionTypes.GetCarrierById, payload: { RequestParmCarrierData } }),
-  GetCarrierByIdResponse: (getCarrierByIdResponse) => ({ type: actionTypes.GetCarrierByIdResponse, payload: { getCarrierByIdResponse } }),
+  // GetCarrierById: (RequestParmCarrierData) => ({ type: actionTypes.GetCarrierById, payload: { RequestParmCarrierData } }),
+  // GetCarrierByIdResponse: (getCarrierByIdResponse) => ({ type: actionTypes.GetCarrierByIdResponse, payload: { getCarrierByIdResponse } }),
 
-  ResetCarrier: (ResetCarrier) => ({ type: actionTypes.ResetCarrier, payload: { ResetCarrier } }),
-  ResetCarrierResponse: (ResetCarrierResponse) => ({ type: actionTypes.ResetCarrierResponse, payload: { ResetCarrierResponse } }),
+  // ResetCarrier: (ResetCarrier) => ({ type: actionTypes.ResetCarrier, payload: { ResetCarrier } }),
+  // ResetCarrierResponse: (ResetCarrierResponse) => ({ type: actionTypes.ResetCarrierResponse, payload: { ResetCarrierResponse } }),
 
   // for the delete carrier 
 
@@ -486,8 +549,6 @@ export const actions = {
   //#endregion
 
   //#region Manage Users
-
-
   GetErrorlogs: (RequestParmErrorlogsData) => ({ type: actionTypes.GetErrorlogs, payload: { RequestParmErrorlogsData } }),
   GetErrorlogsResponse: (GetErrorlogsResponse) => ({ type: actionTypes.GetErrorlogsResponse, payload: { GetErrorlogsResponse } }),
 
@@ -502,56 +563,71 @@ export const actions = {
 
 
   //#region Manage Profile
-
   GetUserData: (userData) => ({ type: actionTypes.GetUserData, payload: { userData } }),
   GetUserDataResponse: (GetUserDataResponse) => ({ type: actionTypes.GetUserDataResponse, payload: { GetUserDataResponse } }),
 
-  GetUseFavoriteVideoData: (userFavoriteData) => ({ type: actionTypes.GetUseFavoriteVideoData, payload: { userFavoriteData } }),
-  GetUseFavoriteVideoDataResponse: (GetUseFavoriteVideoDataResponse) => ({ type: actionTypes.GetUseFavoriteVideoDataResponse, payload: { GetUseFavoriteVideoDataResponse } }),
+  // GetUseFavoriteVideoData: (userFavoriteData) => ({ type: actionTypes.GetUseFavoriteVideoData, payload: { userFavoriteData } }),
+  // GetUseFavoriteVideoDataResponse: (GetUseFavoriteVideoDataResponse) => ({ type: actionTypes.GetUseFavoriteVideoDataResponse, payload: { GetUseFavoriteVideoDataResponse } }),
 
   UpdateProfile: (profile) => ({ type: actionTypes.UpdateProfile, payload: { profile } }),
   UpdateProfileResponse: (updateResponse) => ({ type: actionTypes.UpdateProfileResponse, payload: { updateResponse } }),
   //#endregion Manage Profile
 
-  //#region  Manage Tags
-  GetTags: (RequestParmTag) => ({ type: actionTypes.GetTags, payload: { RequestParmTag } }),
-  GetTagResponse: (GetTagResponse) => ({ type: actionTypes.GetTagResponse, payload: { GetTagResponse } }),
+  //#region Manage Application
+  AddApplication: (application) => ({ type: actionTypes.AddApplication, payload: { application } }),
+  AddApplicationResponse: (applicationResponse) => ({ type: actionTypes.AddApplicationResponse, payload: { applicationResponse } }),
+
+  GetApplication: (RequestParmApplication) => ({ type: actionTypes.GetApplication, payload: { RequestParmApplication } }),
+  GetApplicationResponse: (GetApplicationResponse) => ({ type: actionTypes.GetApplicationResponse, payload: { GetApplicationResponse } }),
+
+  DeleteApplicationById: (RequestParmDeleteApplicationId) => ({ type: actionTypes.DeleteApplicationById, payload: { RequestParmDeleteApplicationId } }),
+  DeleteApplicationByIdResponse: (DeleteApplicationByIdResponse) => ({ type: actionTypes.DeleteApplicationByIdResponse, payload: { DeleteApplicationByIdResponse } }),
+
+  GetApplicationInfoById: (RequestCategoryInfoByID) => ({ type: actionTypes.GetApplicationInfoById, payload: { RequestCategoryInfoByID } }),
+  GetApplicationInfoByIdResponse: (GetApplicationInfoByIdResponse) => ({ type: actionTypes.GetApplicationInfoByIdResponse, payload: { GetApplicationInfoByIdResponse } }),
+  //#endregion Manage Application
+
+  //#region  Manage Category
+  AddCategory: (category) => ({ type: actionTypes.AddCategory, payload: { category } }),
+  AddCategoryResponse: (categoryResponse) => ({ type: actionTypes.AddCategoryResponse, payload: { categoryResponse } }),
+
+  GetCategory: (RequestParmTag) => ({ type: actionTypes.GetCategory, payload: { RequestParmTag } }),
+  GetCategoryResponse: (GetCategoryResponse) => ({ type: actionTypes.GetCategoryResponse, payload: { GetCategoryResponse } }),
 
   GetInsuranceTypes: (RequestParmInsuranceTypeName) => ({ type: actionTypes.GetInsuranceTypes, payload: { RequestParmInsuranceTypeName } }),
   GetInsuranceTypeResponse: (GetInsuranceTypeResponse) => ({ type: actionTypes.GetInsuranceTypeResponse, payload: { GetInsuranceTypeResponse } }),
 
-  GetInsuranceTypeById: (RequestInsuranceTypeData) => ({ type: actionTypes.GetInsuranceTypeById, payload: { RequestInsuranceTypeData } }),
-  GetInsuranceTypeByIdResponse: (GetInsuranceTypeByIdResponse) => ({ type: actionTypes.GetInsuranceTypeByIdResponse, payload: { GetInsuranceTypeByIdResponse } }),
+  GetCategoryById: (RequestCategoryData) => ({ type: actionTypes.GetCategoryById, payload: { RequestCategoryData } }),
+  GetCategoryByIdResponse: (GetCategoryByIdResponse) => ({ type: actionTypes.GetCategoryByIdResponse, payload: { GetCategoryByIdResponse } }),
 
-  AddTag: (tag) => ({ type: actionTypes.AddTag, payload: { tag } }),
-  AddTagResponse: (tagResponse) => ({ type: actionTypes.AddTagResponse, payload: { tagResponse } }),
+  DeleteCategoryById: (RequestParmDeleteCategoryId) => ({ type: actionTypes.DeleteCategoryById, payload: { RequestParmDeleteCategoryId } }),
+  DeleteCategoryByIdResponse: (DeleteCategoryByIdResponse) => ({ type: actionTypes.DeleteCategoryByIdResponse, payload: { DeleteCategoryByIdResponse } }),
 
-  DeleteTagById: (RequestParmDeleteTagId) => ({ type: actionTypes.DeleteTagById, payload: { RequestParmDeleteTagId } }),
-  DeleteTagByIdResponse: (DeleteTagByIdResponse) => ({ type: actionTypes.DeleteTagByIdResponse, payload: { DeleteTagByIdResponse } }),
-
-  //#endregion End Manage Tags
+  GetCategoryInfoByID: (RequestCategoryInfoByID) => ({ type: actionTypes.GetCategoryInfoByID, payload: { RequestCategoryInfoByID } }),
+  GetCategoryInfoByIDResponse: (GetCategoryInfoByIDResponse) => ({ type: actionTypes.GetCategoryInfoByIDResponse, payload: { GetCategoryInfoByIDResponse } }),
+  //#endregion End Manage Category
 
   //#region Manage Videos
-  GetVideos: (RequestParmVideo) => ({ type: actionTypes.GetVideos, payload: { RequestParmVideo } }),
-  GetVideosResponse: (GetVideosResponse) => ({ type: actionTypes.GetVideosResponse, payload: { GetVideosResponse } }),
+  // GetVideos: (RequestParmVideo) => ({ type: actionTypes.GetVideos, payload: { RequestParmVideo } }),
+  // GetVideosResponse: (GetVideosResponse) => ({ type: actionTypes.GetVideosResponse, payload: { GetVideosResponse } }),
 
-  GetVideoById: (RequestParmVideoByIdData) => ({ type: actionTypes.GetVideoById, payload: { RequestParmVideoByIdData } }),
-  GetVideoByIdResponse: (GetVideoByIdResponse) => ({ type: actionTypes.GetVideoByIdResponse, payload: { GetVideoByIdResponse } }),
+  // GetVideoById: (RequestParmVideoByIdData) => ({ type: actionTypes.GetVideoById, payload: { RequestParmVideoByIdData } }),
+  // GetVideoByIdResponse: (GetVideoByIdResponse) => ({ type: actionTypes.GetVideoByIdResponse, payload: { GetVideoByIdResponse } }),
 
-  GetMasterTags: (RequestParmTagData) => ({ type: actionTypes.GetMasterTags, payload: { RequestParmTagData } }),
-  GetMasterTagsResponse: (GetMasterTagsResponse) => ({ type: actionTypes.GetMasterTagsResponse, payload: { GetMasterTagsResponse } }),
+  // GetMasterTags: (RequestParmTagData) => ({ type: actionTypes.GetMasterTags, payload: { RequestParmTagData } }),
+  // GetMasterTagsResponse: (GetMasterTagsResponse) => ({ type: actionTypes.GetMasterTagsResponse, payload: { GetMasterTagsResponse } }),
 
-  ResetVideo: (ResetVideo) => ({ type: actionTypes.ResetVideo, payload: { ResetVideo } }),
-  ResetVideoResponse: (ResetVideoResponse) => ({ type: actionTypes.ResetVideoResponse, payload: { ResetVideoResponse } }),
+  // ResetVideo: (ResetVideo) => ({ type: actionTypes.ResetVideo, payload: { ResetVideo } }),
+  // ResetVideoResponse: (ResetVideoResponse) => ({ type: actionTypes.ResetVideoResponse, payload: { ResetVideoResponse } }),
 
-  AddEditVideo: (addeditVideo) => ({ type: actionTypes.AddEditVideo, payload: { addeditVideo } }),
-  AddEditVideoResponse: (addEditVideoResponse) => ({ type: actionTypes.AddEditVideoResponse, payload: { addEditVideoResponse } }),
+  // AddEditVideo: (addeditVideo) => ({ type: actionTypes.AddEditVideo, payload: { addeditVideo } }),
+  // AddEditVideoResponse: (addEditVideoResponse) => ({ type: actionTypes.AddEditVideoResponse, payload: { addEditVideoResponse } }),
 
-  DeleteVideoById: (RequestParmDeleteVideoId) => ({ type: actionTypes.DeleteVideoById, payload: { RequestParmDeleteVideoId } }),
-  DeleteVideoByIdResponse: (DeleteVideoByIdResponse) => ({ type: actionTypes.DeleteVideoByIdResponse, payload: { DeleteVideoByIdResponse } }),
+  // DeleteVideoById: (RequestParmDeleteVideoId) => ({ type: actionTypes.DeleteVideoById, payload: { RequestParmDeleteVideoId } }),
+  // DeleteVideoByIdResponse: (DeleteVideoByIdResponse) => ({ type: actionTypes.DeleteVideoByIdResponse, payload: { DeleteVideoByIdResponse } }),
   //#endregion End Manage Videos
 
-  
+
 };
 
 export function* saga() {
@@ -566,7 +642,6 @@ export function* saga() {
   //::end reset insurance type :://
   //#endregion Dashbards
 
-
   //#region Manage Profile 
 
   yield takeLatest(actionTypes.GetUserData, function* getUserDataRequested(payload) {
@@ -576,12 +651,12 @@ export function* saga() {
       yield put(actions.GetUserDataResponse(response));
   });
 
-  yield takeLatest(actionTypes.GetUseFavoriteVideoData, function* getUseFavoriteVideoDataRequested(payload) {
-    const response = yield call(getUseFavoriteVideoDataRequestApi, payload.payload);
-    console.log(response)
-    if (response)
-      yield put(actions.GetUseFavoriteVideoDataResponse(response));
-  });
+  // yield takeLatest(actionTypes.GetUseFavoriteVideoData, function* getUseFavoriteVideoDataRequested(payload) {
+  //   const response = yield call(getUseFavoriteVideoDataRequestApi, payload.payload);
+  //   console.log(response)
+  //   if (response)
+  //     yield put(actions.GetUseFavoriteVideoDataResponse(response));
+  // });
 
   yield takeLatest(actionTypes.UpdateProfile, function* updateProfileRequested(payload) {
     const response = yield call(updateProfileRequestApi, payload.payload);
@@ -591,57 +666,86 @@ export function* saga() {
 
   //#endregion Manage Profile 
 
-  //#region  Manage Tags
-  yield takeLatest(actionTypes.GetTags, function* getTagRequested(payload) {
-    const response = yield call(getTagsRequestedApi, payload.payload);
-    yield put(actions.GetTagResponse(response));
+  //#region  Manage Category
+  yield takeLatest(actionTypes.GetCategory, function* getCategoryRequested(payload) {
+    const response = yield call(getCategoryRequestedApi, payload.payload);
+    yield put(actions.GetCategoryResponse(response));
+  });
+
+  yield takeLatest(actionTypes.GetCategoryInfoByID, function* GetCategoryInfoByIDRequest(payload) {
+    const response = yield call(GetCategoryInfoByIDRequestedApi, payload.payload);
+    yield put(actions.GetCategoryInfoByIDResponse(response));
 
   });
 
-  yield takeLatest(actionTypes.GetInsuranceTypes, function* getInsuranceTypeRequested(payload) {
-    const response = yield call(getInsuranceTypeRequestedApi, payload.payload);
-    yield put(actions.GetInsuranceTypeResponse(response));
+  yield takeLatest(actionTypes.GetApplicationInfoById, function* GetApplicationInfoByIDRequest(payload) {
+    const response = yield call(GetApplicationInfoByIDRequestedApi, payload.payload);
+    yield put(actions.GetApplicationInfoByIdResponse(response));
 
   });
+  // yield takeLatest(actionTypes.GetInsuranceTypes, function* getInsuranceTypeRequested(payload) {
+  //   const response = yield call(getInsuranceTypeRequestedApi, payload.payload);
+  //   yield put(actions.GetInsuranceTypeResponse(response));
 
-  yield takeLatest(actionTypes.GetInsuranceTypeById, function* GetInsuranceTypeByIdRequest(payload) {
-    const response = yield call(getInsuranceTypeByIdRequestedApi, payload.payload);
-    yield put(actions.GetInsuranceTypeByIdResponse(response));
+  // });
 
+  yield takeLatest(actionTypes.GetCategoryById, function* GetInsuranceTypeByIdRequest(payload) {
+    const response = yield call(getCategoryByIdRequestedApi, payload.payload);
+    yield put(actions.GetCategoryByIdResponse(response));
   });
 
-  yield takeLatest(actionTypes.AddTag, function* addTagRequested(payload) {
-    const response = yield call(addTagRequestApi, payload.payload);
+  yield takeLatest(actionTypes.AddCategory, function* addCategoryRequested(payload) {
+    const response = yield call(addCategoryRequestApi, payload.payload);
     if (response)
-      yield put(actions.AddTagResponse(response));
+      yield put(actions.AddCategoryResponse(response));
   });
 
-  yield takeLatest(actionTypes.DeleteTagById, function* deleteTagRequested(payload) {
-    const response = yield call(deleteTagRequestApi, payload.payload);
+  yield takeLatest(actionTypes.DeleteCategoryById, function* deleteTagRequested(payload) {
+    const response = yield call(deleteCategoryApi, payload.payload);
     if (response)
-      yield put(actions.DeleteTagByIdResponse(response));
+      yield put(actions.DeleteCategoryByIdResponse(response));
   });
 
-  //#endregion Manage Tags
+  //#endregion Manage Category
+
+  //#region Manage Application
+  yield takeLatest(actionTypes.AddApplication, function* addApplicationRequested(payload) {
+    const response = yield call(addApplicationRequestApi, payload.payload);
+    if (response)
+      yield put(actions.AddApplicationResponse(response));
+  });
+
+  yield takeLatest(actionTypes.GetApplication, function* getApplicationRequested(payload) {
+    const response = yield call(getApplicationRequestedApi, payload.payload);
+    yield put(actions.GetApplicationResponse(response));
+  });
+
+  yield takeLatest(actionTypes.DeleteApplicationById, function* deleteTagRequested(payload) {
+    const response = yield call(deleteApplicationApi, payload.payload);
+    if (response)
+      yield put(actions.DeleteApplicationByIdResponse(response));
+  });
+  //#endregion Mange Application
+
 
   //#region Manage Videos
-  yield takeLatest(actionTypes.GetVideos, function* getVideosRequested(payload) {
-    const response = yield call(getVdeosRequestedApi, payload.payload);
-    yield put(actions.GetVideosResponse(response));
+  // yield takeLatest(actionTypes.GetVideos, function* getVideosRequested(payload) {
+  //   const response = yield call(getVdeosRequestedApi, payload.payload);
+  //   yield put(actions.GetVideosResponse(response));
 
-  });
+  // });
 
-  yield takeLatest(actionTypes.GetVideoById, function* GetVideoByIdRequest(payload) {
-    const response = yield call(getVideoByIdRequestedApi, payload.payload);
-    yield put(actions.GetVideoByIdResponse(response));
+  // yield takeLatest(actionTypes.GetVideoById, function* GetVideoByIdRequest(payload) {
+  //   const response = yield call(getVideoByIdRequestedApi, payload.payload);
+  //   yield put(actions.GetVideoByIdResponse(response));
 
-  });
+  // });
 
-  yield takeLatest(actionTypes.GetMasterTags, function* GetTagsRequested(payload) {
-    const response = yield call(getmasterTagsRequestedApi, payload.payload);
-    yield put(actions.GetMasterTagsResponse(response));
+  // yield takeLatest(actionTypes.GetMasterTags, function* GetTagsRequested(payload) {
+  //   const response = yield call(getmasterTagsRequestedApi, payload.payload);
+  //   yield put(actions.GetMasterTagsResponse(response));
 
-  });
+  // });
 
   yield takeLatest(actionTypes.ResetVideo, function* ResetVideosRequested(payload) {
 
@@ -649,22 +753,22 @@ export function* saga() {
 
   });
 
-  yield takeLatest(actionTypes.AddEditVideo, function* addEditRequested(payload) {
-    const response = yield call(addEditVideoRequestApi, payload.payload);
-    if (response.status == 200) {
-      yield put(actions.AddEditVideoResponse(response));
-      sendNotificationApi(payload.payload)
-      console.log('true');
-    } else {
-      console.log('fail');
-    }
-  });
+  // yield takeLatest(actionTypes.AddEditVideo, function* addEditRequested(payload) {
+  //   const response = yield call(addEditVideoRequestApi, payload.payload);
+  //   if (response.status == 200) {
+  //     yield put(actions.AddEditVideoResponse(response));
+  //     sendNotificationApi(payload.payload)
+  //     console.log('true');
+  //   } else {
+  //     console.log('fail');
+  //   }
+  // });
 
-  yield takeLatest(actionTypes.DeleteVideoById, function* deleteVideoRequested(payload) {
-    const response = yield call(deleteVideoRequestApi, payload.payload);
-    if (response)
-      yield put(actions.DeleteVideoByIdResponse(response));
-  });
+  // yield takeLatest(actionTypes.DeleteVideoById, function* deleteVideoRequested(payload) {
+  //   const response = yield call(deleteVideoRequestApi, payload.payload);
+  //   if (response)
+  //     yield put(actions.DeleteVideoByIdResponse(response));
+  // });
 
   //#endregion End Manage Videos
 }
@@ -714,29 +818,42 @@ const updateProfileRequestApi = async (payload) => {
 };
 
 //#endregion Manage Profile 
-//#region Manage Tags
-const addTagRequestApi = async (payload) => {
-  var data = payload.tag;
+//#region Manage Category
+const addCategoryRequestApi = async (payload) => {
+  var data = payload.category;
   const instance = await axios.create({
   });
   const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  const respo = instance.post(`${BASE_URL}Tag/addEditTag`, data, options)
+  const respo = instance.post(`${BASE_URL}Category/addEditCategory`, data, options)
     .catch((e) => {
       return e.response;
     });
+  console.log(respo);
   return respo;
 };
 
-const getInsuranceTypeByIdRequestedApi = async (payload) => {
-  var data = payload.RequestInsuranceTypeData;
+const getCategoryRequestedApi = async (payload) => {
+  // var data = payload.RequestParmTag;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
+  };
+  const respo = instance.get(`${BASE_URL}Category/GetAllCategory`, options);
+  return respo;
+};
+
+const getCategoryByIdRequestedApi = async (payload) => {
+  var data = payload.RequestCategoryData;
   const instance = await axios.create({
   });
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
   };
-  const respo = instance.get(`${BASE_URL}Tag/GetTagById?inTagId=${data}`, options);
+  const respo = instance.get(`${BASE_URL}Category/GetAllCategory`, options);
   return respo;
 };
 
@@ -753,19 +870,6 @@ const getInsuranceTypeRequestedApi = async (payload) => {
   const respo = instance.get(`${BASE_URL}Tag/FetchTags?stSearch=${data}`, options);
   return respo;
 };
-
-const getTagsRequestedApi = async (payload) => {
-  var data = payload.RequestParmTag;
-  const instance = await axios.create({
-  });
-  const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
-    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
-  };
-  const respo = instance.get(`${BASE_URL}Tag/FetchTags?stSearch=${data}`, options);
-  return respo;
-};
-
 
 const getVdeosRequestedApi = async (payload) => {
   var data = payload.RequestParmVideo;
@@ -831,21 +935,37 @@ const deleteVideoRequestApi = async (payload) => {
 };
 
 
-const deleteTagRequestApi = async (payload) => {
-  var data = payload.RequestParmDeleteTagId;
+const deleteCategoryApi = async (payload) => {
+  var data = payload.RequestParmDeleteCategoryId;
+  console.log(data,"::::::::");
   const instance = await axios.create({
   });
   const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  const respo = instance.delete(`${BASE_URL}Tag/DeleteTag?inTagId=${data}`, options)
+  const respo = instance.delete(`${BASE_URL}Category/DeleteCategory?inCategoryId=${data}&inModifiedBy=22`, options)
     .catch((e) => {
       return e.response;
     });
   return respo;
 };
 
-//#endregion End Manage Tags
+const GetCategoryInfoByIDRequestedApi = async (payload) => {
+  var data = payload.RequestCategoryInfoByID;
+  console.log(data,"??????");
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.get(`${BASE_URL}Category/GetCategoryById?inCategoryId=${data}`, options);
+  console.log(respo,">>>>>");
+  return respo;
+};
+
+
+
+//#endregion End Manage Category
 
 //#region 
 const sendNotificationApi = async (payload) => {
@@ -863,3 +983,61 @@ const sendNotificationApi = async (payload) => {
   return respo;
 };
 //#endregion
+
+
+//#region Manage Application
+const addApplicationRequestApi = async (payload) => {
+  var data = payload.application;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.post(`${BASE_URL}Application/addEditApplication`, data, options)
+    .catch((e) => {
+      return e.response;
+    });
+  console.log(respo, "??>>>????");
+  return respo;
+};
+
+const getApplicationRequestedApi = async (payload) => {
+  // var data = payload.RequestParmTag;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
+  };
+  const respo = instance.get(`${BASE_URL}Application/GetAllApplication`, options);
+  return respo;
+};
+
+const deleteApplicationApi = async (payload) => {
+  var data = payload.RequestParmDeleteApplicationId;
+  console.log(data,"::::::::");
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.delete(`${BASE_URL}Application/DeleteApplication?inApplicationId=${data}&inModifiedBy=22`, options)
+    .catch((e) => {
+      return e.response;
+    });
+  return respo;
+};
+
+const GetApplicationInfoByIDRequestedApi = async (payload) => {
+  var data = payload.RequestCategoryInfoByID;
+  console.log(data,"??????");
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.get(`${BASE_URL}Application/GetApplicationById?inApplicationId=${data}`, options);
+  console.log(respo,">>>>>");
+  return respo;
+};
+//#endregion Manage Application

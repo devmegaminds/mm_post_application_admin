@@ -29,18 +29,6 @@ class ViewUserPage extends Component {
     componentWillReceiveProps(nextProps) {
         debugger
 
-        // if (nextProps.GetTagResponse) {
-        //     if (nextProps.GetTagResponse && nextProps.GetTagResponse != this.props.GetTagResponse) {
-        //         if (nextProps.GetTagResponse.statusCode == 200) {
-        //             this.setState({ isGettingTags: false });
-        //             this.setState({ isLoading: false })
-        //             this.setState({ totalno: nextProps.GetTagResponse.data.length })
-
-        //             this.setState({ tagsData: nextProps.GetTagResponse.data})
-        //         }
-        //     }
-        // }
-
         if (nextProps.GetUserByIdResponse) {
             if (nextProps.GetUserByIdResponse && nextProps.GetUserByIdResponse != this.props.GetUserByIdResponse) {
                 if (nextProps.GetUserByIdResponse.statusCode == 200) {

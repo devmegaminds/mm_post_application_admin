@@ -28,36 +28,36 @@ class ManageApplication extends Component {
     }
 
     handleEdit(row) {
-        this.props.history.push(`/Tags/Tag/${row.inTagId}`)
+        this.props.history.push(`/AddApplicationPage/${row.inApplicationId}`)
     }
 
     handleDelete(row) {
         if (row != null)
             this.hideAlert(false);
-        this.props.DeleteTagById(row.inTagId)
+        this.props.DeleteApplicationById(row.inApplicationId)
     }
     componentDidMount() {
         this.setState({ isGettingTags: true })
-        this.props.GetTags("");
+        this.props.GetApplication("");
     }
     componentWillReceiveProps(nextProps) {
-        if (nextProps.GetTagResponse) {
-            if (nextProps.GetTagResponse && nextProps.GetTagResponse != this.props.GetTagResponse) {
-                if (nextProps.GetTagResponse.statusCode == 200) {
+        if (nextProps.GetApplicationResponse) {
+            if (nextProps.GetApplicationResponse && nextProps.GetApplicationResponse != this.props.GetApplicationResponse) {
+                if (nextProps.GetApplicationResponse.statusCode == 200) {
                     this.setState({ isGettingTags: false });
                     this.setState({ isLoading: false })
-                    this.setState({ totalno: nextProps.GetTagResponse.data.length })
+                    this.setState({ totalno: nextProps.GetApplicationResponse.data.length })
 
-                    this.setState({ tagsData: nextProps.GetTagResponse.data })
+                    this.setState({ tagsData: nextProps.GetApplicationResponse.data })
                 }
             }
         }
-        if (nextProps.DeleteTagByIdResponse) {
-            if (nextProps.DeleteTagByIdResponse && nextProps.DeleteTagByIdResponse != this.props.DeleteTagByIdResponse) {
-                if (nextProps.DeleteTagByIdResponse.data.statusCode == 200) {
-                    this.props.GetTags("");
+        if (nextProps.DeleteApplicationByIdResponse) {
+            if (nextProps.DeleteApplicationByIdResponse && nextProps.DeleteApplicationByIdResponse != this.props.DeleteApplicationByIdResponse) {
+                if (nextProps.DeleteApplicationByIdResponse.data.statusCode == 200) {
+                    this.props.GetApplication("");
                     this.setState({ isGettingTags: false });
-                    this.SuccessFailSweetAlert(nextProps.DeleteTagByIdResponse.data.messgae, 'success')
+                    this.SuccessFailSweetAlert(nextProps.DeleteApplicationByIdResponse.data.messgae, 'success')
                 }
             }
         }
@@ -130,18 +130,19 @@ class ManageApplication extends Component {
         var $this = this;
         const columns = [
             //#region Index of the Application list
-            // { dataField: 'inTagId', text: 'TagId Unique Id', hidden: true },
-            // { dataField: 'stTags', text: 'Tag Name', sort: true },
+            { dataField: 'inApplicationId', text: 'Application Id', hidden: true },
+            { dataField: 'stAppplicationName', text: 'Application Name', sort: true },
+            { dataField: 'inCreatedBy', text: 'Creator Name', sort: true },
             // { dataField: 'flgIsActive', text: 'Is Active', sort: false },
-            // {
-            //     dataField: 'dtCreatedOn', text: 'Created Date', sort: false,
-            //     formatter: (cell) => {
-            //         if (cell == null) {
-            //             return
-            //         }
-            //         return moment(cell).format("MM/DD/YYYY");
-            //     },
-            // },
+            {
+                dataField: 'dtCreatedOn', text: 'Created Date', sort: false,
+                formatter: (cell) => {
+                    if (cell == null) {
+                        return
+                    }
+                    return moment(cell).format("MM/DD/YYYY");
+                },
+            },
             //#endregion
             {
                 dataField: 'link',
@@ -264,15 +265,15 @@ function mapStateToProps(state) {
         initialValues: {    
 
         },
-        GetTagResponse: state.auth.GetTagResponse,
-        DeleteTagByIdResponse: state.auth.DeleteTagByIdResponse,
+        GetApplicationResponse: state.auth.GetApplicationResponse,
+        DeleteApplicationByIdResponse: state.auth.DeleteApplicationByIdResponse,
         insuranceTypeResponse: state.auth.insuranceTypeResponse,
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        GetTags: (data) => dispatch(auth.actions.GetTags(data)),
-        DeleteTagById: (data) => dispatch(auth.actions.DeleteTagById(data)),
+        GetApplication: (data) => dispatch(auth.actions.GetApplication(data)),
+        DeleteApplicationById: (data) => dispatch(auth.actions.DeleteApplicationById(data)),
         SaveInsuranceType: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
     }
 }

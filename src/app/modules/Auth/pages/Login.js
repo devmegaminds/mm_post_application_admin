@@ -18,9 +18,13 @@ import { login } from "../_redux/authCrud";
 */
 
 const initialValues = {
-  email: "johndoe@gmail.com",
-  password: "CFvgbhnj12#"//"h)W-k1W0PuOn"
+  email: "renish.megaminds@gmail.com",
+  password: "1234"//"h)W-k1W0PuOn"
 };
+// const initialValues = {
+//   email: "johndoe@gmail.com",
+//   password: "CFvgbhnj12#"//"h)W-k1W0PuOn"
+// };
 
 function Login(props) {
 

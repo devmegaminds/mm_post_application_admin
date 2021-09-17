@@ -148,7 +148,6 @@ class Profile extends Component {
             locatusername.data.stLastName = nextProps.updateResponse.data[0].stLastName
             locatusername.data.stContact = nextProps.updateResponse.data[0].stContact
             locatusername.data.stEmail = nextProps.updateResponse.data[0].stEmail
-
             let localStorageItems = {
               'user': JSON.stringify(locatusername),
               '_persist': _persist

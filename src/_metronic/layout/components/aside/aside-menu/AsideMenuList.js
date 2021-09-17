@@ -90,6 +90,36 @@ export function AsideMenuList({ layoutProps }) {
           </div>
         </li>
 
+        {/* <li
+          className={`menu-item ${getMenuItemActive("/ManageCategory", true)}`}
+          aria-haspopup="true"
+        >
+          <NavLink className="menu-link" to="/ManageCategory">
+            <span className="svg-icon menu-icon">
+              <SVG
+                src={toAbsoluteUrl("/media/svg/icons/Layout/Layout-left-panel-2.svg")}
+              />
+            </span>
+            <span className="menu-text">Category</span>
+          </NavLink>
+          <div className="menu-submenu ">
+            <i className="menu-arrow" />
+            <ul className="menu-subnav">
+
+              <li
+                className={`menu-item ${getMenuItemActive("/AddCategoryPage")}`}
+                aria-haspopup="true" style={{ display: 'none' }}
+              >
+                <NavLink className="menu-link" to="/AddCategoryPage">
+                  <i className="menu-bullet menu-bullet-dot">
+                    <span />
+                  </i>
+                </NavLink>
+              </li>
+            </ul>
+          </div>
+        </li> */}
+
         <li
           className={`menu-item ${getMenuItemActive("/UploadImage", true)}`}
           aria-haspopup="true"

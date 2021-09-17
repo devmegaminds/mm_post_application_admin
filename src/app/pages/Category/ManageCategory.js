@@ -28,36 +28,36 @@ class ManageCategory extends Component {
     }
 
     handleEdit(row) {
-        this.props.history.push(`/Tags/Tag/${row.inTagId}`)
+        this.props.history.push(`/AddCategoryPage/${row.inCategoryId}`)
     }
 
     handleDelete(row) {
         if (row != null)
             this.hideAlert(false);
-        this.props.DeleteTagById(row.inTagId)
+        this.props.DeleteCategoryById(row.inCategoryId)
     }
     componentDidMount() {
         this.setState({ isGettingTags: true })
-        this.props.GetTags("");
+        this.props.GetCategory("");
     }
     componentWillReceiveProps(nextProps) {
-        if (nextProps.GetTagResponse) {
-            if (nextProps.GetTagResponse && nextProps.GetTagResponse != this.props.GetTagResponse) {
-                if (nextProps.GetTagResponse.statusCode == 200) {
+        if (nextProps.GetCategoryResponse) {
+            if (nextProps.GetCategoryResponse && nextProps.GetCategoryResponse != this.props.GetCategoryResponse) {
+                if (nextProps.GetCategoryResponse.statusCode == 200) {
                     this.setState({ isGettingTags: false });
                     this.setState({ isLoading: false })
-                    this.setState({ totalno: nextProps.GetTagResponse.data.length })
+                    this.setState({ totalno: nextProps.GetCategoryResponse.data.length })
 
-                    this.setState({ tagsData: nextProps.GetTagResponse.data })
+                    this.setState({ tagsData: nextProps.GetCategoryResponse.data })
                 }
             }
         }
-        if (nextProps.DeleteTagByIdResponse) {
-            if (nextProps.DeleteTagByIdResponse && nextProps.DeleteTagByIdResponse != this.props.DeleteTagByIdResponse) {
-                if (nextProps.DeleteTagByIdResponse.data.statusCode == 200) {
-                    this.props.GetTags("");
+        if (nextProps.DeleteCategoryByIdResponse) {
+            if (nextProps.DeleteCategoryByIdResponse && nextProps.DeleteCategoryByIdResponse != this.props.DeleteCategoryByIdResponse) {
+                if (nextProps.DeleteCategoryByIdResponse.data.statusCode == 200) {
+                    this.props.GetCategory("");
                     this.setState({ isGettingTags: false });
-                    this.SuccessFailSweetAlert(nextProps.DeleteTagByIdResponse.data.messgae, 'success')
+                    this.SuccessFailSweetAlert(nextProps.DeleteCategoryByIdResponse.data.messgae, 'success')
                 }
             }
         }
@@ -130,18 +130,19 @@ class ManageCategory extends Component {
         var $this = this;
         const columns = [
             //#region Index of the Application list
-            // { dataField: 'inTagId', text: 'TagId Unique Id', hidden: true },
-            // { dataField: 'stTags', text: 'Tag Name', sort: true },
+            { dataField: 'inCategoryId', text: 'Category Number', hidden: false },
+            { dataField: 'stCategoryName', text: 'Category Name', sort: true },
+            { dataField: 'inCreatedBy', text: 'CreatedBy', sort: true },
             // { dataField: 'flgIsActive', text: 'Is Active', sort: false },
-            // {
-            //     dataField: 'dtCreatedOn', text: 'Created Date', sort: false,
-            //     formatter: (cell) => {
-            //         if (cell == null) {
-            //             return
-            //         }
-            //         return moment(cell).format("MM/DD/YYYY");
-            //     },
-            // },
+            {
+                dataField: 'dtCreatedOn', text: 'Created Date', sort: false,
+                formatter: (cell) => {
+                    if (cell == null) {
+                        return
+                    }
+                    return moment(cell).format("MM/DD/YYYY");
+                },
+            },
             //#endregion
             {
                 dataField: 'link',
@@ -162,6 +163,17 @@ class ManageCategory extends Component {
                                 <a className="btn btn-icon btn-sm btn-danger" data-toggle="tooltip" data-placement="buttom" onClick={(e) => this.ConfirmationSweetAlert(row, "Are you sure want to delete it.?")}>
                                     <i className="ki ki-close icon-nm"></i>
                                 </a>
+                            </OverlayTrigger>
+
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={<Tooltip>Add Sub-Category</Tooltip>}>
+                                <a className="btn btn-icon btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                    <i className="ki ki-close icon-nm"></i>
+                                </a>
+                                {/* <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            Add Image
+                        </button> */}
                             </OverlayTrigger>
 
                         </div>
@@ -220,22 +232,10 @@ class ManageCategory extends Component {
                         </OverlayTrigger>
 
                     </div>
-                    <div className="card-toolbar">
-                        {/* <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>Add modal</Tooltip>}>
-                            <Link className="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                Add Modal
-                            </Link>
-                        </OverlayTrigger> */}
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                            Add Image
-                        </button>
-                    </div>
                 </div>
-                
+
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
@@ -297,15 +297,15 @@ function mapStateToProps(state) {
         initialValues: {
 
         },
-        GetTagResponse: state.auth.GetTagResponse,
-        DeleteTagByIdResponse: state.auth.DeleteTagByIdResponse,
+        GetCategoryResponse: state.auth.GetCategoryResponse,
+        DeleteCategoryByIdResponse: state.auth.DeleteCategoryByIdResponse,
         insuranceTypeResponse: state.auth.insuranceTypeResponse,
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        GetTags: (data) => dispatch(auth.actions.GetTags(data)),
-        DeleteTagById: (data) => dispatch(auth.actions.DeleteTagById(data)),
+        GetCategory: (data) => dispatch(auth.actions.GetCategory(data)),
+        DeleteCategoryById: (data) => dispatch(auth.actions.DeleteCategoryById(data)),
         SaveInsuranceType: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
     }
 }

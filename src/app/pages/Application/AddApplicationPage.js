@@ -25,7 +25,7 @@ const renderFields = ({
 const validate = values => {
     const errors = {}
     const requiredFields = [
-        'stTag'
+        'stApplication'
     ]
     requiredFields.forEach(field => {
         if (!values[field]) {
@@ -40,7 +40,7 @@ class AddApplicationPage extends Component {
         super(props)
         this.state = {
             isError: false,
-            currentUserData : {}
+            currentUserData: {}
         }
         this.onSubmit = this.onSubmit.bind(this);
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
@@ -48,12 +48,12 @@ class AddApplicationPage extends Component {
     onSubmit = (formValues) => {
         this.setState({ isLoading: true });
         var data = {
-            inTagId: formValues.inTagId == undefined || formValues.inTagId == "" ? 0 : formValues.inTagId,
-            stTags: formValues.stTag,
-            inCreatedBy:  this.state.currentUserData.inUserID
+            inApplicationId: formValues.inApplicationId == undefined || formValues.inApplicationId == "" ? 0 : formValues.inApplicationId,
+            stApplicationName: formValues.stApplicationName,
+            inCreatedBy: this.state.currentUserData.inUserID
         }
         //this.props.SaveTag(data);
-        this.props.AddTag(data);
+        this.props.AddApplication(data);
     }
 
     hideModel = () => {
@@ -63,25 +63,25 @@ class AddApplicationPage extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        if (nextProps.getInsuranceTypeByIdResponse) {
-            if (nextProps.getInsuranceTypeByIdResponse && nextProps.getInsuranceTypeByIdResponse != this.props.getInsuranceTypeByIdResponse) {
-                if (nextProps.getInsuranceTypeByIdResponse.statusCode == 200) {
+        if (nextProps.getApplicationInfoByIdResponse) {
+            if (nextProps.getApplicationInfoByIdResponse && nextProps.getApplicationInfoByIdResponse != this.props.getApplicationInfoByIdResponse) {
+                if (nextProps.getApplicationInfoByIdResponse.statusCode == 200) {
 
                 }
-                else if (nextProps.getInsuranceTypeByIdResponse.Code == 200) {
+                else if (nextProps.getApplicationInfoByIdResponse.Code == 200) {
 
                 }
                 else
                     this.SuccessFailSweetAlert("getting error", "error");
             }
         }
-        if (nextProps.tagResponse) {
-            if (nextProps.tagResponse && nextProps.tagResponse != this.props.tagResponse) {
-                if (nextProps.tagResponse.statusCode == 200) {
+        if (nextProps.applicationResponse) {
+            if (nextProps.applicationResponse && nextProps.applicationResponse != this.props.applicationResponse) {
+                if (nextProps.applicationResponse.statusCode == 200) {
                     this.setState({ isLoading: false, isRedirect: true });
                 }
-                else if (nextProps.tagResponse.status == "Error") {
-                    this.setState({ Message: nextProps.tagResponse.errorMessage });
+                else if (nextProps.applicationResponse.status == "Error") {
+                    this.setState({ Message: nextProps.applicationResponse.errorMessage });
                     this.setState({ showModal: true });
                     this.setState({ isLoading: false });
                 }
@@ -100,12 +100,12 @@ class AddApplicationPage extends Component {
     }
     componentDidMount() {
         var id = window.location.href.split("/").pop();
-        if (id != "Tag")
-            this.props.GetTagById(id)
+        if (id != "Application")
+            this.props.GetApplicationInfoById(id)
         else {
             var data = {
-                inTagId: "",
-                stTags: "",
+                inApplicationId: "",
+                stAppplicationName: "",
                 inCreatedBy: "",
                 Code: 200
             }
@@ -144,20 +144,21 @@ class AddApplicationPage extends Component {
         var $this = this;
         const { handleSubmit, pristine, reset, submitting, formValues, change } = this.props;
         if (this.state.isRedirect) {
-            return <Redirect to="/Tags" />
+            return <Redirect to="/ManageApplication" />
         }
+        debugger
         return (
             <div className="card card-custom gutter-b example example-compact">
                 {this.state.alert}
                 <div className="card-body">
                     <form className="form-horizontal" onSubmit={handleSubmit(this.onSubmit)}>
-                        <input type="hidden" name="inTagId" />
+                        <input type="hidden" name="inApplicationId" />
                         <div className="row">
                             <div className="col-sm-6">
                                 <label >Application Name <span className="text-danger">*</span></label>
                                 <Field
                                     type="text"
-                                    name="stTag"
+                                    name="stApplication"
                                     placeholder="Enter Application Name"
                                     component={renderFields}
                                 />
@@ -182,7 +183,7 @@ class AddApplicationPage extends Component {
                                     overlay={<Tooltip>Cancel</Tooltip>}>
                                     <Link className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/Tags">
                                         Cancel
-                                </Link>
+                                    </Link>
                                 </OverlayTrigger>
                             </div>
 
@@ -210,22 +211,22 @@ class AddApplicationPage extends Component {
 }
 
 AddApplicationPage = reduxForm({
-    form: 'Tag',
+    form: 'Category',
     validate,
     enableReinitialize: true,
     destroyOnUnmount: true
 })(AddApplicationPage);
-
 function mapStateToProps(state) {
+    debugger
     return {
         initialValues: {
-            inTagId: state.auth.getInsuranceTypeByIdResponse != undefined && state.auth.getInsuranceTypeByIdResponse.data != undefined ? state.auth.getInsuranceTypeByIdResponse.data[0].inTagId : "",
-            stTag: state.auth.getInsuranceTypeByIdResponse != undefined && state.auth.getInsuranceTypeByIdResponse.data != undefined ? state.auth.getInsuranceTypeByIdResponse.data[0].stTags : ""
+            inApplicationId: state.auth.GetApplicationInfoByIdResponse != undefined && state.auth.GetApplicationInfoByIdResponse.data != undefined ? state.auth.GetApplicationInfoByIdResponse.data[0].inApplicationId : "",
+            stApplication: state.auth.GetApplicationInfoByIdResponse != undefined && state.auth.GetApplicationInfoByIdResponse.data != undefined ? state.auth.GetApplicationInfoByIdResponse.data[0].stAppplicationName : ""
 
         },
         // insuranceTypeResponse: state.auth.insuranceTypeResponse,
-        tagResponse: state.auth.tagResponse,
-        getInsuranceTypeByIdResponse: state.auth.getInsuranceTypeByIdResponse,
+        applicationResponse: state.auth.applicationResponse,
+        GetApplicationInfoByIdResponse: state.auth.GetApplicationInfoByIdResponse,
         randomNumbers: state.auth.randomNumbers
 
     }
@@ -233,9 +234,9 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
     return {
         ResetTag: (data) => dispatch(auth.actions.ResetInsuranceType(data)),
-        GetTagById: (data) => dispatch(auth.actions.GetInsuranceTypeById(data)),
+        GetApplicationInfoById: (data) => dispatch(auth.actions.GetApplicationInfoById(data)),
         //SaveTag: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
-        AddTag: (data) => dispatch(auth.actions.AddTag(data)),
+        AddApplication: (data) => dispatch(auth.actions.AddApplication(data)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AddApplicationPage);
