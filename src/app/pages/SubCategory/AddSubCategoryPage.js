@@ -25,7 +25,7 @@ const renderFields = ({
 const validate = values => {
     const errors = {}
     const requiredFields = [
-        'stCategoryName'
+        'stSubCategoryName'
     ]
     requiredFields.forEach(field => {
         if (!values[field]) {
@@ -35,7 +35,7 @@ const validate = values => {
     return errors
 }
 
-class AddCategoryPage extends Component {
+class AddSubCategoryPage extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -49,12 +49,13 @@ class AddCategoryPage extends Component {
         debugger
         this.setState({ isLoading: true });
         var data = {
-            inCategoryId: formValues.inCategoryId == undefined || formValues.inCategoryId == "" ? 0 : formValues.inCategoryId,
-            stCategoryName: formValues.stCategoryName,
+            inSubCategoryId: formValues.inSubCategoryId == undefined || formValues.inSubCategoryId == "" ? 0 : formValues.inSubCategoryId,
+            stSubCategoryName: formValues.stSubCategoryName,
+            inCategoryId: "12",
             inCreatedBy: this.state.currentUserData.inUserID
         }
         //this.props.SaveTag(data);
-        this.props.AddCategory(data);
+        this.props.AddSubCategory(data);
     }
 
     hideModel = () => {
@@ -64,25 +65,25 @@ class AddCategoryPage extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        if (nextProps.getCategoryInfoByIDResponse) {
-            if (nextProps.getCategoryInfoByIDResponse && nextProps.getCategoryInfoByIDResponse != this.props.getCategoryInfoByIDResponse) {
-                if (nextProps.getCategoryInfoByIDResponse.statusCode == 200) {
+        if (nextProps.getSubCategoryInfoByIDResponse) {
+            if (nextProps.getSubCategoryInfoByIDResponse && nextProps.getSubCategoryInfoByIDResponse != this.props.getSubCategoryInfoByIDResponse) {
+                if (nextProps.getSubCategoryInfoByIDResponse.statusCode == 200) {
 
                 }
-                else if (nextProps.getCategoryInfoByIDResponse.Code == 200) {
+                else if (nextProps.getSubCategoryInfoByIDResponse.Code == 200) {
 
                 }
                 else
                     this.SuccessFailSweetAlert("getting error", "error");
             }
         }
-        if (nextProps.categoryResponse) {
-            if (nextProps.categoryResponse && nextProps.categoryResponse != this.props.categoryResponse) {
-                if (nextProps.categoryResponse.statusCode == 200) {
+        if (nextProps.subCategoryResponse) {
+            if (nextProps.subCategoryResponse && nextProps.subCategoryResponse != this.props.subCategoryResponse) {
+                if (nextProps.subCategoryResponse.statusCode == 200) {
                     this.setState({ isLoading: false, isRedirect: true });
                 }
-                else if (nextProps.categoryResponse.status == "Error") {
-                    this.setState({ Message: nextProps.categoryResponse.errorMessage });
+                else if (nextProps.subCategoryResponse.status == "Error") {
+                    this.setState({ Message: nextProps.subCategoryResponse.errorMessage });
                     this.setState({ showModal: true });
                     this.setState({ isLoading: false });
                 }
@@ -100,14 +101,13 @@ class AddCategoryPage extends Component {
         })
     }
     componentDidMount() {
-        debugger
         var id = window.location.href.split("/").pop();
-        if (id != "Category")
-            this.props.GetCategoryInfoByID(id)
+        if (id != "SubCategory")
+            this.props.GetSubCategoryInfoById(id)
         else {
             var data = {
-                inCategoryId: "",
-                stCategoryName: "",
+                inSubCategoryId: "",
+                stSubCategoryName: "",
                 inCreatedBy: "",
                 Code: 200
             }
@@ -146,21 +146,21 @@ class AddCategoryPage extends Component {
         var $this = this;
         const { handleSubmit, pristine, reset, submitting, formValues, change } = this.props;
         if (this.state.isRedirect) {
-            return <Redirect to="/ManageCategory" />
+            return <Redirect to="/ManageSubCategory" />
         }
         return (
             <div className="card card-custom gutter-b example example-compact">
                 {this.state.alert}
                 <div className="card-body">
                     <form className="form-horizontal" onSubmit={handleSubmit(this.onSubmit)}>
-                        <input type="hidden" name="inCategoryId" />
+                        <input type="hidden" name="inSubCategoryId" />
                         <div className="row">
                             <div className="col-sm-6">
-                                <label >Category Name <span className="text-danger">*</span></label>
+                                <label >Sub Category Name <span className="text-danger">*</span></label>
                                 <Field
                                     type="text"
-                                    name="stCategoryName"
-                                    placeholder="Enter Category Name"
+                                    name="stSubCategoryName"
+                                    placeholder="Enter SubCategory Name"
                                     component={renderFields}
                                 />
                             </div>
@@ -178,8 +178,7 @@ class AddCategoryPage extends Component {
                                         className={`btn btn-primary`}>
                                         Submit
                                         {this.state.isLoading && <span className="ml-3 spinner spinner-white"></span>}
-                                    </button>
-                                </OverlayTrigger>
+                                    </button></OverlayTrigger>
                                 <OverlayTrigger
                                     placement="bottom"
                                     overlay={<Tooltip>Cancel</Tooltip>}>
@@ -212,24 +211,23 @@ class AddCategoryPage extends Component {
     }
 }
 
-AddCategoryPage = reduxForm({
-    form: 'Category',
+AddSubCategoryPage = reduxForm({
+    form: 'SubCategory',
     validate,
     enableReinitialize: true,
     destroyOnUnmount: true
-})(AddCategoryPage);
+})(AddSubCategoryPage);
 
 function mapStateToProps(state) {
-    debugger
     return {
         initialValues: {
-            inCategoryId: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0].inCategoryId : "",
-            stCategoryName: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0].stCategoryName : ""
+            inSubCategoryId: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0].inSubCategoryId : "",
+            stSubCategoryName: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0].stSubCategoryName : ""
 
         },
         // insuranceTypeResponse: state.auth.insuranceTypeResponse,
-        categoryResponse: state.auth.categoryResponse,
-        GetCategoryInfoByIDResponse: state.auth.GetCategoryInfoByIDResponse,
+        subCategoryResponse: state.auth.subCategoryResponse,
+        GetSubCategoryInfoByIdResponse: state.auth.GetSubCategoryInfoByIdResponse,
         randomNumbers: state.auth.randomNumbers
 
     }
@@ -237,9 +235,9 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
     return {
         ResetTag: (data) => dispatch(auth.actions.ResetInsuranceType(data)),
-        GetCategoryInfoByID: (data) => dispatch(auth.actions.GetCategoryInfoByID(data)),
+        GetSubCategoryInfoById: (data) => dispatch(auth.actions.GetSubCategoryInfoById(data)),
         //SaveTag: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
-        AddCategory: (data) => dispatch(auth.actions.AddCategory(data)),
+        AddSubCategory: (data) => dispatch(auth.actions.AddSubCategory(data)),
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(AddCategoryPage);
+export default connect(mapStateToProps, mapDispatchToProps)(AddSubCategoryPage);

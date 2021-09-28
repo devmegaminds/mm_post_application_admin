@@ -17,47 +17,52 @@ import Spinner from 'react-bootstrap/Spinner'
 import paginationFactory, { PaginationProvider } from 'react-bootstrap-table2-paginator';
 import { Pagination } from "../pagination/Pagination";
 
-class ManageCategory extends Component {
+class ManageSubCategory extends Component {
     constructor(props) {
         super();
         this.state = {
             pageNumber: 1,
-            tagsData: [],
-            isGettingTags: false,
+            subcategoryData: [],
+            isGettingSubCategory: false,
         }
     }
 
     handleEdit(row) {
-        this.props.history.push(`/AddCategoryPage/${row.inCategoryId}`)
+        this.props.history.push(`/AddSubCategoryPage/${row.inSubCategoryId}`)
+    }
+
+    handleEdit(row) {
+        this.props.history.push(`/AddThumbnailImage/${row.inSubCategoryId}`)
     }
 
     handleDelete(row) {
         if (row != null)
             this.hideAlert(false);
-        this.props.DeleteCategoryById(row.inCategoryId)
+        this.props.DeleteSubCategoryById(row.inSubCategoryId)
     }
     componentDidMount() {
-        this.setState({ isGettingTags: true })
-        this.props.GetCategory("");
+        debugger
+        this.setState({ isGettingSubCategory: true })
+        this.props.GetSubCategory("");
     }
     componentWillReceiveProps(nextProps) {
-        if (nextProps.GetCategoryResponse) {
-            if (nextProps.GetCategoryResponse && nextProps.GetCategoryResponse != this.props.GetCategoryResponse) {
-                if (nextProps.GetCategoryResponse.statusCode == 200) {
-                    this.setState({ isGettingTags: false });
+        if (nextProps.GetSubCategoryResponse) {
+            if (nextProps.GetSubCategoryResponse && nextProps.GetSubCategoryResponse != this.props.GetSubCategoryResponse) {
+                if (nextProps.GetSubCategoryResponse.statusCode == 200) {
+                    this.setState({ isGettingSubCategory: false });
                     this.setState({ isLoading: false })
-                    this.setState({ totalno: nextProps.GetCategoryResponse.data.length })
+                    this.setState({ totalno: nextProps.GetSubCategoryResponse.data.length })
 
-                    this.setState({ tagsData: nextProps.GetCategoryResponse.data })
+                    this.setState({ subcategoryData: nextProps.GetSubCategoryResponse.data })
                 }
             }
         }
-        if (nextProps.DeleteCategoryByIdResponse) {
-            if (nextProps.DeleteCategoryByIdResponse && nextProps.DeleteCategoryByIdResponse != this.props.DeleteCategoryByIdResponse) {
-                if (nextProps.DeleteCategoryByIdResponse.data.statusCode == 200) {
-                    this.props.GetCategory("");
-                    this.setState({ isGettingTags: false });
-                    this.SuccessFailSweetAlert(nextProps.DeleteCategoryByIdResponse.data.messgae, 'success')
+        if (nextProps.DeleteSubCategoryByIdResponse) {
+            if (nextProps.DeleteSubCategoryByIdResponse && nextProps.DeleteSubCategoryByIdResponse != this.props.DeleteSubCategoryByIdResponse) {
+                if (nextProps.DeleteSubCategoryByIdResponse.data.statusCode == 200) {
+                    this.props.GetSubCategory("");
+                    this.setState({ isGettingSubCategory: false });
+                    this.SuccessFailSweetAlert(nextProps.DeleteSubCategoryByIdResponse.data.messgae, 'success')
                 }
             }
         }
@@ -129,9 +134,10 @@ class ManageCategory extends Component {
     render() {
         var $this = this;
         const columns = [
-            //#region Index of the Application list
-            { dataField: 'inCategoryId', text: 'Category Number', hidden: false },
-            { dataField: 'stCategoryName', text: 'Category Name', sort: true },
+            //#region Index of the Sub Category list
+            { dataField: 'inSubCategoryId', text: 'SubCategory Number', hidden: false },
+            { dataField: 'stSubCategoryName', text: 'SubCategory Name', sort: true },
+            { dataField: 'inCategoryId', text: 'Category ID', sort: true },
             { dataField: 'inCreatedBy', text: 'CreatedBy', sort: true },
             // { dataField: 'flgIsActive', text: 'Is Active', sort: false },
             {
@@ -152,15 +158,22 @@ class ManageCategory extends Component {
                         <div>
                             <OverlayTrigger
                                 placement="bottom"
-                                overlay={<Tooltip>Edit Category</Tooltip>}>
+                                overlay={<Tooltip>Edit SubCategory</Tooltip>}>
                                 <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }} onClick={(e) => this.handleEdit(row)}>
                                     <i className="fas fa-edit icon-nm"></i>
                                 </a>
                             </OverlayTrigger>
                             <OverlayTrigger
                                 placement="bottom"
-                                overlay={<Tooltip>Delete Category</Tooltip>}>
-                                <a className="btn btn-icon btn-sm btn-danger" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }} onClick={(e) => this.ConfirmationSweetAlert(row, "Are you sure want to delete it.?")}>
+                                overlay={<Tooltip>Add Image</Tooltip>}>
+                                <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }} onClick={(e) => this.handleEdit(row)}>
+                                    <i className="fas fa-edit icon-nm"></i>
+                                </a>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={<Tooltip>Delete SubCategory</Tooltip>}>
+                                <a className="btn btn-icon btn-sm btn-danger" data-toggle="tooltip" data-placement="buttom" onClick={(e) => this.ConfirmationSweetAlert(row, "Are you sure want to delete it.?")}>
                                     <i className="ki ki-close icon-nm"></i>
                                 </a>
                             </OverlayTrigger>
@@ -168,29 +181,12 @@ class ManageCategory extends Component {
                             {/* <OverlayTrigger
                                 placement="bottom"
                                 overlay={<Tooltip>Add Sub-Category</Tooltip>}>
-                                <a className="btn btn-icon btn-sm btn-primary"  data-toggle="modal" data-target="#exampleModal">
-                                    <i className="ki ki-plus icon-nm"></i>
+                                <a className="btn btn-icon btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                    <i className="ki ki-close icon-nm"></i>
                                 </a>
+                            
                             </OverlayTrigger> */}
-                            {/* <div class="modal fade" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <i aria-hidden="true" class="ki ki-close"></i>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Modal</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary font-weight-bold">Save changes</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> */}
+
                         </div>
                     )
                 },
@@ -234,26 +230,60 @@ class ManageCategory extends Component {
                 {this.state.alert}
                 <div className="card-header">
                     <div className="card-title">
-                        <h3 className="card-label">Category</h3>
-                        {this.state.isGettingTags && <Spinner animation="border" variant="primary" />}
+                        <h3 className="card-label">Sub Category</h3>
+                        {this.state.isGettingSubCategory && <Spinner animation="border" variant="primary" />}
                     </div>
                     <div className="card-toolbar">
                         <OverlayTrigger
                             placement="bottom"
-                            overlay={<Tooltip>Add Category</Tooltip>}>
-                            <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/AddCategoryPage">
-                                Add Category
+                            overlay={<Tooltip>Add SubCategory</Tooltip>}>
+                            <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/AddSubCategoryPage">
+                                Add SubCategory
                             </Link>
                         </OverlayTrigger>
                         <div style={{ marginLeft: 20 }}>
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={<Tooltip>Add Category Image</Tooltip>}>
-                                <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/ManageUploadCategoryImage">
-                                    Add Category Image
+                                <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/ManageUploadSubCategoryImage">
+                                    Add Sub-Category Image
                                 </Link>
                             </OverlayTrigger>
                         </div>
+                        {/* <div style={{ marginLeft: 20 }}>
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={<Tooltip>Add Thumbnail Image</Tooltip>}>
+                                <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/AddThumbnailImage">
+                                    Add Thumbnail Image
+                                </Link>
+                            </OverlayTrigger>
+                        </div> */}
+
+                        {/* <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                            Launch demo modal
+                        </button>
+
+                        <div class="modal fade" id="exampleModalLong" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <i aria-hidden="true" class="ki ki-close"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                       <p>Modal</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary font-weight-bold">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> */}
+
                     </div>
                 </div>
 
@@ -262,7 +292,7 @@ class ManageCategory extends Component {
                     <ToolkitProvider
                         bootstrap4
                         keyField='kw_insuranceType_datatable'
-                        data={this.state.tagsData}
+                        data={this.state.subcategoryData}
                         columns={columns}
 
                         search
@@ -284,10 +314,10 @@ class ManageCategory extends Component {
                     <div className="mt-2">
                         <a className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
                             <i className="fas fa-edit icon-nm"></i>
-                        </a> Edit Category &nbsp;&nbsp;&nbsp;
+                        </a> Edit SubCategory &nbsp;&nbsp;&nbsp;
                         <a className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
                             <i className="ki ki-close icon-nm"></i>
-                        </a> Delete Category
+                        </a> Delete SubCategory
                     </div>
                 </div>
             </div>
@@ -300,17 +330,17 @@ function mapStateToProps(state) {
         initialValues: {
 
         },
-        GetCategoryResponse: state.auth.GetCategoryResponse,
-        DeleteCategoryByIdResponse: state.auth.DeleteCategoryByIdResponse,
+        GetSubCategoryResponse: state.auth.GetSubCategoryResponse,
+        DeleteSubCategoryByIdResponse: state.auth.DeleteSubCategoryByIdResponse,
         insuranceTypeResponse: state.auth.insuranceTypeResponse,
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        GetCategory: (data) => dispatch(auth.actions.GetCategory(data)),
-        DeleteCategoryById: (data) => dispatch(auth.actions.DeleteCategoryById(data)),
+        GetSubCategory: (data) => dispatch(auth.actions.GetSubCategory(data)),
+        DeleteSubCategoryById: (data) => dispatch(auth.actions.DeleteSubCategoryById(data)),
         SaveInsuranceType: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageCategory);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageSubCategory);

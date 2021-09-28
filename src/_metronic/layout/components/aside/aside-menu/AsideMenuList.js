@@ -90,27 +90,27 @@ export function AsideMenuList({ layoutProps }) {
           </div>
         </li>
 
-        {/* <li
-          className={`menu-item ${getMenuItemActive("/ManageCategory", true)}`}
+        <li
+          className={`menu-item ${getMenuItemActive("/ManageSubCategory", true)}`}
           aria-haspopup="true"
         >
-          <NavLink className="menu-link" to="/ManageCategory">
+          <NavLink className="menu-link" to="/ManageSubCategory">
             <span className="svg-icon menu-icon">
               <SVG
                 src={toAbsoluteUrl("/media/svg/icons/Layout/Layout-left-panel-2.svg")}
               />
             </span>
-            <span className="menu-text">Category</span>
+            <span className="menu-text">Sub Category</span>
           </NavLink>
           <div className="menu-submenu ">
             <i className="menu-arrow" />
             <ul className="menu-subnav">
 
               <li
-                className={`menu-item ${getMenuItemActive("/AddCategoryPage")}`}
+                className={`menu-item ${getMenuItemActive("/AddSubCategoryPage")}`}
                 aria-haspopup="true" style={{ display: 'none' }}
               >
-                <NavLink className="menu-link" to="/AddCategoryPage">
+                <NavLink className="menu-link" to="/AddSubCategoryPage">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
@@ -118,20 +118,20 @@ export function AsideMenuList({ layoutProps }) {
               </li>
             </ul>
           </div>
-        </li> */}
+        </li>
 
-        <li
-          className={`menu-item ${getMenuItemActive("/UploadImage", true)}`}
+        {/* <li
+          className={`menu-item ${getMenuItemActive("/ManageUploadCategoryImage", true)}`}
           aria-haspopup="true"
         >
-          <NavLink className="menu-link" to="/UploadImage">
+          <NavLink className="menu-link" to="/ManageUploadCategoryImage">
             <span className="svg-icon menu-icon">
               <SVG
                 src={toAbsoluteUrl("/media/svg/icons/Design/Image.svg")}
               />
             </span>
-            <span className="menu-text">Users</span>
-          </NavLink>
+            <span className="menu-text">Image</span>
+          </NavLink> */}
 
           {/* <div className="menu-submenu ">
             <i className="menu-arrow" />
@@ -149,7 +149,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
             </ul>
           </div> */}
-        </li>
+        {/* </li> */}
 
         <li
           className={`menu-item ${getMenuItemActive("/mypage", true)}`}

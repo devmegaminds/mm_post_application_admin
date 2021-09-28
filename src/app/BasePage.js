@@ -9,7 +9,11 @@ import ManageUsersPage from "./pages/Users/ManageUsersPage";
 import ViewUserPage from "./pages/Users/ViewUserPage";
 import AddCategoryPage from "./pages/Category/AddCategoryPage";
 import ManageCategory from "./pages/Category/ManageCategory";
-import UploadImage from "./pages/Image/UploadImage";
+import ManageUploadCategoryImage from "./pages/Image/ManageUploadCategoryImage";
+import ManageUploadSubCategoryImage from "./pages/Image/ManageUploadSubCategoryImage";
+import AddSubCategoryPage from "./pages/SubCategory/AddSubCategoryPage";
+import ManageSubCategory from "./pages/SubCategory/ManageSubCategory";
+import AddThumbnailImage from "./pages/ThumbnailImage/AddThumbnailImage";
 //#endregion
 
 //#region It's Extra Screen
@@ -43,7 +47,12 @@ export default function BasePage() {
                 <ContentRoute path="/ManageCategory" component={ManageCategory} />
                 <ContentRoute path="/AddCategoryPage" component={AddCategoryPage} />
                 {/* Upload Image */}
-                <ContentRoute path="/UploadImage" component={UploadImage} />
+                <ContentRoute path="/ManageUploadCategoryImage" component={ManageUploadCategoryImage} />
+                <ContentRoute path="/ManageUploadSubCategoryImage" component={ManageUploadSubCategoryImage} />
+                {/* Sub Category */}
+                <ContentRoute path="/ManageSubCategory" component={ManageSubCategory} />
+                <ContentRoute path="/AddSubCategoryPage" component={AddSubCategoryPage} />
+                <ContentRoute path="/AddThumbnailImage" component={AddThumbnailImage} />
 
                 {/* Extra Screen */}
                 <ContentRoute path="/Profile" component={Profile} />

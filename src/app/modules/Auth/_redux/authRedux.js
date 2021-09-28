@@ -53,8 +53,27 @@ export const actionTypes = {
 
   GetApplicationInfoById: "[GetApplicationInfoById] Action",
   GetApplicationInfoByIdResponse: "[GetApplicationInfoByIdResponse] Action",
-
   //#endregion Manage Application 
+
+  //#region Manage Image
+  AddImage: "[AddImage] Action",
+  AddImageResponse: "[AddImageResponse] Action",
+  
+  AddSubCategoryImage: "[AddSubCategoryImage] Action",
+  AddSubCategoryImageResponse: "[AddSubCategoryImageResponse] Action",
+
+  AddSubCategoryThumbnailImage: "[AddSubCategoryThumbnailImage] Action",
+  AddSubCategoryThumbnailImageResponse: "[AddSubCategoryThumbnailImageResponse] Action",
+
+  // GetApplication: "[GetApplication] Action",
+  // GetApplicationResponse: "[GetApplicationResponse] Action",
+
+  // DeleteApplicationById: "[DeleteApplicationById] Action",
+  // DeleteApplicationByIdResponse: "[DeleteApplicationByIdResponse] Action",
+
+  // GetApplicationInfoById: "[GetApplicationInfoById] Action",
+  // GetApplicationInfoByIdResponse: "[GetApplicationInfoByIdResponse] Action",
+  //#endregion Manage Image 
 
   //#region Manage Category
   AddCategory: "[AddCategory] Action",
@@ -72,10 +91,23 @@ export const actionTypes = {
   DeleteCategoryById: "[DeleteCategoryById] Action",
   DeleteCategoryByIdResponse: "[DeleteCategoryByIdResponse] Action",
 
-  // GetInsuranceTypes: "[GetInsuranceTypes] Action",
-  // GetInsuranceTypeResponse: "[GetInsuranceTypeResponse] Action",
-
   //#endregion End Manage Category
+
+  //#region Manage SubCategory
+
+  AddSubCategory: "[AddSubCategory] Action",
+  AddSubCategoryResponse: "[AddSubCategoryResponse] Action",
+
+  GetSubCategory: "[GetSubCategory] Action",
+  GetSubCategoryResponse: "[GetSubCategoryResponse] Action",
+
+  DeleteSubCategoryById: "[DeleteSubCategoryById] Action",
+  DeleteSubCategoryByIdResponse: "[DeleteSubCategoryByIdResponse] Action",
+
+  GetSubCategoryInfoById: "[GetSubCategoryInfoById] Action",
+  GetSubCategoryInfoByIdResponse: "[GetSubCategoryInfoByIdResponse] Action",
+
+  //#endregion Manage SubCategory 
 
   //#region Manage Video
   GetVideos: "[GetVideos] Action",
@@ -206,31 +238,6 @@ export const reducer = persistReducer(
 
       //#endregion Manage Carrier
 
-      //#region Insurance Type
-
-      //::For the Save Insurance Type::
-
-//#region 
-      // //:: for the reset insurance type:://
-      // case actionTypes.ResetInsuranceType: {
-      //   const { ResetInsuranceType } = action.payload;
-      //   return { ...state, ResetInsuranceType };
-      // }
-
-      // //:: End reset insurance type:://
-
-      // case actionTypes.DeleteInsuranceTypeById: {
-      //   const RequestParmInsuranceTypeId = action.payload;
-      //   return { ...state, RequestParmInsuranceTypeId };
-      // }
-
-      // case actionTypes.DeleteInsuranceTypeByIdResponse: {
-      //   const DeleteInsuranceTypeByIdResponse = action.payload.DeleteInsuranceTypeByIdResponse && action.payload.DeleteInsuranceTypeByIdResponse;
-      //   return { ...state, DeleteInsuranceTypeByIdResponse };
-      // }
-
-      //#endregion
-
       //#region Manage User
       case actionTypes.GetErrorlogs: {
         const { RequestParmUserData } = action.payload;
@@ -297,6 +304,37 @@ export const reducer = persistReducer(
       }
       //#endregion End Manage Profile 
 
+      //#region Mange Image
+      case actionTypes.AddImage: {
+        debugger
+        const { categoryImage } = action.payload;
+        return { ...state, categoryImage };
+      }
+      case actionTypes.AddImageResponse: {
+        debugger
+        const imageResponse = action.payload.imageResponse.data && action.payload.imageResponse.data;
+        return { ...state, imageResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+      
+      case actionTypes.AddSubCategoryThumbnailImage: {
+        const { thumbnailImage } = action.payload;
+        return { ...state, thumbnailImage };
+      }
+      case actionTypes.AddSubCategoryThumbnailImageResponse: {
+        const thumbnailImageResponse = action.payload.thumbnailImageResponse.data && action.payload.thumbnailImageResponse.data;
+        return { ...state, thumbnailImageResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+      
+      case actionTypes.AddSubCategoryImage: {
+        const { subCategoryImage } = action.payload;
+        return { ...state, subCategoryImage };
+      }
+      case actionTypes.AddSubCategoryImageResponse: {
+        const subCategoryImageResponse = action.payload.subCategoryImageResponse.data && action.payload.subCategoryImageResponse.data;
+        return { ...state, subCategoryImageResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+      //#endregion Manage Image
+
       //#region Manage Application
       //--------------------------------------------------------//
       case actionTypes.AddApplication: {
@@ -326,10 +364,51 @@ export const reducer = persistReducer(
         const DeleteApplicationByIdResponse = action.payload.DeleteApplicationByIdResponse && action.payload.DeleteApplicationByIdResponse;
         return { ...state, DeleteApplicationByIdResponse };
       }
-      
       //--------------------------------------------------------//
 
       //#endregion Manage Application
+
+      //#region Manage Sub Category
+
+      case actionTypes.AddSubCategory: {
+        const { subCategory } = action.payload;
+        return { ...state, subCategory };
+      }
+      case actionTypes.AddSubCategoryResponse: {
+        const subCategoryResponse = action.payload.subCategoryResponse.data && action.payload.subCategoryResponse.data;
+        return { ...state, subCategoryResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+
+      case actionTypes.GetSubCategory: {
+        const { RequestParmSubCategory } = action.payload;
+        return { ...state, RequestParmSubCategory };
+      }
+      case actionTypes.GetSubCategoryResponse: {
+        const GetSubCategoryResponse = action.payload.GetSubCategoryResponse.data && action.payload.GetSubCategoryResponse.data;
+        return { ...state, GetSubCategoryResponse };
+      }
+
+      case actionTypes.DeleteSubCategoryById: {
+        const RequestParmDeleteSubCategoryId = action.payload;
+        return { ...state, RequestParmDeleteSubCategoryId };
+      }
+
+      case actionTypes.DeleteSubCategoryByIdResponse: {
+        const DeleteSubCategoryByIdResponse = action.payload.DeleteSubCategoryByIdResponse && action.payload.DeleteSubCategoryByIdResponse;
+        return { ...state, DeleteSubCategoryByIdResponse };
+      }
+
+      case actionTypes.GetSubCategoryInfoByIdResponse: {
+        const GetSubCategoryInfoByIdResponse = action.payload.GetSubCategoryInfoByIdResponse.data && action.payload.GetSubCategoryInfoByIdResponse.data;
+        return { ...state, GetSubCategoryInfoByIdResponse };
+      }
+
+      case actionTypes.ResetInsuranceTypeResponse: {
+        const GetSubCategoryInfoByIdResponse = action.payload.ResetInsuranceTypeResponse && action.payload.ResetInsuranceTypeResponse;
+        return { ...state, GetSubCategoryInfoByIdResponse };
+      }
+//#endregion Manage Sub Category
+
 
 
       //#region  Manage Category
@@ -372,19 +451,16 @@ export const reducer = persistReducer(
       }
 
       case actionTypes.GetCategoryInfoByIDResponse: {
-
         const GetCategoryInfoByIDResponse = action.payload.GetCategoryInfoByIDResponse.data && action.payload.GetCategoryInfoByIDResponse.data;
         return { ...state, GetCategoryInfoByIDResponse };
       }
 
       case actionTypes.ResetInsuranceTypeResponse: {
-
         const GetCategoryInfoByIDResponse = action.payload.ResetInsuranceTypeResponse && action.payload.ResetInsuranceTypeResponse;
         return { ...state, GetCategoryInfoByIDResponse };
       }
 
       case actionTypes.GetApplicationInfoByIdResponse: {
-
         const GetApplicationInfoByIdResponse = action.payload.GetApplicationInfoByIdResponse.data && action.payload.GetApplicationInfoByIdResponse.data;
         return { ...state, GetApplicationInfoByIdResponse };
       }
@@ -409,7 +485,6 @@ export const reducer = persistReducer(
         return { ...state, getInsuranceTypeByIdResponse };
       }
      
-// -------------
       //#endregion End Manage Category
 
       //#region Manage Videos
@@ -583,9 +658,34 @@ export const actions = {
   DeleteApplicationById: (RequestParmDeleteApplicationId) => ({ type: actionTypes.DeleteApplicationById, payload: { RequestParmDeleteApplicationId } }),
   DeleteApplicationByIdResponse: (DeleteApplicationByIdResponse) => ({ type: actionTypes.DeleteApplicationByIdResponse, payload: { DeleteApplicationByIdResponse } }),
 
-  GetApplicationInfoById: (RequestCategoryInfoByID) => ({ type: actionTypes.GetApplicationInfoById, payload: { RequestCategoryInfoByID } }),
+  GetApplicationInfoById: (RequestApplicationInfoByID) => ({ type: actionTypes.GetApplicationInfoById, payload: { RequestApplicationInfoByID } }),
   GetApplicationInfoByIdResponse: (GetApplicationInfoByIdResponse) => ({ type: actionTypes.GetApplicationInfoByIdResponse, payload: { GetApplicationInfoByIdResponse } }),
   //#endregion Manage Application
+  
+  //#region Manage Image
+  AddImage: (categoryImage) => ({ type: actionTypes.AddImage, payload: { categoryImage } }),
+  AddImageResponse: (imageResponse) => ({ type: actionTypes.AddImageResponse, payload: { imageResponse } }),
+
+  AddSubCategoryThumbnailImage: (thumbnailImage) => ({ type: actionTypes.AddSubCategoryThumbnailImage, payload: { thumbnailImage } }),
+  AddSubCategoryThumbnailImageResponse: (thumbnailImageResponse) => ({ type: actionTypes.AddImageResponse, payload: { thumbnailImageResponse } }),
+
+  AddSubCategoryImage: (subCategoryImage) => ({ type: actionTypes.AddSubCategoryImage, payload: { subCategoryImage } }),
+  AddSubCategoryImageResponse: (subCategoryImageResponse) => ({ type: actionTypes.AddSubCategoryImageResponse, payload: { subCategoryImageResponse } }),
+  //#endregion Manage Image
+
+  //#region Manage Sub Category
+  AddSubCategory: (subCategory) => ({ type: actionTypes.AddSubCategory, payload: { subCategory } }),
+  AddSubCategoryResponse: (subCategoryResponse) => ({ type: actionTypes.AddSubCategoryResponse, payload: { subCategoryResponse } }),
+
+  GetSubCategory: (RequestParmSubCategory) => ({ type: actionTypes.GetSubCategory, payload: { RequestParmSubCategory } }),
+  GetSubCategoryResponse: (GetSubCategoryResponse) => ({ type: actionTypes.GetSubCategoryResponse, payload: { GetSubCategoryResponse } }),
+
+  DeleteSubCategoryById: (RequestParmDeleteSubCategoryId) => ({ type: actionTypes.DeleteSubCategoryById, payload: { RequestParmDeleteSubCategoryId } }),
+  DeleteSubCategoryByIdResponse: (DeleteSubCategoryByIdResponse) => ({ type: actionTypes.DeleteSubCategoryByIdResponse, payload: { DeleteSubCategoryByIdResponse } }),
+
+  GetSubCategoryInfoById: (RequestSubCategoryInfoById) => ({ type: actionTypes.GetSubCategoryInfoById, payload: { RequestSubCategoryInfoById } }),
+  GetSubCategoryInfoByIdResponse: (GetSubCategoryInfoByIdResponse) => ({ type: actionTypes.GetSubCategoryInfoByIdResponse, payload: { GetSubCategoryInfoByIdResponse } }),
+  //#endregion Manage Sub Category
 
   //#region  Manage Category
   AddCategory: (category) => ({ type: actionTypes.AddCategory, payload: { category } }),
@@ -603,30 +703,9 @@ export const actions = {
   DeleteCategoryById: (RequestParmDeleteCategoryId) => ({ type: actionTypes.DeleteCategoryById, payload: { RequestParmDeleteCategoryId } }),
   DeleteCategoryByIdResponse: (DeleteCategoryByIdResponse) => ({ type: actionTypes.DeleteCategoryByIdResponse, payload: { DeleteCategoryByIdResponse } }),
 
-  GetCategoryInfoByID: (RequestCategoryInfoByID) => ({ type: actionTypes.GetCategoryInfoByID, payload: { RequestCategoryInfoByID } }),
+  GetCategoryInfoByID: (RequestApplicationInfoByID) => ({ type: actionTypes.GetCategoryInfoByID, payload: { RequestApplicationInfoByID } }),
   GetCategoryInfoByIDResponse: (GetCategoryInfoByIDResponse) => ({ type: actionTypes.GetCategoryInfoByIDResponse, payload: { GetCategoryInfoByIDResponse } }),
   //#endregion End Manage Category
-
-  //#region Manage Videos
-  // GetVideos: (RequestParmVideo) => ({ type: actionTypes.GetVideos, payload: { RequestParmVideo } }),
-  // GetVideosResponse: (GetVideosResponse) => ({ type: actionTypes.GetVideosResponse, payload: { GetVideosResponse } }),
-
-  // GetVideoById: (RequestParmVideoByIdData) => ({ type: actionTypes.GetVideoById, payload: { RequestParmVideoByIdData } }),
-  // GetVideoByIdResponse: (GetVideoByIdResponse) => ({ type: actionTypes.GetVideoByIdResponse, payload: { GetVideoByIdResponse } }),
-
-  // GetMasterTags: (RequestParmTagData) => ({ type: actionTypes.GetMasterTags, payload: { RequestParmTagData } }),
-  // GetMasterTagsResponse: (GetMasterTagsResponse) => ({ type: actionTypes.GetMasterTagsResponse, payload: { GetMasterTagsResponse } }),
-
-  // ResetVideo: (ResetVideo) => ({ type: actionTypes.ResetVideo, payload: { ResetVideo } }),
-  // ResetVideoResponse: (ResetVideoResponse) => ({ type: actionTypes.ResetVideoResponse, payload: { ResetVideoResponse } }),
-
-  // AddEditVideo: (addeditVideo) => ({ type: actionTypes.AddEditVideo, payload: { addeditVideo } }),
-  // AddEditVideoResponse: (addEditVideoResponse) => ({ type: actionTypes.AddEditVideoResponse, payload: { addEditVideoResponse } }),
-
-  // DeleteVideoById: (RequestParmDeleteVideoId) => ({ type: actionTypes.DeleteVideoById, payload: { RequestParmDeleteVideoId } }),
-  // DeleteVideoByIdResponse: (DeleteVideoByIdResponse) => ({ type: actionTypes.DeleteVideoByIdResponse, payload: { DeleteVideoByIdResponse } }),
-  //#endregion End Manage Videos
-
 
 };
 
@@ -678,17 +757,6 @@ export function* saga() {
 
   });
 
-  yield takeLatest(actionTypes.GetApplicationInfoById, function* GetApplicationInfoByIDRequest(payload) {
-    const response = yield call(GetApplicationInfoByIDRequestedApi, payload.payload);
-    yield put(actions.GetApplicationInfoByIdResponse(response));
-
-  });
-  // yield takeLatest(actionTypes.GetInsuranceTypes, function* getInsuranceTypeRequested(payload) {
-  //   const response = yield call(getInsuranceTypeRequestedApi, payload.payload);
-  //   yield put(actions.GetInsuranceTypeResponse(response));
-
-  // });
-
   yield takeLatest(actionTypes.GetCategoryById, function* GetInsuranceTypeByIdRequest(payload) {
     const response = yield call(getCategoryByIdRequestedApi, payload.payload);
     yield put(actions.GetCategoryByIdResponse(response));
@@ -708,6 +776,26 @@ export function* saga() {
 
   //#endregion Manage Category
 
+  //#region Manage Image 
+  yield takeLatest(actionTypes.AddImage, function* addImageRequested(payload) {
+    const response = yield call(addCategoryImageRequestApi, payload.payload);
+    if (response)
+      yield put(actions.AddImageResponse(response));
+  });
+ 
+  yield takeLatest(actionTypes.AddSubCategoryThumbnailImage, function* addSubCategoryThumbnailImageRequested(payload) {
+    const response = yield call(addSubCategoryThumbnailImageRequestApi, payload.payload);
+    if (response)
+      yield put(actions.AddSubCategoryThumbnailImageResponse(response));
+  });
+ 
+  yield takeLatest(actionTypes.AddSubCategoryImage, function* addSubCategoryImageRequested(payload) {
+    const response = yield call(addSubCategoryImageRequestApi, payload.payload);
+    if (response)
+      yield put(actions.AddSubCategoryImageResponse(response));
+  });
+  //#endregion Manage Image
+
   //#region Manage Application
   yield takeLatest(actionTypes.AddApplication, function* addApplicationRequested(payload) {
     const response = yield call(addApplicationRequestApi, payload.payload);
@@ -725,52 +813,41 @@ export function* saga() {
     if (response)
       yield put(actions.DeleteApplicationByIdResponse(response));
   });
+
+  yield takeLatest(actionTypes.GetApplicationInfoById, function* GetApplicationInfoByIDRequest(payload) {
+    const response = yield call(GetApplicationInfoByIDRequestedApi, payload.payload);
+    yield put(actions.GetApplicationInfoByIdResponse(response));
+  });
   //#endregion Mange Application
 
+  //#region Manage Sub Category
+  yield takeLatest(actionTypes.AddSubCategory, function* addSubCategoryRequested(payload) {
+    const response = yield call(addSubCategoryRequestApi, payload.payload);
+    if (response)
+      yield put(actions.AddSubCategoryResponse(response));
+  });
+  yield takeLatest(actionTypes.GetSubCategory, function* getSubCategoryRequested(payload) {
+    const response = yield call(getSubCategoryRequestedApi, payload.payload);
+    yield put(actions.GetSubCategoryResponse(response));
+  });
 
-  //#region Manage Videos
-  // yield takeLatest(actionTypes.GetVideos, function* getVideosRequested(payload) {
-  //   const response = yield call(getVdeosRequestedApi, payload.payload);
-  //   yield put(actions.GetVideosResponse(response));
+  yield takeLatest(actionTypes.DeleteSubCategoryById, function* deleteSubCategoryRequested(payload) {
+    const response = yield call(deleteSubCategoryApi, payload.payload);
+    if (response)
+      yield put(actions.DeleteSubCategoryByIdResponse(response));
+  });
 
-  // });
-
-  // yield takeLatest(actionTypes.GetVideoById, function* GetVideoByIdRequest(payload) {
-  //   const response = yield call(getVideoByIdRequestedApi, payload.payload);
-  //   yield put(actions.GetVideoByIdResponse(response));
-
-  // });
-
-  // yield takeLatest(actionTypes.GetMasterTags, function* GetTagsRequested(payload) {
-  //   const response = yield call(getmasterTagsRequestedApi, payload.payload);
-  //   yield put(actions.GetMasterTagsResponse(response));
-
-  // });
+  yield takeLatest(actionTypes.GetSubCategoryInfoById, function* GetSubCategoryInfoByIDRequest(payload) {
+    const response = yield call(GetSubCategoryInfoByIDRequestedApi, payload.payload);
+    yield put(actions.GetSubCategoryInfoByIdResponse(response));
+  });
+  //#endregion Mange Sub Category
 
   yield takeLatest(actionTypes.ResetVideo, function* ResetVideosRequested(payload) {
 
     yield put(actions.ResetVideoResponse(payload.payload.GetVideoByIdResponse));
 
   });
-
-  // yield takeLatest(actionTypes.AddEditVideo, function* addEditRequested(payload) {
-  //   const response = yield call(addEditVideoRequestApi, payload.payload);
-  //   if (response.status == 200) {
-  //     yield put(actions.AddEditVideoResponse(response));
-  //     sendNotificationApi(payload.payload)
-  //     console.log('true');
-  //   } else {
-  //     console.log('fail');
-  //   }
-  // });
-
-  // yield takeLatest(actionTypes.DeleteVideoById, function* deleteVideoRequested(payload) {
-  //   const response = yield call(deleteVideoRequestApi, payload.payload);
-  //   if (response)
-  //     yield put(actions.DeleteVideoByIdResponse(response));
-  // });
-
-  //#endregion End Manage Videos
 }
 
 //#region Manage Profile 
@@ -788,20 +865,7 @@ const getUserDataRequestApi = async (payload) => {
   return respo;
 };
 
-const getUseFavoriteVideoDataRequestApi = async (payload) => {
-  debugger
-  var data = payload.userFavoriteData;
-  const instance = await axios.create({
-  });
-  const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
-  };
-  const respo = instance.post(`${BASE_URL}video/FetchUserTagsVideos`, data, options)
-    .catch((e) => {
-      return e.response;
-    });
-  return respo;
-};
+
 
 const updateProfileRequestApi = async (payload) => {
   var data = payload.profile;
@@ -857,84 +921,6 @@ const getCategoryByIdRequestedApi = async (payload) => {
   return respo;
 };
 
-
-const getInsuranceTypeRequestedApi = async (payload) => {
-  var data = payload.RequestParmInsuranceTypeName;
-  const instance = await axios.create({
-  });
-  const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
-    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
-  };
-  //const respo = instance.get(`${BASE_URL}admin/InsuranceType/GetInsuranceTypes?InsuranceTypeName=${data}&stClientTimeZone=${usertimezone}`, options);
-  const respo = instance.get(`${BASE_URL}Tag/FetchTags?stSearch=${data}`, options);
-  return respo;
-};
-
-const getVdeosRequestedApi = async (payload) => {
-  var data = payload.RequestParmVideo;
-  const instance = await axios.create({
-  });
-  const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
-    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
-  };
-  const respo = instance.get(`${BASE_URL}video/FetchVideos?stSearch=${data}`, options);
-  return respo;
-};
-const getVideoByIdRequestedApi = async (payload) => {
-  var data = payload.RequestParmVideoByIdData;
-  const instance = await axios.create({
-  });
-  const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
-    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
-  };
-  const respo = instance.get(`${BASE_URL}video/GetVideoById?inVideoId=${data}`, options);
-  return respo;
-};
-
-const getmasterTagsRequestedApi = async (payload) => {
-  const instance = await axios.create({
-  });
-  const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
-    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
-  };
-  const respo = instance.get(`${BASE_URL}video/GetTags`, options);
-  return respo;
-};
-
-const addEditVideoRequestApi = async (payload) => {
-  var data = payload.addeditVideo;
-  const instance = await axios.create({
-  });
-  const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
-    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }
-  };
-  const respo = instance.post(`${BASE_URL}video/saveVideo`, data, options)
-    .catch((e) => {
-      return e.response;
-    });
-  return respo;
-};
-
-const deleteVideoRequestApi = async (payload) => {
-  var data = payload.RequestParmDeleteVideoId;
-  const instance = await axios.create({
-  });
-  const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
-  };
-  const respo = instance.delete(`${BASE_URL}video/DeleteVideo?inVideoId=${data}`, options)
-    .catch((e) => {
-      return e.response;
-    });
-  return respo;
-};
-
-
 const deleteCategoryApi = async (payload) => {
   var data = payload.RequestParmDeleteCategoryId;
   console.log(data,"::::::::");
@@ -951,8 +937,7 @@ const deleteCategoryApi = async (payload) => {
 };
 
 const GetCategoryInfoByIDRequestedApi = async (payload) => {
-  var data = payload.RequestCategoryInfoByID;
-  console.log(data,"??????");
+  var data = payload.RequestApplicationInfoByID;
   const instance = await axios.create({
   });
   const options = {
@@ -968,23 +953,72 @@ const GetCategoryInfoByIDRequestedApi = async (payload) => {
 //#endregion End Manage Category
 
 //#region 
-const sendNotificationApi = async (payload) => {
-  var data = payload.addeditVideo;
+// const sendNotificationApi = async (payload) => {
+//   var data = payload.addeditVideo;
+//   const instance = await axios.create({
+//   });
+//   const options = {
+//     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
+//     //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }
+//   };
+//   const respo = instance.post(`${BASE_URL}Notification/Send`, data, options)
+//     .catch((e) => {
+//       return e.response;
+//     });
+//   return respo;
+// };
+//#endregion
+
+//#region Manage Image
+const addCategoryImageRequestApi = async (payload) => {
+  debugger
+  var data = payload.categoryImage;
   const instance = await axios.create({
   });
   const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
-    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  const respo = instance.post(`${BASE_URL}Notification/Send`, data, options)
+  console.log(data,"????????????");
+  const respo = instance.post(`${BASE_URL}Image/addEditImage`, data, options)
+    .catch((e) => {
+      return e.response;
+    });
+  console.log(respo, "??>>>????");
+  return respo;
+};
+
+const addSubCategoryImageRequestApi = async (payload) => {
+  var data = payload.subCategoryImage;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.post(`${BASE_URL}Image/addEditSubCategroyImage`, data, options)
     .catch((e) => {
       return e.response;
     });
   return respo;
 };
-//#endregion
 
+const addSubCategoryThumbnailImageRequestApi = async (payload) => {
+  debugger
+  var data = payload.thumbnailImage;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  console.log(data,"????????????");
+  const respo = instance.post(`${BASE_URL}Image/AddEditSubCategoryThumbnailImage`, data, options)
+    .catch((e) => {
+      return e.response;
+    });
+  console.log(respo, "??>>>????");
+  return respo;
+};
 
+//#endregion Manage Image
 //#region Manage Application
 const addApplicationRequestApi = async (payload) => {
   var data = payload.application;
@@ -1029,8 +1063,7 @@ const deleteApplicationApi = async (payload) => {
 };
 
 const GetApplicationInfoByIDRequestedApi = async (payload) => {
-  var data = payload.RequestCategoryInfoByID;
-  console.log(data,"??????");
+  var data = payload.RequestApplicationInfoByID;
   const instance = await axios.create({
   });
   const options = {
@@ -1041,3 +1074,61 @@ const GetApplicationInfoByIDRequestedApi = async (payload) => {
   return respo;
 };
 //#endregion Manage Application
+
+//#region Manage Sub Category
+const addSubCategoryRequestApi = async (payload) => {
+  var data = payload.subCategory;
+  console.log(data,"????????????");
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.post(`${BASE_URL}SubCategory/addEditSubCategory`, data, options)
+    .catch((e) => {
+      return e.response;
+    });
+  console.log(respo, "??>>>????");
+  return respo;
+};
+
+const getSubCategoryRequestedApi = async (payload) => {
+  debugger
+  var data = payload.GetSubCategoryResponse;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
+  };
+  const respo = instance.get(`${BASE_URL}SubCategory/GetAllSubCategory`, options);
+  return respo;
+};
+
+const deleteSubCategoryApi = async (payload) => {
+  var data = payload.RequestParmDeleteSubCategoryId;
+  console.log(data,"::::::::");
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.delete(`${BASE_URL}SubCategory/DeleteSubCategory?inSubCategoryId=${data}&inModifiedBy=22`, options)
+    .catch((e) => {
+      return e.response;
+    });
+  return respo;
+};
+
+const GetSubCategoryInfoByIDRequestedApi = async (payload) => {
+  var data = payload.RequestSubCategoryInfoById;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.get(`${BASE_URL}SubCategory/GetSubCategoryById?inSubCategoryId=${data}`, options);
+  console.log(respo,">>>>>");
+  return respo;
+};
+//#endregion Manage Sub Category
