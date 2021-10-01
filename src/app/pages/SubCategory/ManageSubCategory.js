@@ -31,7 +31,7 @@ class ManageSubCategory extends Component {
         this.props.history.push(`/AddSubCategoryPage/${row.inSubCategoryId}`)
     }
 
-    handleEdit(row) {
+    handleImage(row) {
         this.props.history.push(`/AddThumbnailImage/${row.inSubCategoryId}`)
     }
 
@@ -166,7 +166,7 @@ class ManageSubCategory extends Component {
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={<Tooltip>Add Image</Tooltip>}>
-                                <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }} onClick={(e) => this.handleEdit(row)}>
+                                <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }} onClick={(e) => this.handleImage(row)}>
                                     <i className="fas fa-edit icon-nm"></i>
                                 </a>
                             </OverlayTrigger>

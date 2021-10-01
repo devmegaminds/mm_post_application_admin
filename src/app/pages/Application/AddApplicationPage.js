@@ -46,10 +46,11 @@ class AddApplicationPage extends Component {
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
+        debugger
         this.setState({ isLoading: true });
         var data = {
             inApplicationId: formValues.inApplicationId == undefined || formValues.inApplicationId == "" ? 0 : formValues.inApplicationId,
-            stApplicationName: formValues.stApplicationName,
+            stApplicationName: formValues.stApplication,
             inCreatedBy: this.state.currentUserData.inUserID
         }
         //this.props.SaveTag(data);
@@ -211,17 +212,16 @@ class AddApplicationPage extends Component {
 }
 
 AddApplicationPage = reduxForm({
-    form: 'Category',
+    form: 'Application',
     validate,
     enableReinitialize: true,
     destroyOnUnmount: true
 })(AddApplicationPage);
 function mapStateToProps(state) {
-    debugger
     return {
         initialValues: {
-            inApplicationId: state.auth.GetApplicationInfoByIdResponse != undefined && state.auth.GetApplicationInfoByIdResponse.data != undefined ? state.auth.GetApplicationInfoByIdResponse.data[0].inApplicationId : "",
-            stApplication: state.auth.GetApplicationInfoByIdResponse != undefined && state.auth.GetApplicationInfoByIdResponse.data != undefined ? state.auth.GetApplicationInfoByIdResponse.data[0].stAppplicationName : ""
+            inApplicationId: state.auth.GetApplicationInfoByIdResponse != undefined && state.auth.GetApplicationInfoByIdResponse.data != undefined ? state.auth.GetApplicationInfoByIdResponse.data[0]?.inApplicationId : "",
+            stApplication: state.auth.GetApplicationInfoByIdResponse != undefined && state.auth.GetApplicationInfoByIdResponse.data != undefined ? state.auth.GetApplicationInfoByIdResponse.data[0]?.stAppplicationName : ""
 
         },
         // insuranceTypeResponse: state.auth.insuranceTypeResponse,

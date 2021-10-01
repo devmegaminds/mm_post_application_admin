@@ -51,7 +51,8 @@ class AddSubCategoryPage extends Component {
         var data = {
             inSubCategoryId: formValues.inSubCategoryId == undefined || formValues.inSubCategoryId == "" ? 0 : formValues.inSubCategoryId,
             stSubCategoryName: formValues.stSubCategoryName,
-            inCategoryId: "12",
+            // inCategoryId: "12",
+            inCategoryId: formValues.ID,
             inCreatedBy: this.state.currentUserData.inUserID
         }
         //this.props.SaveTag(data);
@@ -163,6 +164,12 @@ class AddSubCategoryPage extends Component {
                                     placeholder="Enter SubCategory Name"
                                     component={renderFields}
                                 />
+                                <Field
+                                    type="text"
+                                    name="ID"
+                                    placeholder="ID"
+                                    component={renderFields}
+                                />
                             </div>
                         </div>
 
@@ -219,6 +226,7 @@ AddSubCategoryPage = reduxForm({
 })(AddSubCategoryPage);
 
 function mapStateToProps(state) {
+    console.log(state.auth.GetSubCategoryInfoByIdResponse,":::::");
     return {
         initialValues: {
             inSubCategoryId: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0].inSubCategoryId : "",

@@ -71,8 +71,7 @@ export const actionTypes = {
   // DeleteApplicationById: "[DeleteApplicationById] Action",
   // DeleteApplicationByIdResponse: "[DeleteApplicationByIdResponse] Action",
 
-  // GetApplicationInfoById: "[GetApplicationInfoById] Action",
-  // GetApplicationInfoByIdResponse: "[GetApplicationInfoByIdResponse] Action",
+ 
   //#endregion Manage Image 
 
   //#region Manage Category
@@ -133,8 +132,8 @@ export const actionTypes = {
 
 };
 
-// const BASE_URL = "http://megaminds-001-site9.itempurl.com/api/";
-const BASE_URL = "http://localhost:4200/api/"
+const BASE_URL = "http://megaminds-001-site12.itempurl.com/api/"
+// const BASE_URL = "http://localhost:4200/api/"
 
 
 const initialAuthState = {
@@ -464,12 +463,10 @@ export const reducer = persistReducer(
         const GetApplicationInfoByIdResponse = action.payload.GetApplicationInfoByIdResponse.data && action.payload.GetApplicationInfoByIdResponse.data;
         return { ...state, GetApplicationInfoByIdResponse };
       }
-
-      // case actionTypes.ResetInsuranceTypeResponse: {
-
-      //   const GetCategoryInfoByIDResponse = action.payload.ResetInsuranceTypeResponse && action.payload.ResetInsuranceTypeResponse;
-      //   return { ...state, GetCategoryInfoByIDResponse };
-      // }
+      case actionTypes.ResetInsuranceTypeResponse: {
+        const GetApplicationInfoByIdResponse = action.payload.ResetInsuranceTypeResponse && action.payload.ResetInsuranceTypeResponse;
+        return { ...state, GetApplicationInfoByIdResponse };
+      }
 
       case actionTypes.GetInsuranceTypes: {
         const { RequestParmInsuranceTypeName } = action.payload;
@@ -789,6 +786,7 @@ export function* saga() {
       yield put(actions.AddSubCategoryThumbnailImageResponse(response));
   });
  
+  debugger
   yield takeLatest(actionTypes.AddSubCategoryImage, function* addSubCategoryImageRequested(payload) {
     const response = yield call(addSubCategoryImageRequestApi, payload.payload);
     if (response)
@@ -987,18 +985,22 @@ const addCategoryImageRequestApi = async (payload) => {
   return respo;
 };
 
+debugger
 const addSubCategoryImageRequestApi = async (payload) => {
   var data = payload.subCategoryImage;
+  console.log(data,"DATA");
   const instance = await axios.create({
   });
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
+  debugger
   const respo = instance.post(`${BASE_URL}Image/addEditSubCategroyImage`, data, options)
     .catch((e) => {
       return e.response;
     });
-  return respo;
+    console.log(respo,"}}}}}}}");
+    return respo;
 };
 
 const addSubCategoryThumbnailImageRequestApi = async (payload) => {

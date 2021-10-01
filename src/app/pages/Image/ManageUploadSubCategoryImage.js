@@ -76,11 +76,17 @@ export default function ManageUploadCategoryImage({ navigation }) {
   // }
   var currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
   const onSubmit = (formValues) => {
+    debugger
     var data = {
         inSubCategoryImageId: formValues.inSubCategoryImageId == undefined || formValues.inSubCategoryImageId == "" ? 0 : formValues.inSubCategoryImageId,
         stImageDatabase64: baseImage.split(',')[1],
-        inSubCategoryId: "13",
+        inSubCategoryId: "32",
         inCreatedBy: currentUserData.inUserID
+
+      //   "inSubCategoryImageId": 0,
+      // "stImageDatabase64": "string",
+      // "inSubCategoryId": 0,
+      // "inCreatedBy": 0
     }
     dispatch(auth.actions.AddSubCategoryImage(data))
   }

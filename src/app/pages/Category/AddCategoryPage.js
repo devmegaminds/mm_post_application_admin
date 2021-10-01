@@ -100,7 +100,6 @@ class AddCategoryPage extends Component {
         })
     }
     componentDidMount() {
-        debugger
         var id = window.location.href.split("/").pop();
         if (id != "Category")
             this.props.GetCategoryInfoByID(id)
@@ -220,11 +219,10 @@ AddCategoryPage = reduxForm({
 })(AddCategoryPage);
 
 function mapStateToProps(state) {
-    debugger
     return {
         initialValues: {
-            inCategoryId: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0].inCategoryId : "",
-            stCategoryName: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0].stCategoryName : ""
+            inCategoryId: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0]?.inCategoryId : "",
+            stCategoryName: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0]?.stCategoryName : ""
 
         },
         // insuranceTypeResponse: state.auth.insuranceTypeResponse,

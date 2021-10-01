@@ -6,8 +6,8 @@ export const REQUEST_PASSWORD_URL = "api/auth/forgot-password";
 
 
 export const ME_URL = "api/me";
-//const BASE_URL = "http://megaminds-001-site9.itempurl.com/api/"
-const BASE_URL = "http://localhost:4200/api/"
+const BASE_URL = "http://megaminds-001-site12.itempurl.com/api/"
+// const BASE_URL = "http://localhost:4200/api/"
 export function login(email, password) {
   var data = {
     "stEmail": email,
