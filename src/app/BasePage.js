@@ -5,7 +5,7 @@ import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 import DashboardPage from "./pages/DashboardPage";
 import AddApplicationPage from "./pages/Application/AddApplicationPage";
 import ManageApplication from "./pages/Application/ManageApplication";
-import ManageUsersPage from "./pages/Users/ManageUsersPage";
+// import ManageUsersPage from "./pages/Users/ManageUsersPage";
 import ViewUserPage from "./pages/Users/ViewUserPage";
 import AddCategoryPage from "./pages/Category/AddCategoryPage";
 import ManageCategory from "./pages/Category/ManageCategory";
@@ -14,6 +14,7 @@ import ManageUploadSubCategoryImage from "./pages/Image/ManageUploadSubCategoryI
 import AddSubCategoryPage from "./pages/SubCategory/AddSubCategoryPage";
 import ManageSubCategory from "./pages/SubCategory/ManageSubCategory";
 import AddThumbnailImage from "./pages/ThumbnailImage/AddThumbnailImage";
+import ManageUsersPage from "./pages/Users/ManageUsersPage"
 //#endregion
 
 //#region It's Extra Screen

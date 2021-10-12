@@ -46,7 +46,6 @@ class AddCategoryPage extends Component {
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
-        debugger
         this.setState({ isLoading: true });
         var data = {
             inCategoryId: formValues.inCategoryId == undefined || formValues.inCategoryId == "" ? 0 : formValues.inCategoryId,

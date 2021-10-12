@@ -152,10 +152,10 @@ export function AsideMenuList({ layoutProps }) {
         {/* </li> */}
 
         <li
-          className={`menu-item ${getMenuItemActive("/mypage", true)}`}
+          className={`menu-item ${getMenuItemActive("/ManageUsersPage", true)}`}
           aria-haspopup="true"
         >
-          <NavLink className="menu-link" to="/mypage">
+          <NavLink className="menu-link" to="/ManageUsersPage">
             <span className="svg-icon menu-icon">
               <SVG
                 src={toAbsoluteUrl("/media/svg/icons/Communication/Shield-user.svg")}
@@ -164,7 +164,7 @@ export function AsideMenuList({ layoutProps }) {
             <span className="menu-text">Users</span>
           </NavLink>
 
-          <div className="menu-submenu ">
+          {/* <div className="menu-submenu ">
             <i className="menu-arrow" />
             <ul className="menu-subnav">
 
@@ -179,7 +179,7 @@ export function AsideMenuList({ layoutProps }) {
                 </NavLink>
               </li>
             </ul>
-          </div>
+          </div> */}
         </li>
 
         {/* <li

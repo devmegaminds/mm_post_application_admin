@@ -46,7 +46,6 @@ class AddApplicationPage extends Component {
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
-        debugger
         this.setState({ isLoading: true });
         var data = {
             inApplicationId: formValues.inApplicationId == undefined || formValues.inApplicationId == "" ? 0 : formValues.inApplicationId,
@@ -147,7 +146,6 @@ class AddApplicationPage extends Component {
         if (this.state.isRedirect) {
             return <Redirect to="/ManageApplication" />
         }
-        debugger
         return (
             <div className="card card-custom gutter-b example example-compact">
                 {this.state.alert}

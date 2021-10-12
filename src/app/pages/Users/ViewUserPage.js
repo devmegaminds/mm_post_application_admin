@@ -27,8 +27,6 @@ class ViewUserPage extends Component {
         }
     }
     componentWillReceiveProps(nextProps) {
-        debugger
-
         if (nextProps.GetUserByIdResponse) {
             if (nextProps.GetUserByIdResponse && nextProps.GetUserByIdResponse != this.props.GetUserByIdResponse) {
                 if (nextProps.GetUserByIdResponse.statusCode == 200) {
@@ -63,7 +61,6 @@ class ViewUserPage extends Component {
         // }
     }
     componentDidMount() {
-        debugger
         var id = window.location.href.split("/").pop();
         if (id != "view") {
             this.setState({ isGettingTags: true })

@@ -132,7 +132,7 @@ class ManageCategory extends Component {
             //#region Index of the Application list
             { dataField: 'inCategoryId', text: 'Category Number', hidden: false },
             { dataField: 'stCategoryName', text: 'Category Name', sort: true },
-            { dataField: 'inCreatedBy', text: 'CreatedBy', sort: true },
+            // { dataField: 'inCreatedBy', text: 'CreatedBy', sort: true },
             // { dataField: 'flgIsActive', text: 'Is Active', sort: false },
             {
                 dataField: 'dtCreatedOn', text: 'Created Date', sort: false,

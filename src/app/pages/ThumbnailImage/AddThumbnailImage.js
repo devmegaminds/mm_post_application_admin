@@ -48,11 +48,10 @@ class AddThumbnailImage extends Component {
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
-        debugger
         this.setState({ isLoading: true });
         var data = {
             // inSubCategoryThumbnailImageId:3,
-           inSubCategoryThumbnailImageId: formValues.inSubCategoryThumbnailImageId == undefined || formValues.inSubCategoryThumbnailImageId == "" ? 0 : formValues.inSubCategoryThumbnailImageId,
+            inSubCategoryThumbnailImageId: formValues.inSubCategoryThumbnailImageId == undefined || formValues.inSubCategoryThumbnailImageId == "" ? 0 : formValues.inSubCategoryThumbnailImageId,
             stImageDatabase64: this.state.baseImage.split(',')[1],
             inSubCategoryId: this.state.subCategoryId,
         }

@@ -41,7 +41,6 @@ class ManageSubCategory extends Component {
         this.props.DeleteSubCategoryById(row.inSubCategoryId)
     }
     componentDidMount() {
-        debugger
         this.setState({ isGettingSubCategory: true })
         this.props.GetSubCategory("");
     }
@@ -136,10 +135,8 @@ class ManageSubCategory extends Component {
         const columns = [
             //#region Index of the Sub Category list
             { dataField: 'inSubCategoryId', text: 'SubCategory Number', hidden: false },
-            { dataField: 'stSubCategoryName', text: 'SubCategory Name', sort: true },
-            { dataField: 'inCategoryId', text: 'Category ID', sort: true },
-            { dataField: 'inCreatedBy', text: 'CreatedBy', sort: true },
-            // { dataField: 'flgIsActive', text: 'Is Active', sort: false },
+            { dataField: 'stSubCategoryName', text: 'SubCategory', sort: true },
+            { dataField: 'stCategoryName', text: 'Category', sort: true },
             {
                 dataField: 'dtCreatedOn', text: 'Created Date', sort: false,
                 formatter: (cell) => {

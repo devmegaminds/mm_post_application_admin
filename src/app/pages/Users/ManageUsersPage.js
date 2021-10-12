@@ -1,37 +1,52 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl, checkIsActive } from "../../../_metronic/_helpers";
 import BootstrapTable from 'react-bootstrap-table-next';
-import paginationFactory, {
-    PaginationProvider,
-} from "react-bootstrap-table2-paginator"
-import * as auth from "../../../app/modules/Auth/_redux/authRedux";
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.css';
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
+import { Link } from "react-router-dom";
+import * as auth from "../../modules/Auth/_redux/authRedux";
+//import * as manageTagRedux from "../../modules/Auth/_redux/manageTagRedux";
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
-import Spinner from 'react-bootstrap/Spinner'
-import moment from 'moment';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import SweetAlert from 'react-bootstrap-sweetalert';
+import moment from 'moment';
+import { stubFalse } from 'lodash';
+import Spinner from 'react-bootstrap/Spinner'
+import paginationFactory, { PaginationProvider } from 'react-bootstrap-table2-paginator';
 import { Pagination } from "../pagination/Pagination";
-import { Formik } from "formik";
-class ManageUsersPage extends Component {
+
+class ManageSubCategory extends Component {
     constructor(props) {
         super();
         this.state = {
             pageNumber: 1,
-            pageSize: 5,
-            listLoading: true,
-            page_Limit: 10,
-            Offset_value: 1,
-            Sort_Column: "dtCreatedOn",
-            Sort_Order: "DESC",
+            // subcategoryData: [],
             userResponseData: [],
-            userRquestData: {
-                "stSearchText": "",
-                "stSortColumn": "dtCreatedOn",
-                "stSortOrder": "DESC",
-                "inOffset": 1,
-                "inLimit": 10
-            },
-            isGettingListData: false
+            isGettingListData: false,
         }
+    }
+
+    handleView(row) {
+        this.props.history.push(`/ViewUserPage/${row.inUserID}`)
+    }
+
+    hideModel = () => {
+        this.setState({
+            alert: '',
+            showModal: false,
+        })
+    }
+
+    // handleDelete(row) {
+    //     if (row != null)
+    //         this.hideAlert(false);
+    //     this.props.DeleteSubCategoryById(row.inSubCategoryId)
+    // }
+    componentDidMount() {
+        this.setState({ isGettingListData: true })
+        this.props.GetUsers("");
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.GetUserDataResponse) {
@@ -55,238 +70,235 @@ class ManageUsersPage extends Component {
             }
         }
     }
-    componentDidMount() {
-        this.setState({ isGettingListData: true })
+    SuccessFailSweetAlert(msg, type) {
+        let getAlert = '';
+        if (type == 'success') {
+            getAlert = () => (
+                <SweetAlert
+                    success
+                    title={msg}
+                    onConfirm={() => this.hideAlert(true)}
+                >
+                </SweetAlert>
+            );
 
-        this.props.GetUsers(this.state.userRquestData);
-    }
-    handleView(row) {
-        this.props.history.push(`/ViewUserPage/${row.inUserID}`)
-    }
-    hideModel = () => {
+        }
+        else {
+            getAlert = () => (
+                <SweetAlert
+                    error
+                    title={msg}
+                    onConfirm={() => this.hideAlert(false)}
+                >
+                </SweetAlert>
+            );
+        }
+
         this.setState({
-            alert: '',
-            showModal: false,
-        })
-    }
-    getHandlerTableChange(setQueryParams) {
-
-        return (type, { page, sizePerPage, sortField, sortOrder, data }) => {
-            const pageNumber = page || 1;
-            var shortingfield = sortField;
-            if (sortField == "contact") {
-                shortingfield = "PhoneNumber";
-            }
-            if (sortField == "status") {
-                shortingfield = "flgIsActive";
-            }
-            if (sortField == "createdOn") {
-                shortingfield = "dtCreatedOn";
-            }
-
-            var userRquestData = {
-                "stSearchText": this.state.searchingText != undefined ? this.state.searchingText : "",
-                "stSortColumn": shortingfield != undefined ? shortingfield : "dtCreatedOn",
-                "stSortOrder": sortOrder != undefined ? sortOrder : "DESC",
-                "inOffset": pageNumber,
-                "inLimit": sizePerPage,
-                "stClientTimeZone": localStorage.getItem("CurrentTimezone") != undefined ? localStorage.getItem("CurrentTimezone") : ""
-            }
-            this.setState({
-                page_Limit: sizePerPage,
-                Offset_value: pageNumber,
-                Sort_Column: shortingfield != undefined ? shortingfield : "dtCreatedOn",
-                Sort_Order: sortOrder != undefined ? sortOrder : "DESC"
-            })
-            this.setState({ listLoading: true });
-            this.props.GetUsers(userRquestData);
-        };
+            alert: getAlert()
+        });
     }
 
+    ConfirmationSweetAlert(row, msg) {
+        let getAlert = '';
+        getAlert = () => (
+            <SweetAlert
+                error
+                title={msg}
+                onConfirm={() => this.handleDelete(row)}
+                showCancel
+                cancelBtnBsStyle='danger'
+                onCancel={() => this.hideAlert(false)}
+
+            >
+            </SweetAlert>
+        );
+        this.setState({
+            alert: getAlert()
+        });
+    }
+
+    hideAlert(isSaved) {
+        this.setState({
+            alert: null
+        });
+    }
+    hideAlert(isSaved) {
+        this.setState({
+            alert: null
+        });
+    }
+    dateFormatter(cell) {
+        if (!cell) {
+            return "";
+        }
+        return `${moment(cell).format("MM-DD-YYYY") ? moment(cell).format("MM-DD-YYYY") : moment(cell).format("MM-DD-YYYY")}`;
+    }
     render() {
         var $this = this;
-
         const columns = [
+            //#region Index of the Sub Category list
             { dataField: 'inUserID', text: 'User Unique Id', hidden: true },
-            { dataField: 'TotalRecords', text: 'Row Id', hidden: true },
             { dataField: 'stFirstName', text: 'First Name', sort: true },
             { dataField: 'stLastName', text: 'Last Name', sort: true },
             { dataField: 'stContact', text: 'Contact Number', sort: true },
+            { dataField: 'stAddress', text: 'Address', sort: true },
             { dataField: 'stEmail', text: 'Email', sort: true },
-            { dataField: 'AssignedTags', text: 'Assigned Tags', sort: false },
-            // {
-            //     dataField: 'createdOn', text: 'Signup Date', sort: true,
-            //     formatter: (cell) => {
-            //         if (cell == null) {
-            //             return
-            //         }
-            //         return moment(cell).format("MM/DD/YYYY, h:mm a");
-            //     },
-            // },
-           {
+            // { dataField: 'flgIsActive', text: 'Is Active', sort: false },
+            {
+                dataField: 'dtCreatedOn', text: 'Created Date', sort: false,
+                formatter: (cell) => {
+                    if (cell == null) {
+                        return
+                    }
+                    return moment(cell).format("MM/DD/YYYY");
+                },
+            },
+            //#endregion
+            {
                 dataField: 'link',
                 text: 'Action',
                 formatter: (rowContent, row) => {
                     return (
-                        <div>
-                            <OverlayTrigger
-                                placement="bottom"
-                                overlay={<Tooltip>View Favorite Video</Tooltip>}>
-                                <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }} onClick={(e) => this.handleView(row)}>
-                                    <i className="far fa-eye"></i>
-                                </a>
-                            </OverlayTrigger>
-                        </div>
+                        <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>View Favorite Video</Tooltip>}>
+                            <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }}
+                            //  onClick={(e) => this.handleView(row)}
+                             >
+                                <i className="far fa-eye"></i>
+                            </a>
+                        </OverlayTrigger>
                     )
                 },
                 headerStyle: (colum, colIndex) => {
-                    return { width: '7%' };
+                    return { width: '10%' };
                 }
-           }
+            }
         ];
 
         const defaultSorted = [{
-            dataField: 'CreatedOn',
-            order: 'desc'
+            dataField: 'stTags',
+            order: 'asc'
         }];
-
         const sizePerPageList = [
             { text: "10", value: 10 },
             { text: "5", value: 5 },
             { text: "3", value: 3 }
+
+
         ];
 
-        const paginationOptions = {
-            custom: true,
-            totalSize: $this.state.totalno,
-            sizePerPageList: sizePerPageList,
-            lastPageText: 'Last',
-            firstPageText: 'First',
-            nextPageText: 'Next',
-            prePageText: 'Previous',
-            onSizePerPageChange: function (page, sizePerPage) {
 
-            },
-            onPageChange: function (page) {
-
-
-            },
+        const pagination = paginationFactory({
+            page: 1,
+            sizePerPage: 10,
+            showTotal: true,
             alwaysShowAllBtns: true,
-        };
-        const { SearchBar, ClearSearchButton } = Search;
-        const NoDataIndication = () => (
-            <div className="spinner">
-                <div className="rect1" />
-                <div className="rect2" />
-                <div className="rect3" />
-                <div className="rect4" />
-                <div className="rect5" />
-            </div>
-        );
-        const applyFilter = (values) => {
-
-            const newQueryParams = prepareFilter(values);
-
-        };
-        const prepareFilter = (values) => {
-
-            const { status, type, searchText } = values;
-            const newQueryParams = this.state.carriers;
-            const filter = {};
-
-            var userRquestData = {
-                "stSearchText": searchText != undefined ? searchText : null,
-                "stSortColumn": this.state.Sort_Column,
-                "stSortOrder": this.state.Sort_Order,
-                "inOffset": this.state.Offset_value,
-                "inLimit": this.state.page_Limit,
-                "stClientTimeZone": localStorage.getItem("CurrentTimezone") != undefined ? localStorage.getItem("CurrentTimezone") : ""
-
+            onPageChange: function (page, sizePerPage) {
+                console.log('page', page);
+                console.log('sizePerPage', sizePerPage);
+            },
+            onSizePerPageChange: function (page, sizePerPage) {
+                console.log('page', page);
+                console.log('sizePerPage', sizePerPage);
             }
-            this.setState({ searchingText: searchText });
-            this.setState({ listLoading: true });
-            this.props.GetUsers(userRquestData);
-            return newQueryParams;
-        };
+        });
+        const { SearchBar, ClearSearchButton } = Search;
+
         return (
             <div className="card card-custom gutter-b">
+                {this.state.alert}
                 <div className="card-header">
                     <div className="card-title">
-                        <h3 className="card-label">Users</h3>
+                        <h3 className="card-label">User List</h3>
+                        {this.state.isGettingListData && <Spinner animation="border" variant="primary" />}
+                    </div>
+                    <div className="card-toolbar">
+                        {/* <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>Add SubCategory</Tooltip>}>
+                            <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/AddSubCategoryPage">
+                                Add SubCategory
+                            </Link>
+                        </OverlayTrigger>
+                        <div style={{ marginLeft: 20 }}>
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={<Tooltip>Add Category Image</Tooltip>}>
+                                <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/ManageUploadSubCategoryImage">
+                                    Add Sub-Category Image
+                                </Link>
+                            </OverlayTrigger>
+                        </div> */}
+                        {/* <div style={{ marginLeft: 20 }}>
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={<Tooltip>Add Thumbnail Image</Tooltip>}>
+                                <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/AddThumbnailImage">
+                                    Add Thumbnail Image
+                                </Link>
+                            </OverlayTrigger>
+                        </div> */}
+
+                        {/* <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                            Launch demo modal
+                        </button>
+
+                        <div class="modal fade" id="exampleModalLong" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <i aria-hidden="true" class="ki ki-close"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                       <p>Modal</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary font-weight-bold">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> */}
 
                     </div>
                 </div>
+
                 <div className="card-body">
 
-                    <Formik
-                        initialValues={{
-                            searchText: "",
-                        }}
-                        onSubmit={(values) => {
-                            applyFilter(values);
-                        }}
+                    <ToolkitProvider
+                        bootstrap4
+                        keyField='kw_insuranceType_datatable'
+                        data={this.state.userResponseData}
+                        columns={columns}
+
+                        search
                     >
-                        {({
-                            values,
-                            handleSubmit,
-                            handleBlur,
-                            handleChange,
-                            setFieldValue,
-                        }) => (
-                            <form onSubmit={handleSubmit} className="form form-label-right">
-                                <div className="form-group row">
-
-                                    <div className="col-lg-2">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            name="searchText"
-                                            placeholder="Search"
-                                            onBlur={handleBlur}
-                                            value={values.searchText}
-                                            onChange={(e) => {
-                                                setFieldValue("searchText", e.target.value);
-                                                handleSubmit();
-                                            }}
-                                        />
-                                        {/* <small className="form-text text-muted">
-                                            <b>Search</b> 
-                                            in all fields
-                </small> */}
-                                    </div>
-                                </div>
-                            </form>
-                        )}
-                    </Formik>
-                    <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-                        {({ paginationProps, paginationTableProps }) => {
-                            return (
-                                <Pagination
-                                    isLoading={$this.state.listLoading}
-                                    paginationProps={paginationProps}
-                                >
+                        {
+                            props => (
+                                <div >
+                                    <SearchBar {...props.searchProps} />
                                     <BootstrapTable
-                                        wrapperClasses="table-responsive"
-                                        bootstrap4
-                                        remote
-                                        keyField='kw_users_datatable'
-                                        data={this.state.userResponseData}
-                                        columns={columns}
                                         defaultSorted={defaultSorted}
-                                        onTableChange={$this.getHandlerTableChange(
-                                        )}
-                                        {...paginationTableProps}
-                                    >
-
-                                    </BootstrapTable>
-                                </Pagination>
-                            );
-                        }}
-                    </PaginationProvider>
-                    <a className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
-                        <i className="far fa-eye"></i>
-                    </a> View Favorite Video.&nbsp;&nbsp;&nbsp;
-
+                                        pagination={pagination}
+                                        {...props.baseProps}
+                                    />
+                                </div>
+                            )
+                        }
+                    </ToolkitProvider>
+                    {/* <div className="mt-2">
+                        <a className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
+                            <i className="fas fa-edit icon-nm"></i>
+                        </a> Edit SubCategory &nbsp;&nbsp;&nbsp;
+                        <a className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
+                            <i className="ki ki-close icon-nm"></i>
+                        </a> Delete SubCategory
+                    </div> */}
                 </div>
             </div>
         )
@@ -298,7 +310,6 @@ function mapStateToProps(state) {
         initialValues: {
         },
         GetUserDataResponse: state.auth.GetUserDataResponse,
-
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -307,4 +318,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageUsersPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageSubCategory);

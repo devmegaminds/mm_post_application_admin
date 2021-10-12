@@ -106,6 +106,9 @@ export const actionTypes = {
   GetSubCategoryInfoById: "[GetSubCategoryInfoById] Action",
   GetSubCategoryInfoByIdResponse: "[GetSubCategoryInfoByIdResponse] Action",
 
+  CheckSubCategory: "[CheckSubCategory] Action",
+  CheckSubCategoryResponse: "[CheckSubCategoryResponse] Action",
+
   //#endregion Manage SubCategory 
 
   //#region Manage Video
@@ -305,12 +308,12 @@ export const reducer = persistReducer(
 
       //#region Mange Image
       case actionTypes.AddImage: {
-        debugger
+         
         const { categoryImage } = action.payload;
         return { ...state, categoryImage };
       }
       case actionTypes.AddImageResponse: {
-        debugger
+         
         const imageResponse = action.payload.imageResponse.data && action.payload.imageResponse.data;
         return { ...state, imageResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
       }
@@ -406,6 +409,8 @@ export const reducer = persistReducer(
         const GetSubCategoryInfoByIdResponse = action.payload.ResetInsuranceTypeResponse && action.payload.ResetInsuranceTypeResponse;
         return { ...state, GetSubCategoryInfoByIdResponse };
       }
+
+    
 //#endregion Manage Sub Category
 
 
@@ -429,6 +434,17 @@ export const reducer = persistReducer(
         const GetCategoryResponse = action.payload.GetCategoryResponse.data && action.payload.GetCategoryResponse.data;
         return { ...state, GetCategoryResponse };
       }
+
+
+      case actionTypes.CheckSubCategory: {
+        const { checkSubCategory } = action.payload;
+        return { ...state, checkSubCategory };
+      }
+      case actionTypes.CheckSubCategoryResponse: {
+        const CheckSubCategoryResponse = action.payload.CheckSubCategoryResponse.data && action.payload.CheckSubCategoryResponse.data;
+        return { ...state, CheckSubCategoryResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+
 
       case actionTypes.GetCategoryById: {
         const { RequestParmInsuranceTypeData } = action.payload;
@@ -682,6 +698,9 @@ export const actions = {
 
   GetSubCategoryInfoById: (RequestSubCategoryInfoById) => ({ type: actionTypes.GetSubCategoryInfoById, payload: { RequestSubCategoryInfoById } }),
   GetSubCategoryInfoByIdResponse: (GetSubCategoryInfoByIdResponse) => ({ type: actionTypes.GetSubCategoryInfoByIdResponse, payload: { GetSubCategoryInfoByIdResponse } }),
+
+  CheckSubCategory: (checkSubCategory) => ({ type: actionTypes.CheckSubCategory, payload: { checkSubCategory } }),
+  CheckSubCategoryResponse: (CheckSubCategoryResponse) => ({ type: actionTypes.CheckSubCategoryResponse, payload: { CheckSubCategoryResponse } }),
   //#endregion Manage Sub Category
 
   //#region  Manage Category
@@ -721,6 +740,7 @@ export function* saga() {
   //#region Manage Profile 
 
   yield takeLatest(actionTypes.GetUserData, function* getUserDataRequested(payload) {
+     
     const response = yield call(getUserDataRequestApi, payload.payload);
     console.log(response)
     if (response)
@@ -786,7 +806,7 @@ export function* saga() {
       yield put(actions.AddSubCategoryThumbnailImageResponse(response));
   });
  
-  debugger
+   
   yield takeLatest(actionTypes.AddSubCategoryImage, function* addSubCategoryImageRequested(payload) {
     const response = yield call(addSubCategoryImageRequestApi, payload.payload);
     if (response)
@@ -842,24 +862,30 @@ export function* saga() {
   //#endregion Mange Sub Category
 
   yield takeLatest(actionTypes.ResetVideo, function* ResetVideosRequested(payload) {
-
     yield put(actions.ResetVideoResponse(payload.payload.GetVideoByIdResponse));
+  });
 
+  yield takeLatest(actionTypes.CheckSubCategory, function* checkSubCategoryRequested(payload) {
+    const response = yield call(checkSubCategoryRequestApi, payload.payload);
+    if (response)
+      yield put(actions.CheckSubCategoryResponse(response));
   });
 }
 
 //#region Manage Profile 
 const getUserDataRequestApi = async (payload) => {
+   
   var data = payload.userData;
   const instance = await axios.create({
   });
   const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  const respo = instance.post(`${BASE_URL}Profile/GetUsers`, data, options)
+  const respo = instance.get(`${BASE_URL}Authentication/GetAllUser`, options)
     .catch((e) => {
       return e.response;
     });
+    console.log(respo,"KOLKOLKOLKOL");
   return respo;
 };
 
@@ -870,7 +896,7 @@ const updateProfileRequestApi = async (payload) => {
   const instance = await axios.create({
   });
   const options = {
-    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).token}` }
+   headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
   const respo = instance.post(`${BASE_URL}Profile/EditProfile`, data, options)
     .catch((e) => {
@@ -897,6 +923,7 @@ const addCategoryRequestApi = async (payload) => {
 };
 
 const getCategoryRequestedApi = async (payload) => {
+   
   // var data = payload.RequestParmTag;
   const instance = await axios.create({
   });
@@ -905,6 +932,18 @@ const getCategoryRequestedApi = async (payload) => {
     //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
   };
   const respo = instance.get(`${BASE_URL}Category/GetAllCategory`, options);
+  return respo;
+};
+
+const checkSubCategoryRequestApi = async (payload) => {
+  // var data = payload.checkSubCategory;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.get(`${BASE_URL}SubCategory/CheckSubCategory`, options);
+  console.log(respo,"KOLKOLKOLKOL");
   return respo;
 };
 
@@ -921,7 +960,6 @@ const getCategoryByIdRequestedApi = async (payload) => {
 
 const deleteCategoryApi = async (payload) => {
   var data = payload.RequestParmDeleteCategoryId;
-  console.log(data,"::::::::");
   const instance = await axios.create({
   });
   const options = {
@@ -942,7 +980,6 @@ const GetCategoryInfoByIDRequestedApi = async (payload) => {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
   const respo = instance.get(`${BASE_URL}Category/GetCategoryById?inCategoryId=${data}`, options);
-  console.log(respo,">>>>>");
   return respo;
 };
 
@@ -969,7 +1006,7 @@ const GetCategoryInfoByIDRequestedApi = async (payload) => {
 
 //#region Manage Image
 const addCategoryImageRequestApi = async (payload) => {
-  debugger
+   
   var data = payload.categoryImage;
   const instance = await axios.create({
   });
@@ -985,7 +1022,7 @@ const addCategoryImageRequestApi = async (payload) => {
   return respo;
 };
 
-debugger
+ 
 const addSubCategoryImageRequestApi = async (payload) => {
   var data = payload.subCategoryImage;
   console.log(data,"DATA");
@@ -994,7 +1031,7 @@ const addSubCategoryImageRequestApi = async (payload) => {
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  debugger
+   
   const respo = instance.post(`${BASE_URL}Image/addEditSubCategroyImage`, data, options)
     .catch((e) => {
       return e.response;
@@ -1004,7 +1041,7 @@ const addSubCategoryImageRequestApi = async (payload) => {
 };
 
 const addSubCategoryThumbnailImageRequestApi = async (payload) => {
-  debugger
+   
   var data = payload.thumbnailImage;
   const instance = await axios.create({
   });
@@ -1051,7 +1088,6 @@ const getApplicationRequestedApi = async (payload) => {
 
 const deleteApplicationApi = async (payload) => {
   var data = payload.RequestParmDeleteApplicationId;
-  console.log(data,"::::::::");
   const instance = await axios.create({
   });
   const options = {
@@ -1072,7 +1108,6 @@ const GetApplicationInfoByIDRequestedApi = async (payload) => {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
   const respo = instance.get(`${BASE_URL}Application/GetApplicationById?inApplicationId=${data}`, options);
-  console.log(respo,">>>>>");
   return respo;
 };
 //#endregion Manage Application
@@ -1095,7 +1130,7 @@ const addSubCategoryRequestApi = async (payload) => {
 };
 
 const getSubCategoryRequestedApi = async (payload) => {
-  debugger
+   
   var data = payload.GetSubCategoryResponse;
   const instance = await axios.create({
   });
@@ -1109,7 +1144,6 @@ const getSubCategoryRequestedApi = async (payload) => {
 
 const deleteSubCategoryApi = async (payload) => {
   var data = payload.RequestParmDeleteSubCategoryId;
-  console.log(data,"::::::::");
   const instance = await axios.create({
   });
   const options = {
@@ -1130,7 +1164,8 @@ const GetSubCategoryInfoByIDRequestedApi = async (payload) => {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
   const respo = instance.get(`${BASE_URL}SubCategory/GetSubCategoryById?inSubCategoryId=${data}`, options);
-  console.log(respo,">>>>>");
   return respo;
 };
+
+
 //#endregion Manage Sub Category
