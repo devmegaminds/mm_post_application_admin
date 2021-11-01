@@ -18,8 +18,8 @@ import { login } from "../_redux/authCrud";
 */
 
 const initialValues = {
-  email: "renish.megaminds@gmail.com",
-  password: "1234"//"h)W-k1W0PuOn"
+  email: "dev.megaminds@gmail.com",
+  password: "CFvgbhnj12#"//"h)W-k1W0PuOn"
 };
 // const initialValues = {
 //   email: "johndoe@gmail.com",

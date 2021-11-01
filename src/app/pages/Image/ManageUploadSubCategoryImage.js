@@ -55,7 +55,6 @@ class ManageUploadSubCategoryImage extends Component {
             baseImage: "",
             subCategoryData: [],
         }
-        debugger
         this.props.GetSubCategory("");
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
 
@@ -77,8 +76,9 @@ class ManageUploadSubCategoryImage extends Component {
                 inSubCategoryId: subCategoryId,
                 inCreatedBy: this.state.currentUserData.inUserID
             }
-            console.log(data, "LLLLL");
-            // this.props.AddSubCategoryThumbnailImage(data);
+            this.props.AddSubCategoryImage(data);
+            // dispatch(auth.actions.AddSubCategoryImage(data))
+
         }
     }
 
@@ -232,8 +232,8 @@ ManageUploadSubCategoryImage = reduxForm({
 function mapStateToProps(state) {
     return {
         initialValues: {
-            inSubCategoryId: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0].inSubCategoryId : "",
-            stSubCategoryName: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0].stSubCategoryName : ""
+            inSubCategoryId: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.inSubCategoryId : "",
+            stSubCategoryName: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.stSubCategoryName : ""
 
         },
         subCategoryResponse: state.auth.subCategoryResponse,
@@ -246,7 +246,7 @@ function mapStateToProps(state) {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        AddSubCategoryThumbnailImage: (data) => dispatch(auth.actions.AddSubCategoryThumbnailImage(data)),
+        AddSubCategoryImage: (data) => dispatch(auth.actions.AddSubCategoryImage(data)),
         GetSubCategory: (data) => dispatch(auth.actions.GetSubCategory(data)),
 
     }

@@ -10,7 +10,51 @@ import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import Overlay from 'react-bootstrap/Overlay';
 import { Texture } from '@material-ui/icons';
+import { Field, FieldArray, reduxForm, getFormValues } from 'redux-form'
+
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+const renderField = ({
+    input,
+    label,
+    type,
+    placeholder,
+    meta: { asyncValidating, touched, error }
+}) => (
+    <div className="form-group col-sm-10" style={{ padding: 0 }}>
+        <label>{label}</label>
+        <input {...input} type={type} placeholder={placeholder} className="form-control " />
+        {touched && error && <small className="error-msg text-danger form-text">{error}</small>}
+    </div>
+)
+
+const renderdisableField = ({
+    input,
+    label,
+    type,
+    placeholder,
+    meta: { asyncValidating, touched, error }
+}) => (
+    <div className="form-group col-sm-10" style={{ padding: 0 }}>
+        <label>{label}</label>
+        <input {...input} type={type} placeholder={placeholder} className="form-control " disabled={true} />
+        {touched && error && <small className="error-msg text-danger form-text">{error}</small>}
+    </div>
+)
+
+const validate = values => {
+    const errors = {}
+    const requiredFields = [
+
+    ]
+    requiredFields.forEach(field => {
+        if (!values[field]) {
+            errors[field] = field + ' is required.'
+        }
+    })
+
+
+    return errors
+}
 class ViewUserPage extends Component {
     constructor(props) {
         super();
@@ -30,13 +74,6 @@ class ViewUserPage extends Component {
         if (nextProps.GetUserByIdResponse) {
             if (nextProps.GetUserByIdResponse && nextProps.GetUserByIdResponse != this.props.GetUserByIdResponse) {
                 if (nextProps.GetUserByIdResponse.statusCode == 200) {
-                    // console.log(nextProps.GetUserByIdResponse.data)
-                    // this.setState({ userCoverDetails: nextProps.GetUserByIdResponse.data.userCoverDetails })
-                    // this.setState({ userCoverPaymentDetails: nextProps.GetUserByIdResponse.data.userCoverPaymentDetails })
-                    // this.setState({ invitedUserContactList: nextProps.GetUserByIdResponse.data.invitedUserContactList })
-                    // this.setState({ invitedUserContactLists: nextProps.GetUserByIdResponse.data.invitedUserContactList })
-                    // this.setState({ inviteUserLimit: nextProps.GetUserByIdResponse.data })
-                    // this.setState({ isGettingdata: false })
                     this.setState({ isGettingTags: false });
                     this.setState({ isLoading: false })
                     this.setState({ totalno: nextProps.GetUserByIdResponse.data.length })
@@ -47,37 +84,24 @@ class ViewUserPage extends Component {
                 }
             }
         }
-        // if (nextProps.GetUserPaymentMethodsResponse) {
-        //     if (nextProps.GetUserPaymentMethodsResponse && nextProps.GetUserPaymentMethodsResponse != this.props.GetUserPaymentMethodsResponse) {
-        //         if (nextProps.GetUserPaymentMethodsResponse.statusCode == 200) {
-        //             console.log(nextProps.GetUserPaymentMethodsResponse.data)
-        //             this.setState({ userBankDetails: nextProps.GetUserPaymentMethodsResponse.data.bankList })
-        //             this.setState({ userCardPaymentDetails: nextProps.GetUserPaymentMethodsResponse.data.cardsList })
-        //             this.setState({ isGettingdata: false })
-        //         } else {
-
-        //         }
-        //     }
-        // }
     }
     componentDidMount() {
         var id = window.location.href.split("/").pop();
         if (id != "view") {
             this.setState({ isGettingTags: true })
             var data = {
-                "inUserId": Number(id),
-                "stTitle": "",
-                "stTags": ""
+                inUserID: id
             }
+            console.log(data, "DATA");
             this.props.GetUserById(data)
         }
         //this.props.GetUserPaymentMethods(id)
 
 
     }
-    handleView(row) {
-        this.props.history.push(`/userview/${row.uiUserId}`)
-    }
+    // handleView(row) {
+    //     this.props.history.push(`/userview/${row.uiUserId}`)
+    // }
     userDetails() {
         if (this.state.showUserDetails == false) {
             this.setState({ showUserDetails: true })
@@ -134,51 +158,111 @@ class ViewUserPage extends Component {
         const { SearchBar, ClearSearchButton } = Search;
 
         return (
-            <div className="card card-custom gutter-b">
-                {this.state.alert}
-                <div className="card-header">
-                    <div className="card-title">
-                        <h3 className="card-label">User favorites Video</h3>
-                        {this.state.isGettingTags && <Spinner animation="border" variant="primary" />}
-                    </div>
-                </div>
+            <div className="card card-custom gutter-b example example-compact">
                 <div className="card-body">
-                    {!this.state.isGettingTags && this.state.ViewUserVideos && this.state.ViewUserVideos.length > 0 &&
-                        <ToolkitProvider
-                            bootstrap4
-                            keyField='kw_insuranceType_datatable'
-                            data={this.state.ViewUserVideos}
-                            columns={columns}
+                    <form className="form-horizontal" ref={(el) => this.myFormRef = el}
+                    // onSubmit={handleSubmit(this.onSubmit)}
+                    >
+                        <div className="card card-custom gutter-b example example-compact">
+                            <div className="card-title">
+                                <h3 className="card-label">User Details</h3>
+                            </div>
+                            <div className="card-toolbar">
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-4">
+                                    <Field
+                                        type="text"
+                                        name="stFirstName"
+                                        label="First Name"
+                                        placeholder="First Name"
+                                        component={renderField}
+                                    />
+                                </div>
 
-                            search
-                        >
-                            {
-                                props => (
-                                    <div >
-                                        <SearchBar {...props.searchProps} />
-
-                                        <BootstrapTable
-                                            defaultSorted={defaultSorted}
-                                            pagination={pagination}
-                                            {...props.baseProps}
-                                        />
-                                    </div>
-                                )
-                            }
-                        </ToolkitProvider>} { !this.state.isGettingTags && this.state.ViewUserVideos && this.state.ViewUserVideos.length == 0 && <h6>No Data Found</h6>}
+                                <div className="col-sm-4">
+                                    <Field
+                                        type="text"
+                                        name="stLastName"
+                                        label="Last Name"
+                                        placeholder="Last Name"
+                                        component={renderField}
+                                    />
+                                </div>
+                                <div className="col-sm-4">
+                                    <Field
+                                        type="text"
+                                        name="stEmail"
+                                        label="Email"
+                                        placeholder="Email Address"
+                                        component={renderField}
+                                    />
+                                </div>
+                                <div className="col-sm-4">
+                                    <Field
+                                        type="text"
+                                        name="stContact"
+                                        label="PhoneNo"
+                                        placeholder="Phone Number"
+                                        component={renderField}
+                                    />
+                                </div>
+                                <div className="col-sm-4">
+                                    <Field
+                                        type="text"
+                                        name="stAddress"
+                                        label="Address"
+                                        placeholder="Address"
+                                        component={renderField}
+                                    />
+                                </div>
+                                <div className="col-sm-4">
+                                    <Field
+                                        type="text"
+                                        name="stBusinessName"
+                                        label="BusinessName"
+                                        placeholder="BusinessName"
+                                        component={renderdisableField}
+                                    />
+                                </div>
+                                <div className="col-sm-4">
+                                    <Field
+                                        type="text"
+                                        name="stWebsite"
+                                        label="Website"
+                                        placeholder="Website"
+                                        component={renderdisableField}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         )
     }
 
 }
-
+ViewUserPage = reduxForm({
+    form: 'Profile',
+    validate,
+    enableReinitialize: true,
+    destroyOnUnmount: true
+})(ViewUserPage);
 function mapStateToProps(state) {
+    console.log(state.auth.GetUseFavoriteVideoDataResponse);
     return {
         initialValues: {
+            inUserID: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.inUserID : "",
+            stFirstName: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stFirstName : "",
+            stLastName: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stLastName : "",
+            stContact: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stContact : "",
+            stBusinessName: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stBusinessName : "",
+            stWebsite: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stWebsite : "",
+            stAddress: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stAddress : "",
+            stEmail: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stEmail : "",
         },
         GetUserByIdResponse: state.auth.GetUseFavoriteVideoDataResponse,
-        //GetUserPaymentMethodsResponse: state.auth.GetUserPaymentMethodsResponse
     }
 }
 const mapDispatchToProps = (dispatch) => {

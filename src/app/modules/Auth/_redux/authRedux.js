@@ -34,8 +34,8 @@ export const actionTypes = {
   GetUserData: "[GetUserData] Action",
   GetUserDataResponse: "[GetUserDataResponse] Action",
 
-  // GetUseFavoriteVideoData: "[GetUseFavoriteVideoData] Action",
-  // GetUseFavoriteVideoDataResponse: "[GetUseFavoriteVideoDataResponse] Action",
+  GetUseFavoriteVideoData: "[GetUseFavoriteVideoData] Action",
+  GetUseFavoriteVideoDataResponse: "[GetUseFavoriteVideoDataResponse] Action",
 
   UpdateProfile: "[UpdateProfile] Action",
   UpdateProfileResponse: "[UpdateProfileResponse] Action",
@@ -654,8 +654,8 @@ export const actions = {
   GetUserData: (userData) => ({ type: actionTypes.GetUserData, payload: { userData } }),
   GetUserDataResponse: (GetUserDataResponse) => ({ type: actionTypes.GetUserDataResponse, payload: { GetUserDataResponse } }),
 
-  // GetUseFavoriteVideoData: (userFavoriteData) => ({ type: actionTypes.GetUseFavoriteVideoData, payload: { userFavoriteData } }),
-  // GetUseFavoriteVideoDataResponse: (GetUseFavoriteVideoDataResponse) => ({ type: actionTypes.GetUseFavoriteVideoDataResponse, payload: { GetUseFavoriteVideoDataResponse } }),
+  GetUseFavoriteVideoData: (userFavoriteData) => ({ type: actionTypes.GetUseFavoriteVideoData, payload: { userFavoriteData } }),
+  GetUseFavoriteVideoDataResponse: (GetUseFavoriteVideoDataResponse) => ({ type: actionTypes.GetUseFavoriteVideoDataResponse, payload: { GetUseFavoriteVideoDataResponse } }),
 
   UpdateProfile: (profile) => ({ type: actionTypes.UpdateProfile, payload: { profile } }),
   UpdateProfileResponse: (updateResponse) => ({ type: actionTypes.UpdateProfileResponse, payload: { updateResponse } }),
@@ -747,12 +747,12 @@ export function* saga() {
       yield put(actions.GetUserDataResponse(response));
   });
 
-  // yield takeLatest(actionTypes.GetUseFavoriteVideoData, function* getUseFavoriteVideoDataRequested(payload) {
-  //   const response = yield call(getUseFavoriteVideoDataRequestApi, payload.payload);
-  //   console.log(response)
-  //   if (response)
-  //     yield put(actions.GetUseFavoriteVideoDataResponse(response));
-  // });
+  yield takeLatest(actionTypes.GetUseFavoriteVideoData, function* getUseFavoriteVideoDataRequested(payload) {
+    const response = yield call(getUseFavoriteVideoDataRequestApi, payload.payload);
+    console.log(response)
+    if (response)
+      yield put(actions.GetUseFavoriteVideoDataResponse(response));
+  });
 
   yield takeLatest(actionTypes.UpdateProfile, function* updateProfileRequested(payload) {
     const response = yield call(updateProfileRequestApi, payload.payload);
@@ -885,11 +885,22 @@ const getUserDataRequestApi = async (payload) => {
     .catch((e) => {
       return e.response;
     });
-    console.log(respo,"KOLKOLKOLKOL");
   return respo;
 };
 
-
+const getUseFavoriteVideoDataRequestApi = async (payload) => {
+  var data = payload.userFavoriteData;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.post(`${BASE_URL}Authentication/GetUserByUserId`, data, options)
+    .catch((e) => {
+      return e.response;
+    });
+  return respo;
+};
 
 const updateProfileRequestApi = async (payload) => {
   var data = payload.profile;
@@ -1130,7 +1141,7 @@ const addSubCategoryRequestApi = async (payload) => {
 };
 
 const getSubCategoryRequestedApi = async (payload) => {
-   
+   debugger
   var data = payload.GetSubCategoryResponse;
   const instance = await axios.create({
   });
@@ -1138,8 +1149,10 @@ const getSubCategoryRequestedApi = async (payload) => {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
     //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
   };
+  debugger
   const respo = instance.get(`${BASE_URL}SubCategory/GetAllSubCategory`, options);
   return respo;
+  debugger
 };
 
 const deleteSubCategoryApi = async (payload) => {

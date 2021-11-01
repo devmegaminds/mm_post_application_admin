@@ -41,6 +41,7 @@ class ManageSubCategory extends Component {
         this.props.DeleteSubCategoryById(row.inSubCategoryId)
     }
     componentDidMount() {
+        debugger
         this.setState({ isGettingSubCategory: true })
         this.props.GetSubCategory("");
     }
@@ -65,6 +66,7 @@ class ManageSubCategory extends Component {
                 }
             }
         }
+        debugger
     }
     SuccessFailSweetAlert(msg, type) {
         let getAlert = '';
@@ -134,9 +136,9 @@ class ManageSubCategory extends Component {
         var $this = this;
         const columns = [
             //#region Index of the Sub Category list
-            { dataField: 'inSubCategoryId', text: 'SubCategory Number', hidden: false },
+            { dataField: 'inSubCategoryId', text: 'SubCategory Number', hidden: false,sort: true },
             { dataField: 'stSubCategoryName', text: 'SubCategory', sort: true },
-            { dataField: 'stCategoryName', text: 'Category', sort: true },
+            { dataField: 'stCategoryName', text: 'Category' },
             {
                 dataField: 'dtCreatedOn', text: 'Created Date', sort: false,
                 formatter: (cell) => {
@@ -164,7 +166,7 @@ class ManageSubCategory extends Component {
                                 placement="bottom"
                                 overlay={<Tooltip>Add Image</Tooltip>}>
                                 <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }} onClick={(e) => this.handleImage(row)}>
-                                    <i className="fas fa-edit icon-nm"></i>
+                                    <i className="fas fa-image icon-nm"></i>
                                 </a>
                             </OverlayTrigger>
                             <OverlayTrigger
@@ -333,6 +335,7 @@ function mapStateToProps(state) {
     }
 }
 const mapDispatchToProps = (dispatch) => {
+    debugger
     return {
         GetSubCategory: (data) => dispatch(auth.actions.GetSubCategory(data)),
         DeleteSubCategoryById: (data) => dispatch(auth.actions.DeleteSubCategoryById(data)),

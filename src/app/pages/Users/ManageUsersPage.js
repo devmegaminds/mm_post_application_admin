@@ -164,7 +164,7 @@ class ManageSubCategory extends Component {
                             placement="bottom"
                             overlay={<Tooltip>View Favorite Video</Tooltip>}>
                             <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }}
-                            //  onClick={(e) => this.handleView(row)}
+                             onClick={(e) => this.handleView(row)}
                              >
                                 <i className="far fa-eye"></i>
                             </a>

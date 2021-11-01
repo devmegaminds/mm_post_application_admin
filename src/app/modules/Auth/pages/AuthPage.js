@@ -21,7 +21,7 @@ export function AuthPage() {
           <div
             className="login-aside d-flex flex-row-auto bgi-size-cover bgi-no-repeat p-10 p-lg-10"
             style={{
-              backgroundImage: `url(${toAbsoluteUrl("/media/bg/bg-4.jpg")})`,
+              backgroundImage: `url(${toAbsoluteUrl("/media/bg/demo-7.jpg")})`,
             }}
           >
             {/*begin: Aside Container*/}
@@ -30,8 +30,8 @@ export function AuthPage() {
               <Link to="/" className="flex-column-auto mt-5 pb-lg-0 pb-10">
                 <img
                   alt="Logo"
-                  className="max-h-70px"
-                  src={toAbsoluteUrl("/media/logos/Kiwi-logo.png")}
+                  className="max-h-100px"
+                  src={toAbsoluteUrl("/media/logos/feel_brand.png")}
                   // logo-letter-1.png
                 />
               </Link>
@@ -40,7 +40,7 @@ export function AuthPage() {
               {/* start:: Aside content */}
               <div className="flex-column-fluid d-flex flex-column justify-content-center">
                 <h3 className="font-size-h1 mb-5 text-white">
-                  Welcome to MM Post Application!
+                  Welcome to Feel Brand!
                 </h3>
                 <p className="font-weight-lighter text-white opacity-80">
                   {/* The ultimate Bootstrap & React 16 admin theme framework for
@@ -52,7 +52,7 @@ export function AuthPage() {
               {/* start:: Aside footer for desktop */}
               <div className="d-none flex-column-auto d-lg-flex justify-content-between mt-10">
                 <div className="opacity-70 font-weight-bold	text-white">
-                  &copy; 2020 MM Post Application
+                  &copy; 2020 Feel Brand
                 </div>
                 <div className="d-flex">
                   <Link to="/terms" className="text-white">

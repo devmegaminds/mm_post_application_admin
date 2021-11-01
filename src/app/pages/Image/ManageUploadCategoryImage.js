@@ -6,6 +6,8 @@ import { Link, Redirect } from "react-router-dom";
 import "../custom.css";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import FileBase64 from 'react-file-base64';
+import ImageUploadPreviewComponent from "../ImageUploadPreviewComponent"
 
 const renderFields = ({
     input,
@@ -52,10 +54,10 @@ class ManageUploadCategoryImage extends Component {
             isError: false,
             currentUserData: {},
             subCategoryId: "",
-            baseImage: "",
+            files: [],
+            // baseImage: "",
             categoryData: [],
         }
-        debugger
         this.props.CheckSubCategory("");
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
 
@@ -68,18 +70,19 @@ class ManageUploadCategoryImage extends Component {
             this.setState({ isLoading: false });
         }
         else {
-            debugger
             var categoryId = indexOfItem[0].inCategoryId
             this.setState({ isLoading: true });
             var data = {
-                inSubCategoryThumbnailImageId: formValues.inSubCategoryThumbnailImageId == undefined || formValues.inSubCategoryThumbnailImageId == "" ? 0 : formValues.inSubCategoryThumbnailImageId,
+                inCategoryImageId: formValues.inCategoryImageId == undefined || formValues.inCategoryImageId == "" ? 0 : formValues.inCategoryImageId,
                 stImageDatabase64: this.state.baseImage.split(',')[1],
-                inSubCategoryId: categoryId,
+                inCategoryId: categoryId,
+                // inCategoryId: "2",
             }
             this.props.AddImage(data);
             // dispatch(auth.actions.AddImage(data))
-
+            debugger
         }
+
     }
 
     hideModel = () => {
@@ -95,10 +98,6 @@ class ManageUploadCategoryImage extends Component {
             showModal: false,
         })
     }
-    // componentDidMount() {
-    //     var id = window.location.href.split("/").pop();
-    //     this.setState({ subCategoryId: id })
-    // }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.CheckSubCategoryResponse) {
@@ -138,8 +137,9 @@ class ManageUploadCategoryImage extends Component {
             alert: getAlert()
         });
     }
-
+    //#region Single image upoad 
     uploadImage = async (e) => {
+        debugger
         const file = e.target.files[0];
         const base64 = await this.convertBase64(file);
         this.setState({ baseImage: base64 })
@@ -156,22 +156,25 @@ class ManageUploadCategoryImage extends Component {
             };
         });
     };
+    // ------------------------------
+
     onChangesTagName = (e, index) => {
         this.setState({ isChecked: this.state.categoryData[index].Checked ? false : true })
         this.state.categoryData[index].Checked = !this.state.isChecked ? !this.state.categoryData[index].Checked : false;
         this.setState({ categoryData: this.state.categoryData });
     }
+
     render() {
         var $this = this;
         const { handleSubmit, pristine, reset, submitting, formValues, change } = this.props;
         if (this.state.isRedirect) {
-            return <Redirect to="/ManageSubCategory" />
+            return <Redirect to="/ManageCategory" />
         }
         return (
             <div className="card card-custom gutter-b example example-compact">
                 <div className="card-header">
                     <div className="card-title">
-                        <h3 className="card-label">Upload Thumbnail Image</h3>
+                        <h3 className="card-label"> Image</h3>
                     </div>
                     <div className="card-toolbar">
                     </div>
@@ -180,6 +183,10 @@ class ManageUploadCategoryImage extends Component {
                     <div style={{ margin: 25 }} className="form-group fv-plugins-icon-container">
                         <div className="col-sm-4">
                             <h6>Image Upload</h6>
+                            {/* //#region multiple image upload component */}
+                            {/* <ImageUploadPreviewComponent />   */}
+ 
+                            {/* Signle Imaeg Uplaod  */}
                             <input
                                 type="file"
                                 onChange={(e) => {
@@ -203,28 +210,13 @@ class ManageUploadCategoryImage extends Component {
                             })}
                         </div>
                     </div>
-                    {/* <div className="col-sm-8">
-                            <label >Category</label><br></br>
-                            {this.state.categoryData != null && this.state.categoryData != "" && this.state.categoryData != undefined && this.state.categoryData.map(function (tag, i) {
-                                return (
-                                    <Field
-                                        type="checkbox"
-                                        name={tag.stCategoryName}
-                                        label={tag.stCategoryName}
-                                        data={tag.Checked}
-                                        onChange={(evt) => $this.onChangesTagName(evt, i)}
-                                        component={renderCheckboxField} />
-                                )
-                            })}
-                        </div> */}
-
                     <div style={{ margin: 20 }}>
                         <img src={this.state.baseImage} height="200px" />
                     </div>
                     <div style={{ margin: 20 }}>
                         <OverlayTrigger
                             placement="bottom"
-                            overlay={<Tooltip>Add Thumbnaul Image</Tooltip>}>
+                            overlay={<Tooltip>Add category Image</Tooltip>}>
                             <button style={{ width: 120, marginRight: 10 }}
                                 id="kw_dtn_add_carrier"
                                 type="submit"
@@ -247,12 +239,12 @@ ManageUploadCategoryImage = reduxForm({
 function mapStateToProps(state) {
     return {
         initialValues: {
-            inSubCategoryId: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0].inSubCategoryId : "",
-            stSubCategoryName: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0].stSubCategoryName : ""
+            // inSubCategoryId: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0].inSubCategoryId : "",
+            // stSubCategoryName: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0].stSubCategoryName : ""
 
         },
-        subCategoryResponse: state.auth.subCategoryResponse,
-        GetSubCategoryInfoByIdResponse: state.auth.GetSubCategoryInfoByIdResponse,
+        // subCategoryResponse: state.auth.subCategoryResponse,
+        // GetSubCategoryInfoByIdResponse: state.auth.GetSubCategoryInfoByIdResponse,
         randomNumbers: state.auth.randomNumbers,
         CheckSubCategoryResponse: state.auth.CheckSubCategoryResponse,
 
@@ -261,7 +253,7 @@ function mapStateToProps(state) {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        AddSubCategoryThumbnailImage: (data) => dispatch(auth.actions.AddSubCategoryThumbnailImage(data)),
+        AddImage: (data) => dispatch(auth.actions.AddImage(data)),
         CheckSubCategory: (data) => dispatch(auth.actions.CheckSubCategory(data)),
 
     }
