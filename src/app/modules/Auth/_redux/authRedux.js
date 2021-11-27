@@ -18,7 +18,7 @@ export const actionTypes = {
 
   //::Get Insurance Type By Id::
 
-  
+
   //::for Reset Insurance Type :://
   ResetInsuranceType: "[ResetInsuranceType] Action",
   ResetInsuranceTypeResponse: "[ResetInsuranceTypeResponse] Action",
@@ -56,9 +56,14 @@ export const actionTypes = {
   //#endregion Manage Application 
 
   //#region Manage Image
+  AddImageTest: "[AddImageTest] Action",
+  AddImageResponseTest: "[AddImageResponseTest] Action",
+
+
+  //#region Manage Image
   AddImage: "[AddImage] Action",
   AddImageResponse: "[AddImageResponse] Action",
-  
+
   AddSubCategoryImage: "[AddSubCategoryImage] Action",
   AddSubCategoryImageResponse: "[AddSubCategoryImageResponse] Action",
 
@@ -71,7 +76,7 @@ export const actionTypes = {
   // DeleteApplicationById: "[DeleteApplicationById] Action",
   // DeleteApplicationByIdResponse: "[DeleteApplicationByIdResponse] Action",
 
- 
+
   //#endregion Manage Image 
 
   //#region Manage Category
@@ -83,7 +88,7 @@ export const actionTypes = {
 
   GetCategoryById: "[GetCategoryById] Action",
   GetCategoryByIdResponse: "[GetCategoryByIdResponse] Action",
-  
+
   GetCategoryInfoByID: "[GetCategoryInfoByID] Action",
   GetCategoryInfoByIDResponse: "[GetCategoryInfoByIDResponse] Action",
 
@@ -307,17 +312,29 @@ export const reducer = persistReducer(
       //#endregion End Manage Profile 
 
       //#region Mange Image
+      case actionTypes.AddImageTest: {
+
+        const { categoryImageTest } = action.payload;
+        return { ...state, categoryImageTest };
+      }
+      case actionTypes.AddImageResponseTest: {
+
+        const imageResponseTest = action.payload.imageResponseTest.data && action.payload.imageResponseTest.data;
+        return { ...state, imageResponseTest, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+
+      //#region Mange Image
       case actionTypes.AddImage: {
-         
+
         const { categoryImage } = action.payload;
         return { ...state, categoryImage };
       }
       case actionTypes.AddImageResponse: {
-         
+
         const imageResponse = action.payload.imageResponse.data && action.payload.imageResponse.data;
         return { ...state, imageResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
       }
-      
+
       case actionTypes.AddSubCategoryThumbnailImage: {
         const { thumbnailImage } = action.payload;
         return { ...state, thumbnailImage };
@@ -326,7 +343,7 @@ export const reducer = persistReducer(
         const thumbnailImageResponse = action.payload.thumbnailImageResponse.data && action.payload.thumbnailImageResponse.data;
         return { ...state, thumbnailImageResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
       }
-      
+
       case actionTypes.AddSubCategoryImage: {
         const { subCategoryImage } = action.payload;
         return { ...state, subCategoryImage };
@@ -361,7 +378,7 @@ export const reducer = persistReducer(
         const RequestParmDeleteApplicationId = action.payload;
         return { ...state, RequestParmDeleteApplicationId };
       }
-      
+
       case actionTypes.DeleteApplicationByIdResponse: {
         const DeleteApplicationByIdResponse = action.payload.DeleteApplicationByIdResponse && action.payload.DeleteApplicationByIdResponse;
         return { ...state, DeleteApplicationByIdResponse };
@@ -410,8 +427,8 @@ export const reducer = persistReducer(
         return { ...state, GetSubCategoryInfoByIdResponse };
       }
 
-    
-//#endregion Manage Sub Category
+
+      //#endregion Manage Sub Category
 
 
 
@@ -455,7 +472,7 @@ export const reducer = persistReducer(
         return { ...state, getInsuranceTypeByIdResponse };
       }
 
-       case actionTypes.DeleteCategoryById: {
+      case actionTypes.DeleteCategoryById: {
         const RequestParmDeleteCategoryId = action.payload;
         return { ...state, RequestParmDeleteCategoryId };
       }
@@ -497,7 +514,7 @@ export const reducer = persistReducer(
         const getInsuranceTypeByIdResponse = action.payload.ResetInsuranceTypeResponse && action.payload.ResetInsuranceTypeResponse;
         return { ...state, getInsuranceTypeByIdResponse };
       }
-     
+
       //#endregion End Manage Category
 
       //#region Manage Videos
@@ -674,13 +691,17 @@ export const actions = {
   GetApplicationInfoById: (RequestApplicationInfoByID) => ({ type: actionTypes.GetApplicationInfoById, payload: { RequestApplicationInfoByID } }),
   GetApplicationInfoByIdResponse: (GetApplicationInfoByIdResponse) => ({ type: actionTypes.GetApplicationInfoByIdResponse, payload: { GetApplicationInfoByIdResponse } }),
   //#endregion Manage Application
-  
+
+  //#region Manage Image
+  AddImageTest: (categoryImageTest) => ({ type: actionTypes.AddImageTest, payload: { categoryImageTest } }),
+  AddImageResponseTest: (imageResponseTest) => ({ type: actionTypes.AddImageResponseTest, payload: { imageResponseTest } }),
+
   //#region Manage Image
   AddImage: (categoryImage) => ({ type: actionTypes.AddImage, payload: { categoryImage } }),
   AddImageResponse: (imageResponse) => ({ type: actionTypes.AddImageResponse, payload: { imageResponse } }),
 
   AddSubCategoryThumbnailImage: (thumbnailImage) => ({ type: actionTypes.AddSubCategoryThumbnailImage, payload: { thumbnailImage } }),
-  AddSubCategoryThumbnailImageResponse: (thumbnailImageResponse) => ({ type: actionTypes.AddImageResponse, payload: { thumbnailImageResponse } }),
+  AddSubCategoryThumbnailImageResponse: (thumbnailImageResponse) => ({ type: actionTypes.AddSubCategoryThumbnailImageResponse, payload: { thumbnailImageResponse } }),
 
   AddSubCategoryImage: (subCategoryImage) => ({ type: actionTypes.AddSubCategoryImage, payload: { subCategoryImage } }),
   AddSubCategoryImageResponse: (subCategoryImageResponse) => ({ type: actionTypes.AddSubCategoryImageResponse, payload: { subCategoryImageResponse } }),
@@ -740,7 +761,7 @@ export function* saga() {
   //#region Manage Profile 
 
   yield takeLatest(actionTypes.GetUserData, function* getUserDataRequested(payload) {
-     
+
     const response = yield call(getUserDataRequestApi, payload.payload);
     console.log(response)
     if (response)
@@ -794,19 +815,26 @@ export function* saga() {
   //#endregion Manage Category
 
   //#region Manage Image 
+  yield takeLatest(actionTypes.AddImageTest, function* addImageRequestedTest(payload) {
+    const response = yield call(ImageUploadTest, payload.payload);
+    if (response)
+      yield put(actions.AddImageResponseTest(response));
+  });
+
+  //#region Manage Image 
   yield takeLatest(actionTypes.AddImage, function* addImageRequested(payload) {
     const response = yield call(addCategoryImageRequestApi, payload.payload);
     if (response)
       yield put(actions.AddImageResponse(response));
   });
- 
+
   yield takeLatest(actionTypes.AddSubCategoryThumbnailImage, function* addSubCategoryThumbnailImageRequested(payload) {
     const response = yield call(addSubCategoryThumbnailImageRequestApi, payload.payload);
     if (response)
       yield put(actions.AddSubCategoryThumbnailImageResponse(response));
   });
- 
-   
+
+
   yield takeLatest(actionTypes.AddSubCategoryImage, function* addSubCategoryImageRequested(payload) {
     const response = yield call(addSubCategoryImageRequestApi, payload.payload);
     if (response)
@@ -874,7 +902,7 @@ export function* saga() {
 
 //#region Manage Profile 
 const getUserDataRequestApi = async (payload) => {
-   
+
   var data = payload.userData;
   const instance = await axios.create({
   });
@@ -907,7 +935,7 @@ const updateProfileRequestApi = async (payload) => {
   const instance = await axios.create({
   });
   const options = {
-   headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
   const respo = instance.post(`${BASE_URL}Profile/EditProfile`, data, options)
     .catch((e) => {
@@ -934,7 +962,7 @@ const addCategoryRequestApi = async (payload) => {
 };
 
 const getCategoryRequestedApi = async (payload) => {
-   
+
   // var data = payload.RequestParmTag;
   const instance = await axios.create({
   });
@@ -954,7 +982,7 @@ const checkSubCategoryRequestApi = async (payload) => {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
   const respo = instance.get(`${BASE_URL}SubCategory/CheckSubCategory`, options);
-  console.log(respo,"KOLKOLKOLKOL");
+  console.log(respo, "KOLKOLKOLKOL");
   return respo;
 };
 
@@ -1017,14 +1045,14 @@ const GetCategoryInfoByIDRequestedApi = async (payload) => {
 
 //#region Manage Image
 const addCategoryImageRequestApi = async (payload) => {
-   
+
   var data = payload.categoryImage;
   const instance = await axios.create({
   });
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  console.log(data,"????????????");
+  console.log(data, "????????????");
   const respo = instance.post(`${BASE_URL}Image/addEditImage`, data, options)
     .catch((e) => {
       return e.response;
@@ -1033,33 +1061,33 @@ const addCategoryImageRequestApi = async (payload) => {
   return respo;
 };
 
- 
+
 const addSubCategoryImageRequestApi = async (payload) => {
   var data = payload.subCategoryImage;
-  console.log(data,"DATA");
+  console.log(data, "DATA");
   const instance = await axios.create({
   });
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-   
+
   const respo = instance.post(`${BASE_URL}Image/addEditSubCategroyImage`, data, options)
     .catch((e) => {
       return e.response;
     });
-    console.log(respo,"}}}}}}}");
-    return respo;
+  console.log(respo, "}}}}}}}");
+  return respo;
 };
 
 const addSubCategoryThumbnailImageRequestApi = async (payload) => {
-   
+
   var data = payload.thumbnailImage;
   const instance = await axios.create({
   });
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  console.log(data,"????????????");
+  console.log(data, "????????????");
   const respo = instance.post(`${BASE_URL}Image/AddEditSubCategoryThumbnailImage`, data, options)
     .catch((e) => {
       return e.response;
@@ -1126,7 +1154,7 @@ const GetApplicationInfoByIDRequestedApi = async (payload) => {
 //#region Manage Sub Category
 const addSubCategoryRequestApi = async (payload) => {
   var data = payload.subCategory;
-  console.log(data,"????????????");
+  console.log(data, "????????????");
   const instance = await axios.create({
   });
   const options = {
@@ -1141,7 +1169,7 @@ const addSubCategoryRequestApi = async (payload) => {
 };
 
 const getSubCategoryRequestedApi = async (payload) => {
-   debugger
+   
   var data = payload.GetSubCategoryResponse;
   const instance = await axios.create({
   });
@@ -1149,10 +1177,10 @@ const getSubCategoryRequestedApi = async (payload) => {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
     //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
   };
-  debugger
+   
   const respo = instance.get(`${BASE_URL}SubCategory/GetAllSubCategory`, options);
   return respo;
-  debugger
+   
 };
 
 const deleteSubCategoryApi = async (payload) => {
@@ -1177,6 +1205,22 @@ const GetSubCategoryInfoByIDRequestedApi = async (payload) => {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
   const respo = instance.get(`${BASE_URL}SubCategory/GetSubCategoryById?inSubCategoryId=${data}`, options);
+  return respo;
+};
+
+const ImageUploadTest = async (payload) => {
+  var data = payload.categoryImageTest;
+  const instance = await axios.create({
+  });
+  // const options = {
+  //   headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  // };
+  console.log(data, "????????????");
+  const respo = instance.post(`${BASE_URL}Image/addEditImageTest`, data)
+    .catch((e) => {
+      return e.response;
+    });
+  console.log(respo, "??>>>????");
   return respo;
 };
 

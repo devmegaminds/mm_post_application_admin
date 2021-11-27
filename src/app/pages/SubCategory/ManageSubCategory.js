@@ -41,7 +41,7 @@ class ManageSubCategory extends Component {
         this.props.DeleteSubCategoryById(row.inSubCategoryId)
     }
     componentDidMount() {
-        debugger
+        
         this.setState({ isGettingSubCategory: true })
         this.props.GetSubCategory("");
     }
@@ -66,7 +66,7 @@ class ManageSubCategory extends Component {
                 }
             }
         }
-        debugger
+        
     }
     SuccessFailSweetAlert(msg, type) {
         let getAlert = '';
@@ -335,7 +335,7 @@ function mapStateToProps(state) {
     }
 }
 const mapDispatchToProps = (dispatch) => {
-    debugger
+    
     return {
         GetSubCategory: (data) => dispatch(auth.actions.GetSubCategory(data)),
         DeleteSubCategoryById: (data) => dispatch(auth.actions.DeleteSubCategoryById(data)),

@@ -15,6 +15,7 @@ import AddSubCategoryPage from "./pages/SubCategory/AddSubCategoryPage";
 import ManageSubCategory from "./pages/SubCategory/ManageSubCategory";
 import AddThumbnailImage from "./pages/ThumbnailImage/AddThumbnailImage";
 import ManageUsersPage from "./pages/Users/ManageUsersPage"
+import ImageUploadTest from "../app/modules/Auth/pages/ImageUploadTest";
 //#endregion
 
 //#region It's Extra Screen
@@ -50,6 +51,7 @@ export default function BasePage() {
                 {/* Upload Image */}
                 <ContentRoute path="/ManageUploadCategoryImage" component={ManageUploadCategoryImage} />
                 <ContentRoute path="/ManageUploadSubCategoryImage" component={ManageUploadSubCategoryImage} />
+                <ContentRoute path="/ImageUploadTest" component={ImageUploadTest} />
                 {/* Sub Category */}
                 <ContentRoute path="/ManageSubCategory" component={ManageSubCategory} />
                 <ContentRoute path="/AddSubCategoryPage" component={AddSubCategoryPage} />

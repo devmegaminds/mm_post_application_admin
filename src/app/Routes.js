@@ -11,7 +11,9 @@ import { shallowEqual, useSelector } from "react-redux";
 import { Layout } from "../_metronic/layout";
 import BasePage from "./BasePage";
 import { Logout, AuthPage } from "./modules/Auth";
+import ImageUploadTest from "./modules/Auth/pages/ImageUploadTest";
 import ErrorsPage from "./modules/ErrorsExamples/ErrorsPage";
+import Comp from "./pages/Extra/comp";
 
 export function Routes() {
   const { isAuthorized } = useSelector(
@@ -27,6 +29,7 @@ export function Routes() {
         /*Render auth page when user at `/auth` and not authorized.*/
         <Route>
           <AuthPage />
+          {/* <Comp /> */}
         </Route>
       ) : (
         /*Otherwise redirect to root page (`/`)*/
@@ -34,7 +37,7 @@ export function Routes() {
       )}
 
       <Route path="/error" component={ErrorsPage} />
-      <Route path="/logout" component={Logout} />
+      {/* <Route path="/logout" component={Logout} /> */}
 
       {!isAuthorized ? (
         /*Redirect to `/auth` when user is not authorized*/

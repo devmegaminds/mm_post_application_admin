@@ -7,14 +7,7 @@ import "../custom.css";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
-const renderFields = ({
-    input,
-    label,
-    type,
-    data,
-    placeholder,
-    meta: { asyncValidating, touched, error }
-}) => (
+const renderFields = ({ input, label, type, data, placeholder, meta: { asyncValidating, touched, error } }) => (
     <div className="form-group">
         <label>{label}</label>
         <input {...input} type={type} placeholder={placeholder} className="form-control" style={{ marginTop: '-3%' }} />
@@ -22,6 +15,14 @@ const renderFields = ({
     </div>
 )
 
+const renderCheckboxField = ({
+    input, label, type, checked, id, txtId, data, onClick, meta: { asyncValidating, touched, error } }) => (
+    <div className="form-check form-check-inline">
+        {/* style={{ marginTop: 33 }} */}
+        <input  {...input} type={type} checked={data} className="form-check-input" style={{ cursor: 'pointer' }}></input>
+        <label className="form-check-label">{label}</label>
+    </div>
+)
 const validate = values => {
     const errors = {}
     const requiredFields = [
@@ -40,20 +41,30 @@ class AddApplicationPage extends Component {
         super(props)
         this.state = {
             isError: false,
-            currentUserData: {}
+            currentUserData: {},
+            categoryData: [],
+            isChecked: false
         }
         this.onSubmit = this.onSubmit.bind(this);
+        this.props.GetCategory("");
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
+        debugger
+        let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
+        console.log(indexOfItem);
         this.setState({ isLoading: true });
-        var data = {
-            inApplicationId: formValues.inApplicationId == undefined || formValues.inApplicationId == "" ? 0 : formValues.inApplicationId,
-            stApplicationName: formValues.stApplication,
-            inCreatedBy: this.state.currentUserData.inUserID
-        }
-        //this.props.SaveTag(data);
-        this.props.AddApplication(data);
+        indexOfItem.forEach(element => {
+            var data = {
+                inApplicationId: formValues.inApplicationId == undefined || formValues.inApplicationId == "" ? 0 : formValues.inApplicationId,
+                stApplicationName: formValues.stApplication,
+                inCreatedBy: this.state.currentUserData.inUserID,
+                applicationID: element
+            }
+            console.log(data,"ASDASDASDXZXZC");
+            debugger
+            // this.props.AddApplication(data);
+        });
     }
 
     hideModel = () => {
@@ -90,6 +101,14 @@ class AddApplicationPage extends Component {
                 }
             }
         }
+        if (nextProps.GetCategoryResponse) {
+            if (nextProps.GetCategoryResponse && nextProps.GetCategoryResponse != this.props.GetCategoryResponse) {
+                if (nextProps.GetCategoryResponse.data.length > 0) {
+                    this.setState({ isGettingTags: false });
+                    this.setState({ categoryData: nextProps.GetCategoryResponse.data })
+                }
+            }
+        }
 
     }
     hideModel = () => {
@@ -98,6 +117,7 @@ class AddApplicationPage extends Component {
             showModal: false,
         })
     }
+
     componentDidMount() {
         var id = window.location.href.split("/").pop();
         if (id != "Application")
@@ -112,6 +132,7 @@ class AddApplicationPage extends Component {
             this.props.ResetTag(data);
         }
     }
+
     SuccessFailSweetAlert(msg, type) {
         let getAlert = '';
         if (type == 'success') {
@@ -123,7 +144,6 @@ class AddApplicationPage extends Component {
                 >
                 </SweetAlert>
             );
-
         }
         else {
             getAlert = () => (
@@ -139,6 +159,11 @@ class AddApplicationPage extends Component {
         this.setState({
             alert: getAlert()
         });
+    }
+    onChangesTagName = (e, index) => {
+        // this.setState({ isChecked: this.state.categoryData[index].Checked ? false : true })
+        this.state.categoryData[index].Checked = !this.state.isChecked ? !this.state.categoryData[index].Checked : false;
+        this.setState({ categoryData: this.state.categoryData });
     }
     render() {
         var $this = this;
@@ -163,7 +188,22 @@ class AddApplicationPage extends Component {
                                 />
                             </div>
                         </div>
-
+                        {/* <div className="row">
+                            <div className="col-sm-8">
+                                <h6 >Category</h6><br></br>
+                                {this.state.categoryData != null && this.state.categoryData != "" && this.state.categoryData != undefined && this.state.categoryData.map(function (tag, i) {
+                                    return (
+                                        <Field
+                                            type="checkbox"
+                                            name={tag.stCategoryName}
+                                            label={tag.stCategoryName}
+                                            data={tag.Checked}
+                                            onChange={(evt) => $this.onChangesTagName(evt, i)}
+                                            component={renderCheckboxField} />
+                                    )
+                                })}
+                            </div>
+                        </div> */}
                         <div className="row mt-3 mb-3" >
                             <div className="col-sm-9 text-left userprofile-btn">
                                 <OverlayTrigger
@@ -225,7 +265,8 @@ function mapStateToProps(state) {
         // insuranceTypeResponse: state.auth.insuranceTypeResponse,
         applicationResponse: state.auth.applicationResponse,
         GetApplicationInfoByIdResponse: state.auth.GetApplicationInfoByIdResponse,
-        randomNumbers: state.auth.randomNumbers
+        randomNumbers: state.auth.randomNumbers,
+        GetCategoryResponse: state.auth.GetCategoryResponse,
 
     }
 }
@@ -235,6 +276,8 @@ const mapDispatchToProps = (dispatch) => {
         GetApplicationInfoById: (data) => dispatch(auth.actions.GetApplicationInfoById(data)),
         //SaveTag: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
         AddApplication: (data) => dispatch(auth.actions.AddApplication(data)),
+        GetCategory: (data) => dispatch(auth.actions.GetCategory(data)),
+
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AddApplicationPage);

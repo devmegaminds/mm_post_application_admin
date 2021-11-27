@@ -6,7 +6,8 @@ import { Link, Redirect } from "react-router-dom";
 import "../custom.css";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-
+import DemoPage from '../Extra/demo'
+import { imagesubcriber } from '../Extra/subBehaviour';
 const renderFields = ({
     input,
     label,
@@ -48,14 +49,27 @@ class AddThumbnailImage extends Component {
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
-        this.setState({ isLoading: true });
-        var data = {
-            // inSubCategoryThumbnailImageId:3,
-            inSubCategoryThumbnailImageId: formValues.inSubCategoryThumbnailImageId == undefined || formValues.inSubCategoryThumbnailImageId == "" ? 0 : formValues.inSubCategoryThumbnailImageId,
-            stImageDatabase64: this.state.baseImage.split(',')[1],
-            inSubCategoryId: this.state.subCategoryId,
-        }
-        this.props.AddSubCategoryThumbnailImage(data);
+        debugger
+        const fd = new FormData();
+        var subCategoryId = this.state.subCategoryId
+        var SubCategoryImageId = 0
+        let x = this.state.image
+        fd.append('image', x[0].file);
+        fd.append('inSubCategoryThumbnailImageId', SubCategoryImageId);   //Image Id
+        // fd.append('stImageDatabase64', x[i]['data_url'].split(',')[1]);  // Imaeg Data base64
+        fd.append('inSubCategoryId', subCategoryId); // Sub Caetgory Id
+        // fd.append('inCreatedBy', this.state.currentUserData.inUserID); // user Id
+
+        // this.setState({ isLoading: true });
+        // var data = {
+        //     
+        //     inSubCategoryThumbnailImageId: formValues.inSubCategoryThumbnailImageId == undefined || formValues.inSubCategoryThumbnailImageId == "" ? 0 : formValues.inSubCategoryThumbnailImageId,
+        //     stImageDatabase64: this.state.baseImage.split(',')[1],
+        //     inSubCategoryId: this.state.subCategoryId,
+        // }
+        // console.log(data,"THUMBNAIL IMAGE SCREEN");
+        this.props.AddSubCategoryThumbnailImage(fd);
+        debugger
     }
 
     // hideModel = () => {
@@ -72,6 +86,10 @@ class AddThumbnailImage extends Component {
     //     })
     // }
     componentDidMount() {
+        imagesubcriber.subscribe((x) => {
+            debugger
+            this.setState({ image: x })
+        })
         var id = window.location.href.split("/").pop();
         this.setState({ subCategoryId: id })
     }
@@ -140,16 +158,17 @@ class AddThumbnailImage extends Component {
                     <div className="card-toolbar">
                     </div>
                 </div>
-                <form className="form-horizontal" onSubmit={(this.onSubmit)}>
+                {/* <form className="form-horizontal" onSubmit={(this.onSubmit)}> */}
                     <div style={{ margin: 25 }} className="form-group fv-plugins-icon-container">
-                        <div className="col-sm-4">
+                        <div className="col-sm-6">
                             <h6>Image Upload</h6>
-                            <input
+                            <DemoPage />
+                            {/* <input
                                 type="file"
                                 onChange={(e) => {
                                     this.uploadImage(e);
                                 }}
-                            />
+                            /> */}
                         </div>
                         <br></br>
                     </div>
@@ -161,17 +180,22 @@ class AddThumbnailImage extends Component {
                         <OverlayTrigger
                             placement="bottom"
                             overlay={<Tooltip>Add Thumbnaul Image</Tooltip>}>
-                            <button style={{ width: 120, marginRight: 10 }}
+                            {/* <button style={{ width: 120, marginRight: 10 }}
                                 id="kw_dtn_add_carrier"
                                 type="submit"
                                 //   disabled={!baseImage}
                                 className={`btn btn-primary`}>
                                 Submit
-                                {/* {this.state.isLoading && <span className="ml-3 spinner spinner-white"></span>} */}
-                            </button>
+                            </button> */}
+                             <button style={{ width: 120, marginRight: 0 }}
+                            id="kw_dtn_add_carrier"
+                            type="submit"
+                            className="btn btn-primary"
+                            onClick={(this.onSubmit)}>Submit
+                        </button>
                         </OverlayTrigger>
                     </div>
-                </form>
+                {/* </form> */}
             </div>
         )
     }

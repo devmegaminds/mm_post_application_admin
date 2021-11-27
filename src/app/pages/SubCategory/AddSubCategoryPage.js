@@ -290,7 +290,7 @@ AddSubCategoryPage = reduxForm({
 })(AddSubCategoryPage);
 
 function mapStateToProps(state) {
-    debugger
+    
     return {
         initialValues: {
             inSubCategoryId: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.inSubCategoryId : "",

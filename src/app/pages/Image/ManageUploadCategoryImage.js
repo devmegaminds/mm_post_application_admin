@@ -7,22 +7,12 @@ import "../custom.css";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import FileBase64 from 'react-file-base64';
-import ImageUploadPreviewComponent from "../ImageUploadPreviewComponent"
+// import ImageUploadPreviewComponent from "../ImageUploadPreviewComponent"
 
-const renderFields = ({
-    input,
-    label,
-    type,
-    data,
-    placeholder,
-    meta: { asyncValidating, touched, error }
-}) => (
-    <div className="form-group">
-        <label>{label}</label>
-        <input {...input} type={type} placeholder={placeholder} className="form-control" style={{ marginTop: '-3%' }} />
-        {touched && error && <small className="error-msg text-danger form-text">{error}</small>}
-    </div>
-)
+
+import DemoPage from '../Extra/demo'
+import { imagesubcriber } from '../Extra/subBehaviour';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const renderCheckboxField = ({
     input, label, type, checked, id, txtId, data, onClick, meta: { asyncValidating, touched, error } }) => (
@@ -46,8 +36,8 @@ const validate = values => {
     return errors
 }
 
-
 class ManageUploadCategoryImage extends Component {
+
     constructor(props) {
         super(props)
         this.state = {
@@ -55,51 +45,23 @@ class ManageUploadCategoryImage extends Component {
             currentUserData: {},
             subCategoryId: "",
             files: [],
-            // baseImage: "",
             categoryData: [],
+            baseImage: [],
+            imageData: []
         }
         this.props.CheckSubCategory("");
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
-
     }
-    onSubmit = (formValues) => {
-        debugger
-        let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
-        if (indexOfItem.length == 0) {
-            this.SuccessFailSweetAlert("Please select at least one Category", "error");
-            this.setState({ isLoading: false });
-        }
-        else {
-            var categoryId = indexOfItem[0].inCategoryId
-            this.setState({ isLoading: true });
-            var data = {
-                inCategoryImageId: formValues.inCategoryImageId == undefined || formValues.inCategoryImageId == "" ? 0 : formValues.inCategoryImageId,
-                stImageDatabase64: this.state.baseImage.split(',')[1],
-                inCategoryId: categoryId,
-                // inCategoryId: "2",
-            }
-            this.props.AddImage(data);
-            // dispatch(auth.actions.AddImage(data))
-            debugger
-        }
-
-    }
-
-    hideModel = () => {
-        this.setState({
-            alert: '',
-            showModal: false,
-        })
-    }
-
-    hideModel = () => {
-        this.setState({
-            alert: '',
-            showModal: false,
+    componentDidMount() {
+         
+        imagesubcriber.subscribe((x) => {
+             
+            this.setState({image: x})
         })
     }
 
     componentWillReceiveProps(nextProps) {
+         
         if (nextProps.CheckSubCategoryResponse) {
             if (nextProps.CheckSubCategoryResponse && nextProps.CheckSubCategoryResponse != this.props.CheckSubCategoryResponse) {
                 if (nextProps.CheckSubCategoryResponse.data.length > 0) {
@@ -109,6 +71,21 @@ class ManageUploadCategoryImage extends Component {
             }
         }
     }
+
+    hideModel = () => {
+        this.setState({
+            alert: '',
+            showModal: false,
+        })
+    }
+
+    hideModel = () => {
+        this.setState({
+            alert: '',
+            showModal: false,
+        })
+    }
+
     SuccessFailSweetAlert(msg, type) {
         let getAlert = '';
         if (type == 'success') {
@@ -137,13 +114,134 @@ class ManageUploadCategoryImage extends Component {
             alert: getAlert()
         });
     }
-    //#region Single image upoad 
-    uploadImage = async (e) => {
-        debugger
-        const file = e.target.files[0];
-        const base64 = await this.convertBase64(file);
-        this.setState({ baseImage: base64 })
+
+    // onFileChange = (event) => {
+    //     const fileData = event.target.files;
+    //     const blob = new Blob([fileData]);
+    //     const reader = new FileReader();
+
+    //     reader.onloadend = () => {
+    //         for (let i = 0; i < fileData.length; i++) {
+    //             console.log('Data to be sent', {
+    //                 name: fileData[i].name,
+    //                 fileSize: fileData[i].size,
+    //                 fileContentType: fileData[i].type,
+    //                 file: reader.result
+    //             });
+    //         }
+    //     }
+    //     reader.readAsDataURL(blob);
+    //  }
+    fileToDataUri = (image) => {
+        return new Promise((res) => {
+            const reader = new FileReader();
+            const { type, name, size } = image;
+            reader.addEventListener('load', () => {
+                res({
+                    base64: reader.result,
+                    name: name,
+                    type,
+                    size: size,
+                })
+            });
+            // console.log();
+            reader.readAsDataURL(image);
+        })
     };
+    //#region image upoad 
+    uploadImage = async (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const newImagesPromises = []
+            for (let i = 0; i < e.target.files.length; i++) {
+                newImagesPromises.push(this.fileToDataUri(e.target.files[i]))
+            }
+            const newImages = await Promise.all(newImagesPromises)
+            // console.log(newImages[1].base64, ":><:><:><:><:>");
+            this.setState({ baseImage: [...newImages] })
+            //#region Signle Image Upload
+            // const file = e.target.files[0];
+            // const base64 = await this.convertBase64(file);
+            // this.setState({ baseImage: base64 })
+            //#endregion
+        }
+    };
+
+    onSubmit = async (formValues) => {
+        //#region Split Base64 Data
+         
+        const data = []
+        var base64Data = this.state.baseImage
+        for (let index = 0; index < base64Data.length; index++) {
+            data.push(base64Data[index].base64.split(',')[1])
+        }
+        const newImagess = await Promise.all(data)
+        this.setState({ imageData: [...newImagess] })
+        //-------------------------------//
+
+        let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
+        if (indexOfItem.length == 0) {
+            this.SuccessFailSweetAlert("Please select at least one Category", "error");
+            this.setState({ isLoading: false });
+        }
+        else {
+             
+            let x = this.state.image
+            console.log(x, "PLPLPLPLPLPLPLPLPLPLP");
+            var categoryId = indexOfItem[0].inCategoryId
+            this.setState({ isLoading: true });
+            for (var i = 0; i < x.length; i++) {
+                const fd = new FormData();
+                var xyz = categoryId
+                var xyzz = "iMAGE pATRH"
+                var asd = 0
+                fd.append('image', x[i]['file']);
+                fd.append('inCategoryImageId', xyzz);   //Image Id
+                // fd.append('stImageDatabase64', x[i]['data_url'].split(',')[1]);  // Imaeg Data base64
+                fd.append('stImageDatabase64',xyzz);  // Imaeg Data base64
+                fd.append('inCategoryId', categoryId); // Caetgory Id
+                // fd.append('stImageDatabase64', xysz);
+                this.props.AddImage(fd);
+            }
+            // var categoryId = indexOfItem[0].inCategoryId
+            // this.setState({ isLoading: true });
+            // this.state.imageData.forEach(element => {
+            //     var data = {
+            //         inCategoryImageId: formValues.inCategoryImageId == undefined || formValues.inCategoryImageId == "" ? 0 : formValues.inCategoryImageId,
+            //         // stImageDatabase64: this.state.baseImage.split(',')[1],
+            //         stImageDatabase64: element,
+            //         inCategoryId: categoryId,
+            //     }
+            //     console.log(data, "CATEGORY IMAGE SCREEN");
+            //     this.props.AddImage(data);
+            //      
+            // });
+        }
+    }
+
+    // addFormData() {
+    //      
+    //     let x = this.state.image
+    //     console.log(x, "PLPLPLPLPLPLPLPLPLPLP");
+
+    //     for (var i = 0; i < x.length; i++) {
+    //         const fd = new FormData();
+    //         var xyz = 15
+    //         var asd = 0
+    //         fd.append('image', x[i]['file']);
+    //         fd.append('stImageDatabase64', x[i]['data_url'].split(',')[1]);
+    //         fd.append('inCategoryId', xyz);
+    //         // fd.append('stImageDatabase64', xysz);
+    //         fd.append('inCategoryImageId', asd);
+    //         this.props.AddImage(fd);
+
+    //         // console.log(fd, ">:>:>:>:>:>:>:>:>:>:");
+    //         // axios.post('http://localhost:4200/api/Image/ImageTest', fd)
+    //         //     // axios.post('http://megaminds-001-site12.itempurl.com/api/Image/ImageTest', fd)
+    //         //     .catch((e) => {
+    //         //     });
+    //     }
+    // }
+
     convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const fileReader = new FileReader();
@@ -156,6 +254,8 @@ class ManageUploadCategoryImage extends Component {
             };
         });
     };
+
+    
     // ------------------------------
 
     onChangesTagName = (e, index) => {
@@ -170,6 +270,7 @@ class ManageUploadCategoryImage extends Component {
         if (this.state.isRedirect) {
             return <Redirect to="/ManageCategory" />
         }
+        let base64ImageData = this.state.baseImage
         return (
             <div className="card card-custom gutter-b example example-compact">
                 <div className="card-header">
@@ -179,20 +280,22 @@ class ManageUploadCategoryImage extends Component {
                     <div className="card-toolbar">
                     </div>
                 </div>
-                <form className="form-horizontal" onSubmit={(this.onSubmit)}>
+                {/* <form className="form-horizontal" onSubmit={(this.onSubmit)}> */}
                     <div style={{ margin: 25 }} className="form-group fv-plugins-icon-container">
-                        <div className="col-sm-4">
+                        <div className="col-sm-12">
                             <h6>Image Upload</h6>
-                            {/* //#region multiple image upload component */}
-                            {/* <ImageUploadPreviewComponent />   */}
- 
-                            {/* Signle Imaeg Uplaod  */}
-                            <input
-                                type="file"
-                                onChange={(e) => {
-                                    this.uploadImage(e);
-                                }}
-                            />
+                            {/* Imaeg Uplaod  */}
+                            <DemoPage/>
+                            {/* <div className="form-group">
+                                <input
+                                    className="form-control"
+                                    type="file"
+                                    multiple
+                                    onChange={(e) => {
+                                        this.uploadImage(e);
+                                    }}
+                                />
+                            </div> */}
                         </div>
                         <br></br>
                         <div className="col-sm-8">
@@ -209,23 +312,49 @@ class ManageUploadCategoryImage extends Component {
                                 )
                             })}
                         </div>
+                        {
+                            base64ImageData.length > 0
+                                ? base64ImageData.map((imageObj, i) => {
+                                    return (
+                                        <div >
+                                            <img
+                                                width="75px"
+                                                height="75px"
+                                                src={imageObj.base64}
+                                                alt=''
+                                            />
+                                            {/* <div>
+                                                <span>{imageObj.size ? imageObj.size : '-'}</span>
+                                                <span>{imageObj.name ? imageObj.name : '-'}</span>
+                                            </div> */}
+                                        </div>
+                                    )
+                                })
+                                : null
+                        }
                     </div>
-                    <div style={{ margin: 20 }}>
+                    {/* <div style={{ margin: 20 }}>
                         <img src={this.state.baseImage} height="200px" />
-                    </div>
+                    </div> */}
                     <div style={{ margin: 20 }}>
                         <OverlayTrigger
                             placement="bottom"
                             overlay={<Tooltip>Add category Image</Tooltip>}>
-                            <button style={{ width: 120, marginRight: 10 }}
+                            {/* <button style={{ width: 120, marginRight: 10 }}
                                 id="kw_dtn_add_carrier"
                                 type="submit"
                                 className={`btn btn-primary`}>
                                 Submit
-                            </button>
+                            </button> */}                            
+                        <button style={{ width: 120, marginRight: 0 }}
+                            id="kw_dtn_add_carrier"
+                            type="submit"
+                            className="btn btn-primary"
+                            onClick={(this.onSubmit)}>Submit
+                        </button>
                         </OverlayTrigger>
                     </div>
-                </form>
+                {/* </form> */}
             </div>
         )
     }
