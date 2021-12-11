@@ -9,6 +9,8 @@ import "../custom.css";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import FileBase64 from 'react-file-base64';
 import { cartCountSubscriber, cartCountService } from "../pagination/dataTransferService";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+
 const renderField = ({
   input,
   label,
@@ -382,7 +384,7 @@ class Profile extends Component {
                     autocomplete="off"
                     name="oldPassword"
                     label="Current Password"
-                    placeholder="Enter Current password"
+                    placeholder="Enter Current Password"
                     component={renderField}
                   />
                 </div>
@@ -392,7 +394,7 @@ class Profile extends Component {
                     autocomplete="off"
                     name="newPassword"
                     label="New Password"
-                    placeholder="Enter new password"
+                    placeholder="Enter New Password"
                     component={renderField}
                   />
                 </div>
@@ -420,6 +422,14 @@ class Profile extends Component {
                     Submit
                     {this.state.isLoading && <span className="ml-3 spinner spinner-white"></span>}
                   </button>
+
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={<Tooltip>Cancel</Tooltip>}>
+                    <Link className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/DashboardPage">
+                      Cancel
+                    </Link>
+                  </OverlayTrigger>
                 </div>
 
               </div>

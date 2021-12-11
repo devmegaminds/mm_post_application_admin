@@ -120,9 +120,9 @@ export function UserProfileDropdown() {
                 }}
               >
                 <div className="symbol bg-white-o-15 mr-3">
-                  <img src={JSON.parse(localStorage.getItem("persist:v713-demo1-auth")) != null ?
+                  {/* <img src={JSON.parse(localStorage.getItem("persist:v713-demo1-auth")) != null ?
                     JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user != undefined ?
-                      JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).profileImage : "" : ""} />
+                      JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).profileImage : "" : ""} /> */}
 
                   <span className="text-success font-weight-bold font-size-h4">
                     {/* {user.name} */}

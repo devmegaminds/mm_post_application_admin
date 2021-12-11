@@ -138,7 +138,7 @@ class ManageSubCategory extends Component {
         var $this = this;
         const columns = [
             //#region Index of the Sub Category list
-            { dataField: 'inUserID', text: 'User Unique Id', hidden: true },
+            // { dataField: 'inUserID', text: 'User Unique Id', hidden: true },
             { dataField: 'stFirstName', text: 'First Name', sort: true },
             { dataField: 'stLastName', text: 'Last Name', sort: true },
             { dataField: 'stContact', text: 'Contact Number', sort: true },
@@ -162,17 +162,17 @@ class ManageSubCategory extends Component {
                     return (
                         <OverlayTrigger
                             placement="bottom"
-                            overlay={<Tooltip>View Favorite Video</Tooltip>}>
-                            <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }}
-                             onClick={(e) => this.handleView(row)}
-                             >
+                            overlay={<Tooltip>View User</Tooltip>}>
+                            <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginLeft: 10 }}
+                                onClick={(e) => this.handleView(row)}
+                            >
                                 <i className="far fa-eye"></i>
                             </a>
                         </OverlayTrigger>
                     )
                 },
                 headerStyle: (colum, colIndex) => {
-                    return { width: '10%' };
+                    return { width: '5%' };
                 }
             }
         ];
@@ -211,7 +211,7 @@ class ManageSubCategory extends Component {
                 {this.state.alert}
                 <div className="card-header">
                     <div className="card-title">
-                        <h3 className="card-label">User List</h3>
+                        <h3 className="card-label">Users List</h3>
                         {this.state.isGettingListData && <Spinner animation="border" variant="primary" />}
                     </div>
                     <div className="card-toolbar">
@@ -291,14 +291,14 @@ class ManageSubCategory extends Component {
                             )
                         }
                     </ToolkitProvider>
-                    {/* <div className="mt-2">
+                    <div className="mt-2">
                         <a className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
-                            <i className="fas fa-edit icon-nm"></i>
-                        </a> Edit SubCategory &nbsp;&nbsp;&nbsp;
-                        <a className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
+                            <i className="far fa-eye"></i>
+                        </a> View User Detail &nbsp;&nbsp;&nbsp;
+                        {/* <a className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
                             <i className="ki ki-close icon-nm"></i>
-                        </a> Delete SubCategory
-                    </div> */}
+                        </a> Delete SubCategory */}
+                    </div>
                 </div>
             </div>
         )

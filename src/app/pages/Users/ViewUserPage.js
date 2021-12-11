@@ -176,7 +176,7 @@ class ViewUserPage extends Component {
                                         name="stFirstName"
                                         label="First Name"
                                         placeholder="First Name"
-                                        component={renderField}
+                                        component={renderdisableField}
                                     />
                                 </div>
 
@@ -186,7 +186,7 @@ class ViewUserPage extends Component {
                                         name="stLastName"
                                         label="Last Name"
                                         placeholder="Last Name"
-                                        component={renderField}
+                                        component={renderdisableField}
                                     />
                                 </div>
                                 <div className="col-sm-4">
@@ -195,7 +195,7 @@ class ViewUserPage extends Component {
                                         name="stEmail"
                                         label="Email"
                                         placeholder="Email Address"
-                                        component={renderField}
+                                        component={renderdisableField}
                                     />
                                 </div>
                                 <div className="col-sm-4">
@@ -204,7 +204,7 @@ class ViewUserPage extends Component {
                                         name="stContact"
                                         label="PhoneNo"
                                         placeholder="Phone Number"
-                                        component={renderField}
+                                        component={renderdisableField}
                                     />
                                 </div>
                                 <div className="col-sm-4">
@@ -213,7 +213,7 @@ class ViewUserPage extends Component {
                                         name="stAddress"
                                         label="Address"
                                         placeholder="Address"
-                                        component={renderField}
+                                        component={renderdisableField}
                                     />
                                 </div>
                                 <div className="col-sm-4">
@@ -235,6 +235,13 @@ class ViewUserPage extends Component {
                                     />
                                 </div>
                             </div>
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={<Tooltip>Cancel</Tooltip>}>
+                                <Link style={{ width: 120 }} className="btn btn-primary" id="kw_lnk_cancel_carrier" to="/ManageUsersPage">
+                                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                </Link>
+                            </OverlayTrigger>
                         </div>
                     </form>
                 </div>

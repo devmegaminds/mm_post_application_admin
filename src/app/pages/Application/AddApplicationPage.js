@@ -33,6 +33,9 @@ const validate = values => {
             errors[field] = field.substring(2) + ' is required.'
         }
     })
+    if(values.stApplication && values.stApplication.trim() == ""){
+        errors["stApplication"] = "Application is required."
+    }
     return errors
 }
 
@@ -49,22 +52,34 @@ class AddApplicationPage extends Component {
         this.props.GetCategory("");
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
+    // onSubmit = (formValues) => {
+    //     debugger
+    //     let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
+    //     console.log(indexOfItem);
+    //     this.setState({ isLoading: true });
+    //     indexOfItem.forEach(element => {
+    //         var data = {
+    //             inApplicationId: formValues.inApplicationId == undefined || formValues.inApplicationId == "" ? 0 : formValues.inApplicationId,
+    //             stApplicationName: formValues.stApplication,
+    //             inCreatedBy: this.state.currentUserData.inUserID,
+    //             applicationID: element
+    //         }       
+    //         console.log(data,"LLLLL");
+    //         // this.props.AddApplication(data);
+    //     });
+    //     debugger
+    // }
     onSubmit = (formValues) => {
-        debugger
-        let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
-        console.log(indexOfItem);
         this.setState({ isLoading: true });
-        indexOfItem.forEach(element => {
+        if(formValues.stApplication.trim() != ""){
             var data = {
                 inApplicationId: formValues.inApplicationId == undefined || formValues.inApplicationId == "" ? 0 : formValues.inApplicationId,
-                stApplicationName: formValues.stApplication,
+                stApplicationName: formValues.stApplication.trim(),
                 inCreatedBy: this.state.currentUserData.inUserID,
-                applicationID: element
             }
-            console.log(data,"ASDASDASDXZXZC");
-            debugger
-            // this.props.AddApplication(data);
-        });
+            console.log(data,"ASDASD");
+            this.props.AddApplication(data);
+        }
     }
 
     hideModel = () => {
@@ -186,8 +201,9 @@ class AddApplicationPage extends Component {
                                     placeholder="Enter Application Name"
                                     component={renderFields}
                                 />
+                                {/* <label style={{opacity : this.isError ? 1 : 0}}>Application is required.</label> */}
                             </div>
-                        </div>
+                        </div>  
                         {/* <div className="row">
                             <div className="col-sm-8">
                                 <h6 >Category</h6><br></br>
@@ -220,7 +236,7 @@ class AddApplicationPage extends Component {
                                 <OverlayTrigger
                                     placement="bottom"
                                     overlay={<Tooltip>Cancel</Tooltip>}>
-                                    <Link className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/Tags">
+                                    <Link style={{ width: 120 }} className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageApplication">
                                         Cancel
                                     </Link>
                                 </OverlayTrigger>

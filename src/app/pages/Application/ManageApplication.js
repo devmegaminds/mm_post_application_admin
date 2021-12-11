@@ -30,6 +30,7 @@ class ManageApplication extends Component {
     handleEdit(row) {
         this.props.history.push(`/AddApplicationPage/${row.inApplicationId}`)
     }
+   
 
     handleDelete(row) {
         if (row != null)
@@ -126,13 +127,16 @@ class ManageApplication extends Component {
         }
         return `${moment(cell).format("MM-DD-YYYY") ? moment(cell).format("MM-DD-YYYY") : moment(cell).format("MM-DD-YYYY")}`;
     }
+    changeevent(e,row) {
+        console.log(row.inApplicationId);
+    }
     render() {
         var $this = this;
         const columns = [
             //#region Index of the Application list
-            { dataField: 'inApplicationId', text: 'Application Id', hidden: true },
+            // { dataField: 'inApplicationId', text: 'Application Id', hidden: true },
             { dataField: 'stAppplicationName', text: 'Application Name', sort: true },
-            { dataField: 'inCreatedBy', text: 'Creator Name', sort: true },
+            { dataField: 'inCreatedBy', text: 'Creator Id' },
             // { dataField: 'flgIsActive', text: 'Is Active', sort: false },
             {
                 dataField: 'dtCreatedOn', text: 'Created Date', sort: false,
@@ -150,6 +154,14 @@ class ManageApplication extends Component {
                 formatter: (rowContent, row) => {
                     return (
                         <div>
+                            {/* <div class="col-3">
+                                <span class="switch switch-outline switch-icon switch-success">
+                                    <label>
+                                        <input type="checkbox" checked="checked" name="select" onClick={(e) => this.changeevent(e,row)} />
+                                        <span></span>
+                                    </label>
+                                </span>
+                            </div> */}
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={<Tooltip>Edit Application</Tooltip>}>
@@ -216,7 +228,7 @@ class ManageApplication extends Component {
                             placement="bottom"
                             overlay={<Tooltip>Add Application</Tooltip>}>
                             <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/AddApplicationPage">
-                            Add Application
+                                Add Application
                             </Link>
                         </OverlayTrigger>
 
@@ -229,7 +241,6 @@ class ManageApplication extends Component {
                         keyField='kw_insuranceType_datatable'
                         data={this.state.tagsData}
                         columns={columns}
-
                         search
                     >
                         {
@@ -247,12 +258,12 @@ class ManageApplication extends Component {
                         }
                     </ToolkitProvider>
                     <div className="mt-2">
-                        <a className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
+                        <div className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
                             <i className="fas fa-edit icon-nm"></i>
-                        </a> Edit Application &nbsp;&nbsp;&nbsp;
-                        <a className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
+                        </div> Edit Application &nbsp;&nbsp;&nbsp;
+                        <div className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
                             <i className="ki ki-close icon-nm"></i>
-                        </a> Delete Application 
+                        </div> Delete Application
                     </div>
                 </div>
             </div>
@@ -262,7 +273,7 @@ class ManageApplication extends Component {
 
 function mapStateToProps(state) {
     return {
-        initialValues: {    
+        initialValues: {
 
         },
         GetApplicationResponse: state.auth.GetApplicationResponse,

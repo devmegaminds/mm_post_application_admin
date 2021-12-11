@@ -6,8 +6,8 @@ import { Link, Redirect } from "react-router-dom";
 import "../custom.css";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import DemoPage from '../Extra/demo'
-import { imagesubcriber } from '../Extra/subBehaviour';
+import ImageUplaodComponents from '../../components/ImageUplaod'
+import { imagesubcriber } from '../../env/subBehaviour';
 const renderFields = ({
     input,
     label,
@@ -23,19 +23,6 @@ const renderFields = ({
     </div>
 )
 
-const validate = values => {
-    const errors = {}
-    const requiredFields = [
-        'stSubCategoryName'
-    ]
-    requiredFields.forEach(field => {
-        if (!values[field]) {
-            errors[field] = field.substring(2) + ' is required.'
-        }
-    })
-    return errors
-}
-
 class AddThumbnailImage extends Component {
     constructor(props) {
         super(props)
@@ -44,47 +31,24 @@ class AddThumbnailImage extends Component {
             currentUserData: {},
             subCategoryId: "",
             baseImage: "",
+            showModal: false,
+            message: ''
         }
-        // this.onSubmit = this.onSubmit.bind(this);
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
-        debugger
         const fd = new FormData();
         var subCategoryId = this.state.subCategoryId
         var SubCategoryImageId = 0
         let x = this.state.image
         fd.append('image', x[0].file);
         fd.append('inSubCategoryThumbnailImageId', SubCategoryImageId);   //Image Id
-        // fd.append('stImageDatabase64', x[i]['data_url'].split(',')[1]);  // Imaeg Data base64
         fd.append('inSubCategoryId', subCategoryId); // Sub Caetgory Id
-        // fd.append('inCreatedBy', this.state.currentUserData.inUserID); // user Id
-
-        // this.setState({ isLoading: true });
-        // var data = {
-        //     
-        //     inSubCategoryThumbnailImageId: formValues.inSubCategoryThumbnailImageId == undefined || formValues.inSubCategoryThumbnailImageId == "" ? 0 : formValues.inSubCategoryThumbnailImageId,
-        //     stImageDatabase64: this.state.baseImage.split(',')[1],
-        //     inSubCategoryId: this.state.subCategoryId,
-        // }
-        // console.log(data,"THUMBNAIL IMAGE SCREEN");
         this.props.AddSubCategoryThumbnailImage(fd);
-        debugger
+        this.SuccessFailSweetAlert("Image has been saved successfully!", "success");
+        this.setState({ isLoading: false });
     }
 
-    // hideModel = () => {
-    //     this.setState({
-    //         alert: '',
-    //         showModal: false,
-    //     })
-    // }
-
-    // hideModel = () => {
-    //     this.setState({
-    //         alert: '',
-    //         showModal: false,
-    //     })
-    // }
     componentDidMount() {
         imagesubcriber.subscribe((x) => {
             debugger
@@ -93,42 +57,29 @@ class AddThumbnailImage extends Component {
         var id = window.location.href.split("/").pop();
         this.setState({ subCategoryId: id })
     }
-    // SuccessFailSweetAlert(msg, type) {
-    //     let getAlert = '';
-    //     if (type == 'success') {
-    //         getAlert = () => (
-    //             <SweetAlert
-    //                 success
-    //                 title={msg}
-    //                 onConfirm={() => this.hideAlert(true)}
-    //             >
-    //             </SweetAlert>
-    //         );
 
-    //     }
-    //     else {
-    //         getAlert = () => (
-    //             <SweetAlert
-    //                 error
-    //                 title={msg}
-    //                 onConfirm={() => this.hideAlert(false)}
-    //             >
-    //             </SweetAlert>
-    //         );
-    //     }
+    SuccessFailSweetAlert(msg, type) {
+        this.setState({ showModal: true, message: msg, alertType: type })
+    }
 
-    //     this.setState({
-    //         alert: getAlert()
-    //     });
-    // }
+    hideModelError = () => {
+        this.setState({
+            message: '',
+            showModal: false,
+        })
+    }
 
+    hideModelSuccess = () => {
+        this.setState({
+            alert: '',
+            showModal: false,
+            isRedirect: true
+        })
+    }
     uploadImage = async (e) => {
         const file = e.target.files[0];
         const base64 = await this.convertBase64(file);
-        // const base = base64.split(',')[1];
-        // initialValues.baseimg = base64;
         this.setState({ baseImage: base64 })
-        // this.setState(base64);
     };
     convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -158,64 +109,67 @@ class AddThumbnailImage extends Component {
                     <div className="card-toolbar">
                     </div>
                 </div>
-                {/* <form className="form-horizontal" onSubmit={(this.onSubmit)}> */}
-                    <div style={{ margin: 25 }} className="form-group fv-plugins-icon-container">
-                        <div className="col-sm-6">
-                            <h6>Image Upload</h6>
-                            <DemoPage />
-                            {/* <input
+                <div style={{ margin: 25 }} className="form-group fv-plugins-icon-container">
+                    <div className="col-sm-6">
+                        <h6>Image Upload</h6>
+                        <ImageUplaodComponents />
+                        {/* <input
                                 type="file"
                                 onChange={(e) => {
                                     this.uploadImage(e);
                                 }}
                             /> */}
-                        </div>
-                        <br></br>
                     </div>
+                    <br></br>
+                </div>
 
-                    <div style={{ margin: 20 }}>
-                        <img src={this.state.baseImage} height="200px" />
-                    </div>
-                    <div style={{ margin: 20 }}>
-                        <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>Add Thumbnaul Image</Tooltip>}>
-                            {/* <button style={{ width: 120, marginRight: 10 }}
-                                id="kw_dtn_add_carrier"
-                                type="submit"
-                                //   disabled={!baseImage}
-                                className={`btn btn-primary`}>
-                                Submit
-                            </button> */}
-                             <button style={{ width: 120, marginRight: 0 }}
+                <div style={{ margin: 20 }}>
+                    <img src={this.state.baseImage} height="200px" />
+                </div>
+                <div style={{ margin: 20 }}>
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={<Tooltip>Add Thumbnaul Image</Tooltip>}>
+                        <button style={{ width: 120, marginRight: 10 }}
                             id="kw_dtn_add_carrier"
                             type="submit"
                             className="btn btn-primary"
                             onClick={(this.onSubmit)}>Submit
                         </button>
-                        </OverlayTrigger>
-                    </div>
-                {/* </form> */}
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={<Tooltip>Cancel</Tooltip>}>
+                        <Link style={{ width: 120 }} className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageSubCategory">
+                            Cancel
+                        </Link>
+                    </OverlayTrigger>
+                </div>
+                {this.state.showModal && this.state.alertType == 'error' ?
+                    <SweetAlert
+                        error
+                        title={this.state.message}
+                        onConfirm={() => this.hideModelError()}>
+                    </SweetAlert>
+                    :
+                    this.state.showModal &&
+                    <SweetAlert
+                        success
+                        title={this.state.message}
+                        onConfirm={() => this.hideModelSuccess()}>
+                    </SweetAlert>
+                }
             </div>
         )
     }
 }
-
-// AddSubCategoryPage = reduxForm({
-//     form: 'SubCategory',
-//     validate,
-//     enableReinitialize: true,
-//     destroyOnUnmount: true
-// })(AddSubCategoryPage);
 
 function mapStateToProps(state) {
     return {
         initialValues: {
             inSubCategoryId: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.inSubCategoryId : "",
             stSubCategoryName: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.stSubCategoryName : ""
-
         },
-        // insuranceTypeResponse: state.auth.insuranceTypeResponse,
         subCategoryResponse: state.auth.subCategoryResponse,
         GetSubCategoryInfoByIdResponse: state.auth.GetSubCategoryInfoByIdResponse,
         randomNumbers: state.auth.randomNumbers

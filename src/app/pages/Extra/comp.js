@@ -2,8 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import '../custom.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import DemoPage from './demo'
-import { imagesubcriber } from './subBehaviour';
+import ImageUplaodComponents from '../../components/ImageUplaod'
+import { imagesubcriber } from '../../env/subBehaviour';
 
 const maxNumber = 10;
 const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
@@ -57,7 +57,7 @@ class Demo extends React.Component {
         return (
             <div>
                 <div>
-                    <DemoPage />
+                    <ImageUplaodComponents />
                 </div>
                 <div >
                     <button className="btn btn-primary"

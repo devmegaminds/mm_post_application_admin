@@ -7,12 +7,11 @@ import "../custom.css";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import FileBase64 from 'react-file-base64';
-// import ImageUploadPreviewComponent from "../ImageUploadPreviewComponent"
 
-
-import DemoPage from '../Extra/demo'
-import { imagesubcriber } from '../Extra/subBehaviour';
+import ImageUplaodComponents from '../../components/ImageUplaod'
+import { imagesubcriber } from '../../env/subBehaviour';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { idsubcriber } from '../../env/categoryId';
 
 const renderCheckboxField = ({
     input, label, type, checked, id, txtId, data, onClick, meta: { asyncValidating, touched, error } }) => (
@@ -37,7 +36,6 @@ const validate = values => {
 }
 
 class ManageUploadCategoryImage extends Component {
-
     constructor(props) {
         super(props)
         this.state = {
@@ -47,21 +45,25 @@ class ManageUploadCategoryImage extends Component {
             files: [],
             categoryData: [],
             baseImage: [],
-            imageData: []
+            imageData: [],
+            showModal: false,
+            message: ''
         }
         this.props.CheckSubCategory("");
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     componentDidMount() {
-         
+        debugger
+        idsubcriber.subscribe((Id) => {
+            var categoryId = Id
+            this.setState({ categoryId: categoryId })
+        })
         imagesubcriber.subscribe((x) => {
-             
-            this.setState({image: x})
+            this.setState({ image: x })
         })
     }
 
     componentWillReceiveProps(nextProps) {
-         
         if (nextProps.CheckSubCategoryResponse) {
             if (nextProps.CheckSubCategoryResponse && nextProps.CheckSubCategoryResponse != this.props.CheckSubCategoryResponse) {
                 if (nextProps.CheckSubCategoryResponse.data.length > 0) {
@@ -72,66 +74,25 @@ class ManageUploadCategoryImage extends Component {
         }
     }
 
-    hideModel = () => {
+    hideModelError = () => {
         this.setState({
-            alert: '',
+            message: '',
             showModal: false,
         })
     }
 
-    hideModel = () => {
+    hideModelSuccess = () => {
         this.setState({
             alert: '',
             showModal: false,
+            isRedirect: true
         })
     }
 
     SuccessFailSweetAlert(msg, type) {
-        let getAlert = '';
-        if (type == 'success') {
-            getAlert = () => (
-                <SweetAlert
-                    success
-                    title={msg}
-                    onConfirm={() => this.hideAlert(true)}
-                >
-                </SweetAlert>
-            );
-
-        }
-        else {
-            getAlert = () => (
-                <SweetAlert
-                    error
-                    title={msg}
-                    onConfirm={() => this.hideAlert(false)}
-                >
-                </SweetAlert>
-            );
-        }
-
-        this.setState({
-            alert: getAlert()
-        });
+        this.setState({ showModal: true, message: msg, alertType: type })
     }
 
-    // onFileChange = (event) => {
-    //     const fileData = event.target.files;
-    //     const blob = new Blob([fileData]);
-    //     const reader = new FileReader();
-
-    //     reader.onloadend = () => {
-    //         for (let i = 0; i < fileData.length; i++) {
-    //             console.log('Data to be sent', {
-    //                 name: fileData[i].name,
-    //                 fileSize: fileData[i].size,
-    //                 fileContentType: fileData[i].type,
-    //                 file: reader.result
-    //             });
-    //         }
-    //     }
-    //     reader.readAsDataURL(blob);
-    //  }
     fileToDataUri = (image) => {
         return new Promise((res) => {
             const reader = new FileReader();
@@ -167,81 +128,36 @@ class ManageUploadCategoryImage extends Component {
     };
 
     onSubmit = async (formValues) => {
-        //#region Split Base64 Data
-         
-        const data = []
-        var base64Data = this.state.baseImage
-        for (let index = 0; index < base64Data.length; index++) {
-            data.push(base64Data[index].base64.split(',')[1])
-        }
-        const newImagess = await Promise.all(data)
-        this.setState({ imageData: [...newImagess] })
-        //-------------------------------//
-
+        debugger
         let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
-        if (indexOfItem.length == 0) {
+        if (indexOfItem.length != 0) {
+            let image = this.state.image.length
+            if (this.state.image.length > 0) {
+                var categoryId = indexOfItem[0].inCategoryId
+                // var categoryId = parseInt(this.state.categoryId)
+                for (var i = 0; i < image.length; i++) {
+                    const fd = new FormData();
+                    var categoryId = categoryId
+                    var categoryImageId = formValues.inCategoryImageId == undefined || formValues.inCategoryImageId == "" ? 0 : formValues.inCategoryImageId
+                    fd.append('inCategoryImageId', categoryImageId);   //Image Id
+                    fd.append('image', image[i]['file']);
+                    fd.append('inCategoryId', categoryId); // Caetgory Id
+                    this.props.AddImage(fd);
+                }
+                this.SuccessFailSweetAlert("Image has been saved successfully!", "success");
+                this.setState({ isLoading: false });
+            } else {
+                this.SuccessFailSweetAlert("Please upload at least one Image", "error");
+                this.setState({ isLoading: false });
+            }
+
+        }
+        else {
             this.SuccessFailSweetAlert("Please select at least one Category", "error");
             this.setState({ isLoading: false });
         }
-        else {
-             
-            let x = this.state.image
-            console.log(x, "PLPLPLPLPLPLPLPLPLPLP");
-            var categoryId = indexOfItem[0].inCategoryId
-            this.setState({ isLoading: true });
-            for (var i = 0; i < x.length; i++) {
-                const fd = new FormData();
-                var xyz = categoryId
-                var xyzz = "iMAGE pATRH"
-                var asd = 0
-                fd.append('image', x[i]['file']);
-                fd.append('inCategoryImageId', xyzz);   //Image Id
-                // fd.append('stImageDatabase64', x[i]['data_url'].split(',')[1]);  // Imaeg Data base64
-                fd.append('stImageDatabase64',xyzz);  // Imaeg Data base64
-                fd.append('inCategoryId', categoryId); // Caetgory Id
-                // fd.append('stImageDatabase64', xysz);
-                this.props.AddImage(fd);
-            }
-            // var categoryId = indexOfItem[0].inCategoryId
-            // this.setState({ isLoading: true });
-            // this.state.imageData.forEach(element => {
-            //     var data = {
-            //         inCategoryImageId: formValues.inCategoryImageId == undefined || formValues.inCategoryImageId == "" ? 0 : formValues.inCategoryImageId,
-            //         // stImageDatabase64: this.state.baseImage.split(',')[1],
-            //         stImageDatabase64: element,
-            //         inCategoryId: categoryId,
-            //     }
-            //     console.log(data, "CATEGORY IMAGE SCREEN");
-            //     this.props.AddImage(data);
-            //      
-            // });
-        }
+
     }
-
-    // addFormData() {
-    //      
-    //     let x = this.state.image
-    //     console.log(x, "PLPLPLPLPLPLPLPLPLPLP");
-
-    //     for (var i = 0; i < x.length; i++) {
-    //         const fd = new FormData();
-    //         var xyz = 15
-    //         var asd = 0
-    //         fd.append('image', x[i]['file']);
-    //         fd.append('stImageDatabase64', x[i]['data_url'].split(',')[1]);
-    //         fd.append('inCategoryId', xyz);
-    //         // fd.append('stImageDatabase64', xysz);
-    //         fd.append('inCategoryImageId', asd);
-    //         this.props.AddImage(fd);
-
-    //         // console.log(fd, ">:>:>:>:>:>:>:>:>:>:");
-    //         // axios.post('http://localhost:4200/api/Image/ImageTest', fd)
-    //         //     // axios.post('http://megaminds-001-site12.itempurl.com/api/Image/ImageTest', fd)
-    //         //     .catch((e) => {
-    //         //     });
-    //     }
-    // }
-
     convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const fileReader = new FileReader();
@@ -255,7 +171,7 @@ class ManageUploadCategoryImage extends Component {
         });
     };
 
-    
+
     // ------------------------------
 
     onChangesTagName = (e, index) => {
@@ -275,18 +191,18 @@ class ManageUploadCategoryImage extends Component {
             <div className="card card-custom gutter-b example example-compact">
                 <div className="card-header">
                     <div className="card-title">
-                        <h3 className="card-label"> Image</h3>
+                        <h3 className="card-label">Category Image</h3>
                     </div>
                     <div className="card-toolbar">
                     </div>
                 </div>
                 {/* <form className="form-horizontal" onSubmit={(this.onSubmit)}> */}
-                    <div style={{ margin: 25 }} className="form-group fv-plugins-icon-container">
-                        <div className="col-sm-12">
-                            <h6>Image Upload</h6>
-                            {/* Imaeg Uplaod  */}
-                            <DemoPage/>
-                            {/* <div className="form-group">
+                <div style={{ margin: 25 }} className="form-group fv-plugins-icon-container">
+                    <div className="col-sm-12">
+                        <h6>Image Upload</h6>
+                        {/* Imaeg Uplaod  */}
+                        <ImageUplaodComponents />
+                        {/* <div className="form-group">
                                 <input
                                     className="form-control"
                                     type="file"
@@ -296,23 +212,23 @@ class ManageUploadCategoryImage extends Component {
                                     }}
                                 />
                             </div> */}
-                        </div>
-                        <br></br>
-                        <div className="col-sm-8">
-                            <h6 >Category</h6>
-                            {this.state.categoryData != null && this.state.categoryData != "" && this.state.categoryData != undefined && this.state.categoryData.map(function (tag, i) {
-                                return (
-                                    <Field
-                                        type="checkbox"
-                                        name={tag.stCategoryName}
-                                        label={tag.stCategoryName}
-                                        data={tag.Checked}
-                                        onChange={(evt) => $this.onChangesTagName(evt, i)}
-                                        component={renderCheckboxField} />
-                                )
-                            })}
-                        </div>
-                        {
+                    </div>
+                    <br></br>
+                    <div className="col-sm-8">
+                        <h6 >Category</h6>
+                        {this.state.categoryData != null && this.state.categoryData != "" && this.state.categoryData != undefined && this.state.categoryData.map(function (tag, i) {
+                            return (
+                                <Field
+                                    type="checkbox"
+                                    name={tag.stCategoryName}
+                                    label={tag.stCategoryName}
+                                    data={tag.Checked}
+                                    onChange={(evt) => $this.onChangesTagName(evt, i)}
+                                    component={renderCheckboxField} />
+                            )
+                        })}
+                    </div>
+                    {/* {
                             base64ImageData.length > 0
                                 ? base64ImageData.map((imageObj, i) => {
                                     return (
@@ -323,37 +239,54 @@ class ManageUploadCategoryImage extends Component {
                                                 src={imageObj.base64}
                                                 alt=''
                                             />
-                                            {/* <div>
-                                                <span>{imageObj.size ? imageObj.size : '-'}</span>
-                                                <span>{imageObj.name ? imageObj.name : '-'}</span>
-                                            </div> */}
                                         </div>
                                     )
                                 })
                                 : null
-                        }
-                    </div>
-                    {/* <div style={{ margin: 20 }}>
+                        } */}
+                </div>
+                {/* <div style={{ margin: 20 }}>
                         <img src={this.state.baseImage} height="200px" />
                     </div> */}
-                    <div style={{ margin: 20 }}>
-                        <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>Add category Image</Tooltip>}>
-                            {/* <button style={{ width: 120, marginRight: 10 }}
+                <div style={{ margin: 20 }}>
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={<Tooltip>Add category Image</Tooltip>}>
+                        {/* <button style={{ width: 120, marginRight: 10 }}
                                 id="kw_dtn_add_carrier"
                                 type="submit"
                                 className={`btn btn-primary`}>
                                 Submit
-                            </button> */}                            
-                        <button style={{ width: 120, marginRight: 0 }}
+                            </button> */}
+                        <button style={{ width: 120, marginRight: 10 }}
                             id="kw_dtn_add_carrier"
                             type="submit"
                             className="btn btn-primary"
                             onClick={(this.onSubmit)}>Submit
                         </button>
-                        </OverlayTrigger>
-                    </div>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={<Tooltip>Cancel</Tooltip>}>
+                        <Link style={{ width: 120 }} className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageCategory">
+                            Cancel
+                        </Link>
+                    </OverlayTrigger>
+                </div>
+                {this.state.showModal && this.state.alertType == 'error' ?
+                    <SweetAlert
+                        error
+                        title={this.state.message}
+                        onConfirm={() => this.hideModelError()}>
+                    </SweetAlert>
+                    :
+                    this.state.showModal &&
+                    <SweetAlert
+                        success
+                        title={this.state.message}
+                        onConfirm={() => this.hideModelSuccess()}>
+                    </SweetAlert>
+                }
                 {/* </form> */}
             </div>
         )
@@ -381,10 +314,10 @@ function mapStateToProps(state) {
     }
 }
 const mapDispatchToProps = (dispatch) => {
+    debugger
     return {
         AddImage: (data) => dispatch(auth.actions.AddImage(data)),
         CheckSubCategory: (data) => dispatch(auth.actions.CheckSubCategory(data)),
-
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ManageUploadCategoryImage);

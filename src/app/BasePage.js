@@ -5,7 +5,6 @@ import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 import DashboardPage from "./pages/DashboardPage";
 import AddApplicationPage from "./pages/Application/AddApplicationPage";
 import ManageApplication from "./pages/Application/ManageApplication";
-// import ManageUsersPage from "./pages/Users/ManageUsersPage";
 import ViewUserPage from "./pages/Users/ViewUserPage";
 import AddCategoryPage from "./pages/Category/AddCategoryPage";
 import ManageCategory from "./pages/Category/ManageCategory";
@@ -15,7 +14,6 @@ import AddSubCategoryPage from "./pages/SubCategory/AddSubCategoryPage";
 import ManageSubCategory from "./pages/SubCategory/ManageSubCategory";
 import AddThumbnailImage from "./pages/ThumbnailImage/AddThumbnailImage";
 import ManageUsersPage from "./pages/Users/ManageUsersPage"
-import ImageUploadTest from "../app/modules/Auth/pages/ImageUploadTest";
 //#endregion
 
 //#region It's Extra Screen
@@ -51,7 +49,6 @@ export default function BasePage() {
                 {/* Upload Image */}
                 <ContentRoute path="/ManageUploadCategoryImage" component={ManageUploadCategoryImage} />
                 <ContentRoute path="/ManageUploadSubCategoryImage" component={ManageUploadSubCategoryImage} />
-                <ContentRoute path="/ImageUploadTest" component={ImageUploadTest} />
                 {/* Sub Category */}
                 <ContentRoute path="/ManageSubCategory" component={ManageSubCategory} />
                 <ContentRoute path="/AddSubCategoryPage" component={AddSubCategoryPage} />

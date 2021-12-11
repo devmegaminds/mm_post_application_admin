@@ -90,7 +90,7 @@ export function AsideMenuList({ layoutProps }) {
           </div>
         </li>
 
-        <li
+        {/* <li
           className={`menu-item ${getMenuItemActive("/ManageSubCategory", true)}`}
           aria-haspopup="true"
         >
@@ -118,7 +118,7 @@ export function AsideMenuList({ layoutProps }) {
               </li>
             </ul>
           </div>
-        </li>
+        </li> */}
 
         {/* <li
           className={`menu-item ${getMenuItemActive("/ManageUploadCategoryImage", true)}`}

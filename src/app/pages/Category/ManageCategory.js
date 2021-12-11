@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
+import { Field, FieldArray, reduxForm, getFormValues } from 'redux-form'
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl, checkIsActive } from "../../../_metronic/_helpers";
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -16,14 +17,23 @@ import { stubFalse } from 'lodash';
 import Spinner from 'react-bootstrap/Spinner'
 import paginationFactory, { PaginationProvider } from 'react-bootstrap-table2-paginator';
 import { Pagination } from "../pagination/Pagination";
+const renderFields = ({ input, label, type, data, placeholder, meta: { asyncValidating, touched, error } }) => (
+    <div className="form-group">
+        <label>{label}</label>
+        <input {...input} type={type} placeholder={placeholder} className="form-control" style={{ marginTop: '-3%' }} />
+        {touched && error && <small className="error-msg text-danger form-text">{error}</small>}
+    </div>
+)
 
 class ManageCategory extends Component {
     constructor(props) {
-        super();
+        super(props);
+        this.textInput = React.createRef();
         this.state = {
             pageNumber: 1,
             tagsData: [],
             isGettingTags: false,
+            test: false
         }
     }
 
@@ -40,15 +50,28 @@ class ManageCategory extends Component {
         this.setState({ isGettingTags: true })
         this.props.GetCategory("");
     }
+
     componentWillReceiveProps(nextProps) {
+        debugger
         if (nextProps.GetCategoryResponse) {
             if (nextProps.GetCategoryResponse && nextProps.GetCategoryResponse != this.props.GetCategoryResponse) {
                 if (nextProps.GetCategoryResponse.statusCode == 200) {
                     this.setState({ isGettingTags: false });
                     this.setState({ isLoading: false })
                     this.setState({ totalno: nextProps.GetCategoryResponse.data.length })
-
                     this.setState({ tagsData: nextProps.GetCategoryResponse.data })
+
+                    // var x = nextProps.GetCategoryResponse.data
+                    // for (let index = 0; index < x.length; index++) {
+                    //     const element = x[index];
+                    //     this.setState({ active:nextProps.GetCategoryResponse.data[index].flgIsActive.data[0] })
+
+                    //     // if(nextProps.GetCategoryResponse.data[index].flgIsActive.data[0] == 2){
+                    //     //     this.setState({isChecked: true})
+                    //     // }
+                    // }
+
+                    // nextProps.GetCategoryResponse.data[0].flgIsActive.data[0]
                 }
             }
         }
@@ -73,7 +96,6 @@ class ManageCategory extends Component {
                 >
                 </SweetAlert>
             );
-
         }
         else {
             getAlert = () => (
@@ -126,14 +148,82 @@ class ManageCategory extends Component {
         }
         return `${moment(cell).format("MM-DD-YYYY") ? moment(cell).format("MM-DD-YYYY") : moment(cell).format("MM-DD-YYYY")}`;
     }
+
+    handleChange = (e) => {
+        console.log(e.target.value)
+    };
+
+    onBlur = (e, row) => {
+        debugger
+        if (e.target.value != "") {
+            var DisplayPriority = e.target.defaultValue = e.target.value
+            var data = {
+                inDisplayPriority: DisplayPriority,
+                inCategoryId: row.inCategoryId
+            }
+            this.props.UpdateCategoryPriority(data);
+            this.SuccessFailSweetAlert("Update priority successfully", "success");
+        }
+        e.target.value = e.target.defaultValue
+    };
+    __onChange(e, row) {
+        debugger
+        var intIndex = this.state.tagsData.map(function (e) { return row.inCategoryId; }).indexOf(row.inCategoryId);
+        this.state.tagsData[intIndex].flgIsActive.data[0] = e.target.checked ? 1 : 0;
+        this.setState({ tagsData: this.state.tagsData });
+        var data = {
+            inCategoryId: row.inCategoryId,
+            flgIsActive: e.target.checked ? 1 : 0
+        }
+        this.props.UpdateCategoryStatus(data)
+        // this.SuccessFailSweetAlert("Change status successfully", "success");
+
+
+
+        // if (document.getElementById('chk1').checked) {
+        // if (document.getElementById('chk1').checked) {
+        // var isActive = 1
+        // var x = row.inCategoryId
+        // console.log(x, "LLLLLL");
+        // this.setState({ isChecked: true })
+        // var data = {
+        //     inCategoryId: x,
+        //     flgIsActive: isActive
+        // }
+        // console.log("Checked");
+        // } else {
+        //     var isActive = 0
+        //     console.log("UnChecked");
+        //     this.setState({ isChecked: true })
+        // }
+    }
     render() {
         var $this = this;
         const columns = [
-            //#region Index of the Application list
-            { dataField: 'inCategoryId', text: 'Category Number', hidden: false },
+            //#region Index of the Ctegory list
+            // { dataField: 'inCategoryId', text: 'Category Number', hidden: false },
             { dataField: 'stCategoryName', text: 'Category Name', sort: true },
-            // { dataField: 'inCreatedBy', text: 'CreatedBy', sort: true },
+            {
+                dataField: 'inDisplayPriority',
+                text: 'Display Priority',
+                // sort: true
+                formatter: (dataField, row, index) => {
+                    return (
+                        <div>
+                            <input
+                                defaultValue={dataField}
+                                className="form-control"
+                                onBlur={(e) => this.onBlur(e, row)}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    )
+                }
+
+            },
             // { dataField: 'flgIsActive', text: 'Is Active', sort: false },
+            { dataField: 'subCategory', text: 'Sub Category' },
+
             {
                 dataField: 'dtCreatedOn', text: 'Created Date', sort: false,
                 formatter: (cell) => {
@@ -143,6 +233,24 @@ class ManageCategory extends Component {
                     return moment(cell).format("MM/DD/YYYY");
                 },
             },
+            {
+                dataField: 'link', text: 'Is Active', sort: false, class: "test",
+                formatter: (rowContent, row) => {
+                    return (
+                        <span class="switch switch-outline switch-icon switch-success" style={{ width: "27%", marginLeft: 20, marginRight: 10 }}>
+                            <label>
+                                <input type="checkbox"
+                                    ref={this.textInput}
+                                    name="select"
+                                    checked={row.flgIsActive.data[0] == 1}
+                                    onClick={(e) => this.__onChange(e, row)}
+                                />
+                                <span></span>
+                            </label>
+                        </span>
+                    )
+                },
+            },
             //#endregion
             {
                 dataField: 'link',
@@ -150,6 +258,24 @@ class ManageCategory extends Component {
                 formatter: (rowContent, row) => {
                     return (
                         <div>
+                            {/* {row.flgIsActive.data[0] == 1 && */}
+                            {/* <input type="checkbox" checked={row.flgIsActive.data[0] == 1}
+                                onClick={(e) => this.__onChange(e, row)}  /> */}
+
+                            {/* <div class="row"> */}
+                            {/* <div class="row">
+                                    <span class="switch switch-outline switch-icon switch-success" style={{ width: "27%" ,marginLeft:20,marginRight:10}}>
+                                        <label>
+                                            <input type="checkbox"
+                                                ref={this.textInput}
+                                                name="select"
+                                                checked={row.flgIsActive.data[0] == 1}
+                                                onClick={(e) => this.__onChange(e, row)}
+                                            />
+                                            <span></span>
+                                        </label>
+                                    </span> */}
+
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={<Tooltip>Edit Category</Tooltip>}>
@@ -164,38 +290,12 @@ class ManageCategory extends Component {
                                     <i className="ki ki-close icon-nm"></i>
                                 </a>
                             </OverlayTrigger>
-
-                            {/* <OverlayTrigger
-                                placement="bottom"
-                                overlay={<Tooltip>Add Sub-Category</Tooltip>}>
-                                <a className="btn btn-icon btn-sm btn-primary"  data-toggle="modal" data-target="#exampleModal">
-                                    <i className="ki ki-plus icon-nm"></i>
-                                </a>
-                            </OverlayTrigger> */}
-                            {/* <div class="modal fade" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <i aria-hidden="true" class="ki ki-close"></i>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Modal</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary font-weight-bold">Save changes</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> */}
                         </div>
+                        // </div>
                     )
                 },
                 headerStyle: (colum, colIndex) => {
-                    return { width: '10%' };
+                    return { width: '15%' };
                 }
             }
         ];
@@ -258,20 +358,18 @@ class ManageCategory extends Component {
                 </div>
 
                 <div className="card-body">
-
                     <ToolkitProvider
                         bootstrap4
                         keyField='kw_insuranceType_datatable'
                         data={this.state.tagsData}
                         columns={columns}
-
                         search
+                    // autoColumns= {true}
                     >
                         {
                             props => (
                                 <div >
                                     <SearchBar {...props.searchProps} />
-
                                     <BootstrapTable
                                         defaultSorted={defaultSorted}
                                         pagination={pagination}
@@ -282,12 +380,12 @@ class ManageCategory extends Component {
                         }
                     </ToolkitProvider>
                     <div className="mt-2">
-                        <a className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
+                        <div className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
                             <i className="fas fa-edit icon-nm"></i>
-                        </a> Edit Category &nbsp;&nbsp;&nbsp;
-                        <a className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
+                        </div> Edit Category &nbsp;&nbsp;&nbsp;
+                        <div className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
                             <i className="ki ki-close icon-nm"></i>
-                        </a> Delete Category
+                        </div> Delete Category
                     </div>
                 </div>
             </div>
@@ -310,6 +408,9 @@ const mapDispatchToProps = (dispatch) => {
         GetCategory: (data) => dispatch(auth.actions.GetCategory(data)),
         DeleteCategoryById: (data) => dispatch(auth.actions.DeleteCategoryById(data)),
         SaveInsuranceType: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
+        UpdateCategoryPriority: (data) => dispatch(auth.actions.UpdateCategoryPriority(data)),
+        UpdateCategoryStatus: (data) => dispatch(auth.actions.UpdateCategoryStatus(data)),
+
     }
 }
 

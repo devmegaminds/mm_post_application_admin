@@ -78,8 +78,18 @@ function Login(props) {
       enableLoading();
       login(values.email, values.password)//,"154.125.658.12","India Standard Time"
         .then((data) => {
-          disableLoading();
-          props.login(data.data);
+          if(data.data.data.inUserID != 0){
+            disableLoading();
+            props.login(data.data);
+          }else{
+            disableLoading();
+            setSubmitting(false);
+            setStatus(
+              intl.formatMessage({
+                id: "AUTH.VALIDATION.INVALID_LOGIN",
+              })
+            );
+          }
         })
         .catch((e) => {
           disableLoading();
@@ -101,7 +111,7 @@ function Login(props) {
           <FormattedMessage id="AUTH.LOGIN.TITLE" />
         </h3>
         <p className="text-muted font-weight-bold">
-          Enter your username and password
+          Enter your Email-Id and password
         </p>
       </div>
       {/* end::Head */}

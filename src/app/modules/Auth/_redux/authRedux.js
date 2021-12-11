@@ -13,12 +13,6 @@ export const actionTypes = {
   SetUser: "[Set User] Action",
   //#region  Insurance Type
 
-  //:: For the Save Insurance type::
-
-
-  //::Get Insurance Type By Id::
-
-
   //::for Reset Insurance Type :://
   ResetInsuranceType: "[ResetInsuranceType] Action",
   ResetInsuranceTypeResponse: "[ResetInsuranceTypeResponse] Action",
@@ -55,10 +49,10 @@ export const actionTypes = {
   GetApplicationInfoByIdResponse: "[GetApplicationInfoByIdResponse] Action",
   //#endregion Manage Application 
 
-  //#region Manage Image
+  //#region Manage Image Test -------------------------------
   AddImageTest: "[AddImageTest] Action",
   AddImageResponseTest: "[AddImageResponseTest] Action",
-
+  //#region Manage Image Test -------------------------------
 
   //#region Manage Image
   AddImage: "[AddImage] Action",
@@ -70,8 +64,11 @@ export const actionTypes = {
   AddSubCategoryThumbnailImage: "[AddSubCategoryThumbnailImage] Action",
   AddSubCategoryThumbnailImageResponse: "[AddSubCategoryThumbnailImageResponse] Action",
 
-  // GetApplication: "[GetApplication] Action",
-  // GetApplicationResponse: "[GetApplicationResponse] Action",
+  GetImageByCategory: "[GetImageByCategory] Action",
+  GetImageByCategoryResponse: "[GetImageByCategoryResponse] Action",
+
+  GetImageBySubCategory: "[GetImageByCatGetImageBySubCategoryegory] Action",
+  GetImageBySubCategoryResponse: "[GetImageBySubCategoryResponse] Action",
 
   // DeleteApplicationById: "[DeleteApplicationById] Action",
   // DeleteApplicationByIdResponse: "[DeleteApplicationByIdResponse] Action",
@@ -95,6 +92,19 @@ export const actionTypes = {
   DeleteCategoryById: "[DeleteCategoryById] Action",
   DeleteCategoryByIdResponse: "[DeleteCategoryByIdResponse] Action",
 
+  DeleteCategoryImage: "[DeleteCategoryImage] Action",
+  DeleteCategoryImageResponse: "[DeleteCategoryImageResponse] Action",
+
+  UpdateCategoryPriority: "[UpdateCategoryPriority] Action",
+  UpdateCategoryPriorityResponse: "[UpdateCategoryPriorityResponse] Action",
+
+  CheckCategoryPriority: "[CheckCategoryPriority] Action",
+  CheckCategoryPriorityResponse: "[CheckCategoryPriorityResponse] Action",
+
+  UpdateCategoryStatus: "[UpdateCategoryStatus] Action",
+  UpdateCategoryStatusResponse: "[UpdateCategoryStatusResponse] Action",
+
+
   //#endregion End Manage Category
 
   //#region Manage SubCategory
@@ -113,6 +123,15 @@ export const actionTypes = {
 
   CheckSubCategory: "[CheckSubCategory] Action",
   CheckSubCategoryResponse: "[CheckSubCategoryResponse] Action",
+
+  UpdateSubCategoryPriority: "[UpdateSubCategoryPriority] Action",
+  UpdateSubCategoryPriorityResponse: "[UpdateSubCategoryPriorityResponse] Action",
+
+  CheckSubCategoryPriority: "[CheckSubCategoryPriority] Action",
+  CheckSubCategoryPriorityResponse: "[CheckSubCategoryPriorityResponse] Action",
+
+  UpdateSubCategoryStatus: "[UpdateSubCategoryStatus] Action",
+  UpdateSubCategoryStatusResponse: "[UpdateSubCategoryStatusResponse] Action",
 
   //#endregion Manage SubCategory 
 
@@ -427,6 +446,14 @@ export const reducer = persistReducer(
         return { ...state, GetSubCategoryInfoByIdResponse };
       }
 
+      case actionTypes.UpdateSubCategoryPriority: {
+        const { updateSubCategoryPriority } = action.payload;
+        return { ...state, updateSubCategoryPriority };
+      }
+      case actionTypes.UpdateSubCategoryPriorityResponse: {
+        const updateSubCategoryPriorityResponse = action.payload.updateSubCategoryPriorityResponse.data && action.payload.updateSubCategoryPriorityResponse.data;
+        return { ...state, updateSubCategoryPriorityResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
 
       //#endregion Manage Sub Category
 
@@ -443,6 +470,42 @@ export const reducer = persistReducer(
         return { ...state, categoryResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
       }
 
+      case actionTypes.UpdateCategoryPriority: {
+        const { updateCategoryPriority } = action.payload;
+        return { ...state, updateCategoryPriority };
+      }
+      case actionTypes.UpdateCategoryPriorityResponse: {
+        const updateCategoryPriorityResponse = action.payload.updateCategoryPriorityResponse.data && action.payload.updateCategoryPriorityResponse.data;
+        return { ...state, updateCategoryPriorityResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+
+      case actionTypes.CheckCategoryPriority: {
+        const { checkCategoryPriority } = action.payload;
+        return { ...state, checkCategoryPriority };
+      }
+      case actionTypes.CheckCategoryPriorityResponse: {
+        const checkCategoryPriorityResponse = action.payload.checkCategoryPriorityResponse.data && action.payload.checkCategoryPriorityResponse.data;
+        return { ...state, checkCategoryPriorityResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+
+      case actionTypes.UpdateCategoryStatus: {
+        const { updateCategoryStatus } = action.payload;
+        return { ...state, updateCategoryStatus };
+      }
+      case actionTypes.UpdateCategoryStatusResponse: {
+        const updateCategoryStatusResponse = action.payload.updateCategoryStatusResponse.data && action.payload.updateCategoryStatusResponse.data;
+        return { ...state, updateCategoryStatusResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+
+      case actionTypes.UpdateSubCategoryStatus: {
+        const { updateSubCategoryStatus } = action.payload;
+        return { ...state, updateSubCategoryStatus };
+      }
+      case actionTypes.UpdateSubCategoryStatusResponse: {
+        const updateSubCategoryStatusResponse = action.payload.updateSubCategoryStatusResponse.data && action.payload.updateSubCategoryStatusResponse.data;
+        return { ...state, updateSubCategoryStatusResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
+
       case actionTypes.GetCategory: {
         const { RequestParmTag } = action.payload;
         return { ...state, RequestParmTag };
@@ -452,6 +515,32 @@ export const reducer = persistReducer(
         return { ...state, GetCategoryResponse };
       }
 
+      case actionTypes.GetImageByCategory: {
+        const { getImageByCategory } = action.payload;
+        return { ...state, getImageByCategory };
+      }
+      case actionTypes.GetImageByCategoryResponse: {
+        const getImageByCategoryResponse = action.payload.getImageByCategoryResponse.data && action.payload.getImageByCategoryResponse.data;
+        return { ...state, getImageByCategoryResponse };
+      }
+
+      case actionTypes.GetImageBySubCategory: {
+        const { getImageBySubCategory } = action.payload;
+        return { ...state, getImageBySubCategory };
+      }
+      case actionTypes.GetImageBySubCategoryResponse: {
+        const getImageBySubCategoryResponse = action.payload.getImageBySubCategoryResponse.data && action.payload.getImageBySubCategoryResponse.data;
+        return { ...state, getImageBySubCategoryResponse };
+      }
+
+      case actionTypes.CheckSubCategoryPriority: {
+        const { checkSubCategoryPriority } = action.payload;
+        return { ...state, checkSubCategoryPriority };
+      }
+      case actionTypes.CheckSubCategoryPriorityResponse: {
+        const checkSubCategoryPriorityResponse = action.payload.checkSubCategoryPriorityResponse.data && action.payload.checkSubCategoryPriorityResponse.data;
+        return { ...state, checkSubCategoryPriorityResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
+      }
 
       case actionTypes.CheckSubCategory: {
         const { checkSubCategory } = action.payload;
@@ -462,6 +551,16 @@ export const reducer = persistReducer(
         return { ...state, CheckSubCategoryResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
       }
 
+
+      case actionTypes.DeleteCategoryImage: {
+        const deleteCategoryImage = action.payload;
+        return { ...state, deleteCategoryImage };
+      }
+
+      case actionTypes.DeleteCategoryImageResponse: {
+        const deleteCategoryImageResponse = action.payload.deleteCategoryImageResponse && action.payload.deleteCategoryImageResponse;
+        return { ...state, deleteCategoryImageResponse };
+      }
 
       case actionTypes.GetCategoryById: {
         const { RequestParmInsuranceTypeData } = action.payload;
@@ -481,6 +580,7 @@ export const reducer = persistReducer(
         const DeleteCategoryByIdResponse = action.payload.DeleteCategoryByIdResponse && action.payload.DeleteCategoryByIdResponse;
         return { ...state, DeleteCategoryByIdResponse };
       }
+
 
       case actionTypes.GetCategoryInfoByIDResponse: {
         const GetCategoryInfoByIDResponse = action.payload.GetCategoryInfoByIDResponse.data && action.payload.GetCategoryInfoByIDResponse.data;
@@ -722,14 +822,38 @@ export const actions = {
 
   CheckSubCategory: (checkSubCategory) => ({ type: actionTypes.CheckSubCategory, payload: { checkSubCategory } }),
   CheckSubCategoryResponse: (CheckSubCategoryResponse) => ({ type: actionTypes.CheckSubCategoryResponse, payload: { CheckSubCategoryResponse } }),
+
+  UpdateSubCategoryPriority: (updateSubCategoryPriority) => ({ type: actionTypes.UpdateSubCategoryPriority, payload: { updateSubCategoryPriority } }),
+  UpdateSubCategoryPriorityResponse: (updateSubCategoryPriorityResponse) => ({ type: actionTypes.UpdateSubCategoryPriorityResponse, payload: { updateSubCategoryPriorityResponse } }),
+
+  CheckSubCategoryPriority: (checkSubCategoryPriority) => ({ type: actionTypes.CheckSubCategoryPriority, payload: { checkSubCategoryPriority } }),
+  CheckSubCategoryPriorityResponse: (checkSubCategoryPriorityResponse) => ({ type: actionTypes.CheckSubCategoryPriorityResponse, payload: { checkSubCategoryPriorityResponse } }),
   //#endregion Manage Sub Category
 
   //#region  Manage Category
   AddCategory: (category) => ({ type: actionTypes.AddCategory, payload: { category } }),
   AddCategoryResponse: (categoryResponse) => ({ type: actionTypes.AddCategoryResponse, payload: { categoryResponse } }),
 
+  UpdateCategoryPriority: (updateCategoryPriority) => ({ type: actionTypes.UpdateCategoryPriority, payload: { updateCategoryPriority } }),
+  UpdateCategoryPriorityResponse: (updateCategoryPriorityResponse) => ({ type: actionTypes.UpdateCategoryPriorityResponse, payload: { updateCategoryPriorityResponse } }),
+
+  CheckCategoryPriority: (checkCategoryPriority) => ({ type: actionTypes.CheckCategoryPriority, payload: { checkCategoryPriority } }),
+  CheckCategoryPriorityResponse: (checkCategoryPriorityResponse) => ({ type: actionTypes.CheckCategoryPriorityResponse, payload: { checkCategoryPriorityResponse } }),
+
+  UpdateCategoryStatus: (updateCategoryStatus) => ({ type: actionTypes.UpdateCategoryStatus, payload: { updateCategoryStatus } }),
+  UpdateCategoryStatusResponse: (updateCategoryStatusResponse) => ({ type: actionTypes.UpdateCategoryStatusResponse, payload: { updateCategoryStatusResponse } }),
+
+  UpdateSubCategoryStatus: (updateSubCategoryStatus) => ({ type: actionTypes.UpdateSubCategoryStatus, payload: { updateSubCategoryStatus } }),
+  UpdateSubCategoryStatusResponse: (updateSubCategoryStatusResponse) => ({ type: actionTypes.UpdateSubCategoryStatusResponse, payload: { updateSubCategoryStatusResponse } }),
+
   GetCategory: (RequestParmTag) => ({ type: actionTypes.GetCategory, payload: { RequestParmTag } }),
   GetCategoryResponse: (GetCategoryResponse) => ({ type: actionTypes.GetCategoryResponse, payload: { GetCategoryResponse } }),
+
+  GetImageByCategory: (getImageByCategory) => ({ type: actionTypes.GetImageByCategory, payload: { getImageByCategory } }),
+  GetImageByCategoryResponse: (getImageByCategoryResponse) => ({ type: actionTypes.GetImageByCategoryResponse, payload: { getImageByCategoryResponse } }),
+
+  GetImageBySubCategory: (getImageBySubCategory) => ({ type: actionTypes.GetImageBySubCategory, payload: { getImageBySubCategory } }),
+  GetImageBySubCategoryResponse: (getImageBySubCategoryResponse) => ({ type: actionTypes.GetImageBySubCategoryResponse, payload: { getImageBySubCategoryResponse } }),
 
   GetInsuranceTypes: (RequestParmInsuranceTypeName) => ({ type: actionTypes.GetInsuranceTypes, payload: { RequestParmInsuranceTypeName } }),
   GetInsuranceTypeResponse: (GetInsuranceTypeResponse) => ({ type: actionTypes.GetInsuranceTypeResponse, payload: { GetInsuranceTypeResponse } }),
@@ -739,6 +863,9 @@ export const actions = {
 
   DeleteCategoryById: (RequestParmDeleteCategoryId) => ({ type: actionTypes.DeleteCategoryById, payload: { RequestParmDeleteCategoryId } }),
   DeleteCategoryByIdResponse: (DeleteCategoryByIdResponse) => ({ type: actionTypes.DeleteCategoryByIdResponse, payload: { DeleteCategoryByIdResponse } }),
+
+  DeleteCategoryImage: (deleteCategoryImage) => ({ type: actionTypes.DeleteCategoryImage, payload: { deleteCategoryImage } }),
+  DeleteCategoryImageResponse: (deleteCategoryImageResponse) => ({ type: actionTypes.DeleteCategoryImageResponse, payload: { deleteCategoryImageResponse } }),
 
   GetCategoryInfoByID: (RequestApplicationInfoByID) => ({ type: actionTypes.GetCategoryInfoByID, payload: { RequestApplicationInfoByID } }),
   GetCategoryInfoByIDResponse: (GetCategoryInfoByIDResponse) => ({ type: actionTypes.GetCategoryInfoByIDResponse, payload: { GetCategoryInfoByIDResponse } }),
@@ -789,6 +916,16 @@ export function* saga() {
     yield put(actions.GetCategoryResponse(response));
   });
 
+  yield takeLatest(actionTypes.GetImageByCategory, function* getImageByCategoryRequested(payload) {
+    const response = yield call(getImageByCategoryRequestedApi, payload.payload);
+    yield put(actions.GetImageByCategoryResponse(response));
+  });
+
+  yield takeLatest(actionTypes.GetImageBySubCategory, function* getImageBySubCategoryRequested(payload) {
+    const response = yield call(getImageBySubCategoryRequestedApi, payload.payload);
+    yield put(actions.GetImageBySubCategoryResponse(response));
+  });
+
   yield takeLatest(actionTypes.GetCategoryInfoByID, function* GetCategoryInfoByIDRequest(payload) {
     const response = yield call(GetCategoryInfoByIDRequestedApi, payload.payload);
     yield put(actions.GetCategoryInfoByIDResponse(response));
@@ -806,10 +943,46 @@ export function* saga() {
       yield put(actions.AddCategoryResponse(response));
   });
 
+  yield takeLatest(actionTypes.UpdateCategoryPriority, function* updateCategoryPriorityRequest(payload) {
+    const response = yield call(updateCategoryPriorityRequestAPI, payload.payload);
+    if (response)
+      yield put(actions.UpdateCategoryPriorityResponse(response));
+  });
+
+  yield takeLatest(actionTypes.CheckCategoryPriority, function* checkCategoryPriorityRequest(payload) {
+    const response = yield call(checkCategoryPriorityRequestAPI, payload.payload);
+    if (response)
+      yield put(actions.CheckCategoryPriorityResponse(response));
+  });
+
+  yield takeLatest(actionTypes.UpdateCategoryStatus, function* updateCategoryStatusRequest(payload) {
+    const response = yield call(updateCategoryStatusRequestAPI, payload.payload);
+    if (response)
+      yield put(actions.UpdateCategoryStatusResponse(response));
+  });
+
+  yield takeLatest(actionTypes.UpdateSubCategoryStatus, function* updateSubCategoryStatusRequest(payload) {
+    const response = yield call(updateSubCategoryStatusRequestAPI, payload.payload);
+    if (response)
+      yield put(actions.UpdateSubCategoryStatusResponse(response));
+  });
+
+  yield takeLatest(actionTypes.CheckSubCategoryPriority, function* checkSubCategoryPriorityRequest(payload) {
+    const response = yield call(checkSubCategoryPriorityRequestAPI, payload.payload);
+    if (response)
+      yield put(actions.CheckSubCategoryPriorityResponse(response));
+  });
+
   yield takeLatest(actionTypes.DeleteCategoryById, function* deleteTagRequested(payload) {
     const response = yield call(deleteCategoryApi, payload.payload);
     if (response)
       yield put(actions.DeleteCategoryByIdResponse(response));
+  });
+
+  yield takeLatest(actionTypes.DeleteCategoryImage, function* DeleteCategoryImageRequested(payload) {
+    const response = yield call(deleteCategoryImageRequestAPI, payload.payload);
+    if (response)
+      yield put(actions.DeleteCategoryImageResponse(response));
   });
 
   //#endregion Manage Category
@@ -898,6 +1071,12 @@ export function* saga() {
     if (response)
       yield put(actions.CheckSubCategoryResponse(response));
   });
+
+  yield takeLatest(actionTypes.UpdateSubCategoryPriority, function* updateSubCategoryPriorityRequest(payload) {
+    const response = yield call(updateSubCategoryPriorityRequestAPI, payload.payload);
+    if (response)
+      yield put(actions.UpdateSubCategoryPriorityResponse(response));
+  });
 }
 
 //#region Manage Profile 
@@ -961,6 +1140,100 @@ const addCategoryRequestApi = async (payload) => {
   return respo;
 };
 
+const updateCategoryPriorityRequestAPI = async (payload) => {
+  var data = payload.updateCategoryPriority;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.post(`${BASE_URL}Category/UpdateCategoryPriority`, data, options)
+    .catch((e) => {
+      return e.response;
+    });
+  console.log(respo);
+  return respo;
+};
+
+const checkCategoryPriorityRequestAPI = async (payload) => {
+  var data = payload.checkCategoryPriority;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.get(`${BASE_URL}Category/CheckCategoryDisplayPriority`, options)
+    .catch((e) => {
+      return e.response;
+    });
+  console.log(respo);
+  return respo;
+};
+
+const updateCategoryStatusRequestAPI = async (payload) => {
+  debugger
+  var data = payload.updateCategoryStatus;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  debugger
+  const respo = instance.post(`${BASE_URL}Category/UpdateCategoryStatus`, data,options)
+    .catch((e) => {
+      return e.response;
+    });
+  console.log(respo);
+  return respo;
+};
+
+const updateSubCategoryStatusRequestAPI = async (payload) => {
+  debugger
+  var data = payload.updateSubCategoryStatus;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  debugger
+  const respo = instance.post(`${BASE_URL}SubCategory/UpdateSubCategoryStatus`, data,options)
+    .catch((e) => {
+      return e.response;
+    });
+  console.log(respo);
+  return respo;
+};
+
+const checkSubCategoryPriorityRequestAPI = async (payload) => {
+  var data = payload.checkSubCategoryPriority;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.get(`${BASE_URL}SubCategory/CheckSubCategoryDisplayPriority`, options)
+    .catch((e) => {
+      return e.response;
+    });
+  console.log(respo);
+  return respo;
+};
+
+const updateSubCategoryPriorityRequestAPI = async (payload) => {
+  var data = payload.updateSubCategoryPriority;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.post(`${BASE_URL}SubCategory/UpdateSubCategoryPriority`, data, options)
+    .catch((e) => {
+      return e.response;
+    });
+  console.log(respo);
+  return respo;
+};
+
 const getCategoryRequestedApi = async (payload) => {
 
   // var data = payload.RequestParmTag;
@@ -1011,6 +1284,20 @@ const deleteCategoryApi = async (payload) => {
   return respo;
 };
 
+const deleteCategoryImageRequestAPI = async (payload) => {
+  var data = payload.deleteCategoryImage;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.delete(`${BASE_URL}Image/DeleteImage?inCategoryImageId=${data.inCategoryImageId}&inModifiedBy=${data.inModifiedBy}`, options)
+    .catch((e) => {
+      return e.response;
+    });
+  return respo;
+};
+
 const GetCategoryInfoByIDRequestedApi = async (payload) => {
   var data = payload.RequestApplicationInfoByID;
   const instance = await axios.create({
@@ -1045,22 +1332,49 @@ const GetCategoryInfoByIDRequestedApi = async (payload) => {
 
 //#region Manage Image
 const addCategoryImageRequestApi = async (payload) => {
-
+  debugger
   var data = payload.categoryImage;
   const instance = await axios.create({
   });
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  console.log(data, "????????????");
+  debugger
   const respo = instance.post(`${BASE_URL}Image/addEditImage`, data, options)
     .catch((e) => {
+      debugger
+      console.log("121121212121212");
       return e.response;
     });
-  console.log(respo, "??>>>????");
+  return respo;
+  debugger
+};
+
+const getImageByCategoryRequestedApi = async (payload) => {
+  var data = payload.getImageByCategory;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
+  };
+  const respo = instance.post(`${BASE_URL}Image/GetImageByCategoryId`, data, options);
   return respo;
 };
 
+const getImageBySubCategoryRequestedApi = async (payload) => {
+  debugger
+  var data = payload.getImageBySubCategory;
+  const instance = await axios.create({
+  });
+  debugger
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
+  };
+  const respo = instance.post(`${BASE_URL}SubCategory/GetImageBySubCategoryId`, data, options);
+  return respo;
+};
 
 const addSubCategoryImageRequestApi = async (payload) => {
   var data = payload.subCategoryImage;
@@ -1169,7 +1483,7 @@ const addSubCategoryRequestApi = async (payload) => {
 };
 
 const getSubCategoryRequestedApi = async (payload) => {
-   
+
   var data = payload.GetSubCategoryResponse;
   const instance = await axios.create({
   });
@@ -1177,10 +1491,10 @@ const getSubCategoryRequestedApi = async (payload) => {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
     //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
   };
-   
+
   const respo = instance.get(`${BASE_URL}SubCategory/GetAllSubCategory`, options);
   return respo;
-   
+
 };
 
 const deleteSubCategoryApi = async (payload) => {

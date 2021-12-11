@@ -6,22 +6,26 @@ import { Link, Redirect } from "react-router-dom";
 import "../custom.css";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import ManageSubCategory from "../SubCategory/ManageSubCategory"
+import ManageUploadCategoryImage from "../Image/ManageUploadCategoryImage"
+import { categoryIdsubcriber, idsub, imagesubcriber } from '../../env/subBehaviour';
+import { idsubcriber } from '../../env/categoryId';
+const baseURL = "http://megaminds-001-site12.itempurl.com"
 
-const renderFields = ({
-    input,
-    label,
-    type,
-    data,
-    placeholder,
-    meta: { asyncValidating, touched, error }
-}) => (
+const renderFields = ({ input, label, type, data, placeholder, meta: { asyncValidating, touched, error } }) => (
     <div className="form-group">
         <label>{label}</label>
         <input {...input} type={type} placeholder={placeholder} className="form-control" style={{ marginTop: '-3%' }} />
         {touched && error && <small className="error-msg text-danger form-text">{error}</small>}
     </div>
 )
-
+const renderCheckboxField = ({
+    input, label, type, checked, id, txtId, data, onClick, meta: { asyncValidating, touched, error } }) => (
+    <div className="form-check form-check-inline">
+        <input  {...input} type={type} checked={data} className="form-check-input" style={{ cursor: 'pointer' }}></input>
+        <label className="form-check-label">{label}</label>
+    </div>
+)
 const validate = values => {
     const errors = {}
     const requiredFields = [
@@ -29,31 +33,40 @@ const validate = values => {
     ]
     requiredFields.forEach(field => {
         if (!values[field]) {
-            errors[field] = field.substring(2) + ' is required.'
+            errors[field] = "Category Name is required."
         }
     })
+    if (values.stCategoryName && values.stCategoryName.trim() == "") {
+        errors["stCategoryName"] = "Category Name is required."
+    }
     return errors
 }
 
 class AddCategoryPage extends Component {
     constructor(props) {
+        debugger
         super(props)
         this.state = {
             isError: false,
-            currentUserData: {}
+            currentUserData: {},
+            isChecked: false
         }
         this.onSubmit = this.onSubmit.bind(this);
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
         this.setState({ isLoading: true });
-        var data = {
-            inCategoryId: formValues.inCategoryId == undefined || formValues.inCategoryId == "" ? 0 : formValues.inCategoryId,
-            stCategoryName: formValues.stCategoryName,
-            inCreatedBy: this.state.currentUserData.inUserID
+        if (formValues.stCategoryName.trim() != "") {
+            var isCheckValue = this.state.isChecked == true ? 1 : 0;
+            var data = {
+                inCategoryId: formValues.inCategoryId == undefined || formValues.inCategoryId == "" ? 0 : formValues.inCategoryId,
+                stCategoryName: formValues.stCategoryName,
+                inCreatedBy: this.state.currentUserData.inUserID,
+                inDisplayPriority: this.state.priority,
+                isHaveSubCategory: isCheckValue
+            }
+            this.props.AddCategory(data);
         }
-        //this.props.SaveTag(data);
-        this.props.AddCategory(data);
     }
 
     hideModel = () => {
@@ -63,6 +76,46 @@ class AddCategoryPage extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
+        var id = window.location.href.split("/").pop();    // "1"   "ASDASD"
+        var value = parseInt(id)
+        if (isNaN(value)) {
+            if (nextProps.checkCategoryPriorityResponse) {
+                if (nextProps.checkCategoryPriorityResponse && nextProps.checkCategoryPriorityResponse != this.props.checkCategoryPriorityResponse) {
+                    if (nextProps.checkCategoryPriorityResponse.statusCode == 200) {
+                        var newPriority = nextProps.checkCategoryPriorityResponse.data[0].DisplayPriority + 1
+                        this.setState({ priority: newPriority })
+                        console.log(newPriority, "NEW");
+
+                    }
+                }
+            }
+        }
+        else {
+            debugger
+            if (nextProps.GetCategoryInfoByIDResponse) {
+                if (nextProps.GetCategoryInfoByIDResponse && nextProps.GetCategoryInfoByIDResponse != this.props.GetCategoryInfoByIDResponse) {
+                    if (nextProps.GetCategoryInfoByIDResponse.statusCode == 200) {
+                        var prePriority = nextProps.GetCategoryInfoByIDResponse.data[0].inDisplayPriority
+                        var isChecked = nextProps.GetCategoryInfoByIDResponse.data[0].isHaveSubCategory
+                        // var isCheckValue = isChecked == 1 ? true : false;
+                        this.setState({ isChecked: isChecked == 1 ? true : false })
+                        this.setState({ priority: prePriority })
+                        console.log(prePriority, "OLD");
+                        console.log(isChecked, "isChecked");
+
+                    }
+                }
+            }
+        }
+        if (nextProps.getImageByCategoryResponse) {
+            if (nextProps.getImageByCategoryResponse && nextProps.getImageByCategoryResponse != this.props.getImageByCategoryResponse) {
+                if (nextProps.getImageByCategoryResponse.statusCode == 200) {
+                    var image = nextProps.getImageByCategoryResponse.data
+                    this.setState({ imageData: image })
+
+                }
+            }
+        }
         if (nextProps.getCategoryInfoByIDResponse) {
             if (nextProps.getCategoryInfoByIDResponse && nextProps.getCategoryInfoByIDResponse != this.props.getCategoryInfoByIDResponse) {
                 if (nextProps.getCategoryInfoByIDResponse.statusCode == 200) {
@@ -99,7 +152,9 @@ class AddCategoryPage extends Component {
         })
     }
     componentDidMount() {
+        debugger
         var id = window.location.href.split("/").pop();
+        idsubcriber.next(id)
         if (id != "Category")
             this.props.GetCategoryInfoByID(id)
         else {
@@ -111,7 +166,60 @@ class AddCategoryPage extends Component {
             }
             this.props.ResetTag(data);
         }
+        this.props.CheckCategoryPriority()
+        this.getImage();
     }
+    ConfirmationSweetAlert(index, image, msg) {
+        let getAlert = '';
+        getAlert = () => (
+            <SweetAlert
+                error
+                title={msg}
+                onConfirm={() => this.handleDelete(index, image)}
+                showCancel
+                cancelBtnBsStyle='danger'
+                onCancel={() => this.hideAlert(false)}
+
+            >
+            </SweetAlert>
+        );
+        this.setState({
+            alert: getAlert()
+        });
+    }
+    handleDelete(index, image) {
+        var inCategoryImageId = image.inCategoryImageId
+        console.log(inCategoryImageId, "112121212121212");
+        var data = {
+            inCategoryImageId: inCategoryImageId,
+            inModifiedBy: this.state.currentUserData.inUserID,
+        }
+        this.props.DeleteCategoryImage(data)
+        this.hideAlert(false);
+        var id = window.location.href.split("/").pop();
+        this.props.GetCategoryInfoByID(id)
+
+        // window.location.reload();
+        // if (row != null)
+        //     this.hideAlert(false);
+        // this.props.DeleteCategoryById(row.inCategoryId)
+        debugger
+    }
+    hideAlert(isSaved) {
+        this.setState({
+            alert: null
+        });
+    }
+    getImage = () => {
+        debugger
+        var id = window.location.href.split("/").pop();
+        console.log(id, "ASASASASASAS");
+        var data = {
+            inCategroyId: id
+        }
+        this.props.GetImageByCategory(data);
+    }
+
     SuccessFailSweetAlert(msg, type) {
         let getAlert = '';
         if (type == 'success') {
@@ -123,7 +231,6 @@ class AddCategoryPage extends Component {
                 >
                 </SweetAlert>
             );
-
         }
         else {
             getAlert = () => (
@@ -140,12 +247,21 @@ class AddCategoryPage extends Component {
             alert: getAlert()
         });
     }
+
+    onChangesTagName = (e, index) => {
+        this.setState({ isChecked: this.state.isChecked ? false : true })
+        // debugger
+        // this.state.categoryData[index].Checked = !this.state.isChecked ? !this.state.categoryData[index].Checked : false;
+        // this.setState({ categoryData: this.state.categoryData });
+    }
+
     render() {
         var $this = this;
         const { handleSubmit, pristine, reset, submitting, formValues, change } = this.props;
         if (this.state.isRedirect) {
             return <Redirect to="/ManageCategory" />
         }
+        let isChecked = this.state.isChecked
         return (
             <div className="card card-custom gutter-b example example-compact">
                 {this.state.alert}
@@ -162,8 +278,30 @@ class AddCategoryPage extends Component {
                                     component={renderFields}
                                 />
                             </div>
+                            <div className="row-sm-6">
+                                <h6 >Priority of New Category</h6>
+                                <input style={{ marginTop: "-2%", width: "30%" }}
+                                    disabled={true}
+                                    name="inDisplayPriority"
+                                    defaultValue={this.state.priority}
+                                    className="form-control"
+                                // onChange={(e)=>console.log(e,"11111")}
+                                />
+                                {/* <label>{this.state.priority}</label> */}
+                            </div>
                         </div>
-
+                        <div className="row-sm-6">
+                            <h6 >Category Have any Sub Category?</h6>
+                            {/* <input type="checkbox" checked="checked"
+                                     onClick={(e) => this.__onChange(e)}
+                                  />  */}
+                            <Field
+                                type="checkbox"
+                                data={this.state.isChecked}
+                                onChange={(evt) => $this.onChangesTagName(evt)}
+                                component={renderCheckboxField} />
+                            {/* <label>{this.state.priority}</label> */}
+                        </div>
                         <div className="row mt-3 mb-3" >
                             <div className="col-sm-9 text-left userprofile-btn">
                                 <OverlayTrigger
@@ -181,14 +319,14 @@ class AddCategoryPage extends Component {
                                 <OverlayTrigger
                                     placement="bottom"
                                     overlay={<Tooltip>Cancel</Tooltip>}>
-                                    <Link className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/Tags">
+                                    <Link className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageCategory">
                                         Cancel
                                     </Link>
                                 </OverlayTrigger>
                             </div>
-
-
                         </div>
+                  
+
                         {this.state.showModal &&
                             <SweetAlert
                                 info
@@ -204,6 +342,28 @@ class AddCategoryPage extends Component {
                             </SweetAlert>
                         }
                     </form>
+                    <div class="row">
+                        {this.state.imageData != null && this.state.imageData != "" && this.state.imageData != undefined && this.state.imageData.map((image, index) => (
+                            <div class="col-2">
+                                <div className="image-item mt-5 mb-5 mr-5">
+                                    <div key={index} className="image-item mt-5 mb-5 mr-5">
+                                        <img width="140px"
+                                            height="140px"
+                                            src={`${baseURL}${image.stImagePath}`}
+                                        />
+                                    </div>
+                                    <div className="image-item__btn-wrapper">
+                                        {/* <button style={{ marginRight: 5 }} className="btn btn-icon btn-sm btn-primary" onClick={() => console.log(image)}><i style={{ alignSelf: "center" }} className="fas fa-edit icon-nm"></i></button> */}
+                                        <button className="btn btn-icon btn-sm btn-danger" onClick={() => this.ConfirmationSweetAlert(index, image, "Are you sure want to delete it.?")}><i className="ki ki-close icon-nm"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    {
+                            //(isChecked == true) ? (<ManageSubCategory />) : (isChecked == false) ? (null) : (<ManageUploadCategoryImage />) 
+                            (isChecked == true) ? (<ManageSubCategory history={this.props.history} />) : (<ManageUploadCategoryImage history={this.props.history} />)
+                        }
                 </div>
             </div>
         )
@@ -221,13 +381,17 @@ function mapStateToProps(state) {
     return {
         initialValues: {
             inCategoryId: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0]?.inCategoryId : "",
-            stCategoryName: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0]?.stCategoryName : ""
-
+            stCategoryName: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0]?.stCategoryName : "",
+            inDisplayPriority: state.auth.GetCategoryInfoByIDResponse != undefined && state.auth.GetCategoryInfoByIDResponse.data != undefined ? state.auth.GetCategoryInfoByIDResponse.data[0]?.inDisplayPriority : "",
         },
         // insuranceTypeResponse: state.auth.insuranceTypeResponse,
+        checkCategoryPriorityResponse: state.auth.checkCategoryPriorityResponse,
         categoryResponse: state.auth.categoryResponse,
         GetCategoryInfoByIDResponse: state.auth.GetCategoryInfoByIDResponse,
-        randomNumbers: state.auth.randomNumbers
+        getImageByCategoryResponse: state.auth.getImageByCategoryResponse,
+        randomNumbers: state.auth.randomNumbers,
+        AddCategoryResponse: state.auth.AddCategoryResponse
+
 
     }
 }
@@ -236,7 +400,10 @@ const mapDispatchToProps = (dispatch) => {
         ResetTag: (data) => dispatch(auth.actions.ResetInsuranceType(data)),
         GetCategoryInfoByID: (data) => dispatch(auth.actions.GetCategoryInfoByID(data)),
         //SaveTag: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
+        CheckCategoryPriority: (data) => dispatch(auth.actions.CheckCategoryPriority(data)),
+        GetImageByCategory: (data) => dispatch(auth.actions.GetImageByCategory(data)),
         AddCategory: (data) => dispatch(auth.actions.AddCategory(data)),
+        DeleteCategoryImage: (data) => dispatch(auth.actions.DeleteCategoryImage(data)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AddCategoryPage);

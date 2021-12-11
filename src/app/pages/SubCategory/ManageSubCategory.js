@@ -16,6 +16,8 @@ import { stubFalse } from 'lodash';
 import Spinner from 'react-bootstrap/Spinner'
 import paginationFactory, { PaginationProvider } from 'react-bootstrap-table2-paginator';
 import { Pagination } from "../pagination/Pagination";
+import { categoryIdsubcriber, idsub, imagesubcriber } from '../../env/subBehaviour';
+import { idsubcriber } from '../../env/categoryId';
 
 class ManageSubCategory extends Component {
     constructor(props) {
@@ -25,10 +27,13 @@ class ManageSubCategory extends Component {
             subcategoryData: [],
             isGettingSubCategory: false,
         }
+        this.handleEdit = this.handleEdit.bind(this);
     }
 
     handleEdit(row) {
-        this.props.history.push(`/AddSubCategoryPage/${row.inSubCategoryId}`)
+        var categoryId = parseInt(this.state.categoryId)
+        if (row.inSubCategoryId != null)
+            this.props.history.push(`/AddSubCategoryPage/${row.inSubCategoryId}`)
     }
 
     handleImage(row) {
@@ -41,7 +46,6 @@ class ManageSubCategory extends Component {
         this.props.DeleteSubCategoryById(row.inSubCategoryId)
     }
     componentDidMount() {
-        
         this.setState({ isGettingSubCategory: true })
         this.props.GetSubCategory("");
     }
@@ -52,7 +56,6 @@ class ManageSubCategory extends Component {
                     this.setState({ isGettingSubCategory: false });
                     this.setState({ isLoading: false })
                     this.setState({ totalno: nextProps.GetSubCategoryResponse.data.length })
-
                     this.setState({ subcategoryData: nextProps.GetSubCategoryResponse.data })
                 }
             }
@@ -66,7 +69,7 @@ class ManageSubCategory extends Component {
                 }
             }
         }
-        
+
     }
     SuccessFailSweetAlert(msg, type) {
         let getAlert = '';
@@ -132,13 +135,80 @@ class ManageSubCategory extends Component {
         }
         return `${moment(cell).format("MM-DD-YYYY") ? moment(cell).format("MM-DD-YYYY") : moment(cell).format("MM-DD-YYYY")}`;
     }
+
+    handleChange = (e) => {
+        console.log(e.target.value)
+    };
+
+    onBlur = (e, row) => {
+        if (e.target.value != "") {
+            debugger
+            var DisplayPriority = e.target.defaultValue = e.target.value
+            var data = {
+                inDisplayPriority: DisplayPriority,
+                inSubCategoryId: row.inSubCategoryId
+            }
+            this.props.UpdateSubCategoryPriority(data);
+            this.SuccessFailSweetAlert("Update priority successfully", "success");
+        }
+        e.target.value = e.target.defaultValue
+    };
+
+    __onChange(e, row) {
+        var intIndex = this.state.subcategoryData.map(function (e) { return row.inSubCategoryId; }).indexOf(row.inSubCategoryId);
+        this.state.subcategoryData[intIndex].flgIsActive.data[0] = e.target.checked ? 1 : 0;
+        this.setState({ subcategoryData: this.state.subcategoryData });
+        var data = {
+            inSubCategoryId: row.inSubCategoryId,
+            flgIsActive: e.target.checked ? 1 : 0
+        }
+        this.props.UpdateSubCategoryStatus(data)
+        // this.SuccessFailSweetAlert("Change status successfully", "success");
+        // if (document.getElementById('chk1').checked) {
+        // if (document.getElementById('chk1').checked) {
+        // var isActive = 1
+        // var x = row.inCategoryId
+        // console.log(x, "LLLLLL");
+        // this.setState({ isChecked: true })
+        // var data = {
+        //     inCategoryId: x,
+        //     flgIsActive: isActive
+        // }
+        // console.log("Checked");
+        // } else {
+        //     var isActive = 0
+        //     console.log("UnChecked");
+        //     this.setState({ isChecked: true })
+        // }
+    }
+
     render() {
         var $this = this;
         const columns = [
             //#region Index of the Sub Category list
-            { dataField: 'inSubCategoryId', text: 'SubCategory Number', hidden: false,sort: true },
-            { dataField: 'stSubCategoryName', text: 'SubCategory', sort: true },
+            // { dataField: 'inSubCategoryId', text: 'Sub Category Number', hidden: false,sort: true },
+            { dataField: 'stSubCategoryName', text: 'Sub Category', sort: true },
             { dataField: 'stCategoryName', text: 'Category' },
+            {
+                dataField: 'inDisplayPriority',
+                text: 'Display Priority',
+                // sort: true
+                formatter: (dataField, row, index) => {
+                    return (
+                        <div>
+                            <input
+                                // disabled={true}
+                                defaultValue={dataField}
+                                className="form-control"
+                                onBlur={(e) => this.onBlur(e, row)}
+                                // onChange={(e)=>console.log(e,"11111")}
+                                onChange={this.handleChange}
+                            />
+                            {/* <input type="text" onChange={this.handleChange.bind(this, index)} value={this.state.index} value={dataField}/> */}
+                        </div>
+                    )
+                }
+            },
             {
                 dataField: 'dtCreatedOn', text: 'Created Date', sort: false,
                 formatter: (cell) => {
@@ -148,6 +218,24 @@ class ManageSubCategory extends Component {
                     return moment(cell).format("MM/DD/YYYY");
                 },
             },
+            {
+                dataField: 'link', text: 'Is Active', sort: false,
+                formatter: (rowContent, row) => {
+                    return (
+                        <span class="switch switch-outline switch-icon switch-success" style={{ width: "27%", marginLeft: 20, marginRight: 10 }}>
+                            <label>
+                                <input type="checkbox"
+                                    ref={this.textInput}
+                                    name="select"
+                                    checked={row.flgIsActive.data[0] == 1}
+                                    onClick={(e) => this.__onChange(e, row)}
+                                />
+                                <span></span>
+                            </label>
+                        </span>
+                    )
+                },
+            },
             //#endregion
             {
                 dataField: 'link',
@@ -155,38 +243,42 @@ class ManageSubCategory extends Component {
                 formatter: (rowContent, row) => {
                     return (
                         <div>
+                            {/* <div class="row"> */}
+                            {/* <span class="switch switch-outline switch-icon switch-success" style={{ width: "27%" ,marginLeft:20,marginRight:10}}>
+                                        <label>
+                                            <input type="checkbox"
+                                                ref={this.textInput}
+                                                name="select"
+                                                checked={row.flgIsActive.data[0] == 1}
+                                                onClick={(e) => this.__onChange(e, row)}
+                                            />
+                                            <span></span>
+                                        </label>
+                                    </span> */}
                             <OverlayTrigger
                                 placement="bottom"
-                                overlay={<Tooltip>Edit SubCategory</Tooltip>}>
+                                overlay={<Tooltip>Edit Sub Category</Tooltip>}>
+                                {/* <button className="btn btn-icon btn-sm btn-danger" onClick={(e) => this.handleEdit(row)}><i className="fas fa-edit icon-nm"></i></button> */}
                                 <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }} onClick={(e) => this.handleEdit(row)}>
                                     <i className="fas fa-edit icon-nm"></i>
                                 </a>
                             </OverlayTrigger>
                             <OverlayTrigger
                                 placement="bottom"
-                                overlay={<Tooltip>Add Image</Tooltip>}>
+                                overlay={<Tooltip>Add Sub Category Thumbnail</Tooltip>}>
                                 <a className="btn btn-icon btn-sm btn-primary" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }} onClick={(e) => this.handleImage(row)}>
                                     <i className="fas fa-image icon-nm"></i>
                                 </a>
                             </OverlayTrigger>
                             <OverlayTrigger
                                 placement="bottom"
-                                overlay={<Tooltip>Delete SubCategory</Tooltip>}>
+                                overlay={<Tooltip>Delete Sub Category</Tooltip>}>
                                 <a className="btn btn-icon btn-sm btn-danger" data-toggle="tooltip" data-placement="buttom" onClick={(e) => this.ConfirmationSweetAlert(row, "Are you sure want to delete it.?")}>
                                     <i className="ki ki-close icon-nm"></i>
                                 </a>
                             </OverlayTrigger>
-
-                            {/* <OverlayTrigger
-                                placement="bottom"
-                                overlay={<Tooltip>Add Sub-Category</Tooltip>}>
-                                <a className="btn btn-icon btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                    <i className="ki ki-close icon-nm"></i>
-                                </a>
-                            
-                            </OverlayTrigger> */}
-
                         </div>
+                        // </div>
                     )
                 },
                 headerStyle: (colum, colIndex) => {
@@ -203,11 +295,7 @@ class ManageSubCategory extends Component {
             { text: "10", value: 10 },
             { text: "5", value: 5 },
             { text: "3", value: 3 }
-
-
         ];
-
-
         const pagination = paginationFactory({
             page: 1,
             sizePerPage: 10,
@@ -235,54 +323,20 @@ class ManageSubCategory extends Component {
                     <div className="card-toolbar">
                         <OverlayTrigger
                             placement="bottom"
-                            overlay={<Tooltip>Add SubCategory</Tooltip>}>
+                            overlay={<Tooltip>Add Sub Category</Tooltip>}>
                             <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/AddSubCategoryPage">
-                                Add SubCategory
+                                Add Sub Category
                             </Link>
                         </OverlayTrigger>
                         <div style={{ marginLeft: 20 }}>
                             <OverlayTrigger
                                 placement="bottom"
-                                overlay={<Tooltip>Add Category Image</Tooltip>}>
+                                overlay={<Tooltip>Add Sub Category Image</Tooltip>}>
                                 <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/ManageUploadSubCategoryImage">
-                                    Add Sub-Category Image
+                                    Add Sub Category Image
                                 </Link>
                             </OverlayTrigger>
                         </div>
-                        {/* <div style={{ marginLeft: 20 }}>
-                            <OverlayTrigger
-                                placement="bottom"
-                                overlay={<Tooltip>Add Thumbnail Image</Tooltip>}>
-                                <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/AddThumbnailImage">
-                                    Add Thumbnail Image
-                                </Link>
-                            </OverlayTrigger>
-                        </div> */}
-
-                        {/* <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-                            Launch demo modal
-                        </button>
-
-                        <div class="modal fade" id="exampleModalLong" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <i aria-hidden="true" class="ki ki-close"></i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                       <p>Modal</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary font-weight-bold">Save changes</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
-
                     </div>
                 </div>
 
@@ -300,7 +354,6 @@ class ManageSubCategory extends Component {
                             props => (
                                 <div >
                                     <SearchBar {...props.searchProps} />
-
                                     <BootstrapTable
                                         defaultSorted={defaultSorted}
                                         pagination={pagination}
@@ -311,12 +364,15 @@ class ManageSubCategory extends Component {
                         }
                     </ToolkitProvider>
                     <div className="mt-2">
-                        <a className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
+                        <div className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
                             <i className="fas fa-edit icon-nm"></i>
-                        </a> Edit SubCategory &nbsp;&nbsp;&nbsp;
-                        <a className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
+                        </div> Edit SubCategory &nbsp;&nbsp;&nbsp;
+                        <div className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
+                            <i className="fas fa-image icon-nm"></i>
+                        </div> Add Sub Category Thumbnail &nbsp;&nbsp;&nbsp;
+                        <div className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
                             <i className="ki ki-close icon-nm"></i>
-                        </a> Delete SubCategory
+                        </div> Delete SubCategory
                     </div>
                 </div>
             </div>
@@ -335,11 +391,13 @@ function mapStateToProps(state) {
     }
 }
 const mapDispatchToProps = (dispatch) => {
-    
+
     return {
         GetSubCategory: (data) => dispatch(auth.actions.GetSubCategory(data)),
         DeleteSubCategoryById: (data) => dispatch(auth.actions.DeleteSubCategoryById(data)),
+        UpdateSubCategoryPriority: (data) => dispatch(auth.actions.UpdateSubCategoryPriority(data)),
         SaveInsuranceType: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
+        UpdateSubCategoryStatus: (data) => dispatch(auth.actions.UpdateSubCategoryStatus(data)),
     }
 }
 

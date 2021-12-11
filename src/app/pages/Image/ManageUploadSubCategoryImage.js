@@ -6,29 +6,13 @@ import { Link, Redirect } from "react-router-dom";
 import "../custom.css";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-
-import DemoPage from '../Extra/demo'
-import { imagesubcriber } from '../Extra/subBehaviour';
+import ImageUplaodComponents from '../../components/ImageUplaod'
+import { imagesubcriber } from '../../env/subBehaviour';
 import 'bootstrap/dist/css/bootstrap.min.css';
-const renderFields = ({
-    input,
-    label,
-    type,
-    data,
-    placeholder,
-    meta: { asyncValidating, touched, error }
-}) => (
-    <div className="form-group">
-        <label>{label}</label>
-        <input {...input} type={type} placeholder={placeholder} className="form-control" style={{ marginTop: '-3%' }} />
-        {touched && error && <small className="error-msg text-danger form-text">{error}</small>}
-    </div>
-)
 
 const renderCheckboxField = ({
     input, label, type, checked, id, txtId, data, onClick, meta: { asyncValidating, touched, error } }) => (
     <div className="form-check form-check-inline">
-        {/* style={{ marginTop: 33 }} */}
         <input  {...input} type={type} checked={data} className="form-check-input" style={{ cursor: 'pointer' }}></input>
         <label className="form-check-label">{label}</label>
     </div>
@@ -47,7 +31,6 @@ const validate = values => {
     return errors
 }
 
-
 class ManageUploadSubCategoryImage extends Component {
     constructor(props) {
         super(props)
@@ -59,33 +42,17 @@ class ManageUploadSubCategoryImage extends Component {
             subCategoryData: [],
             categoryData: [],
             baseImage: [],
-            imageData: []
+            imageData: [],
+            showModal: false,
+            message: ''
         }
         this.props.GetSubCategory("");
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
-
     }
 
-
-    hideModel = () => {
-        this.setState({
-            alert: '',
-            showModal: false,
-        })
-    }
-
-    hideModel = () => {
-        this.setState({
-            alert: '',
-            showModal: false,
-        })
-    }
-    // componentDidMount() {
-    //     var id = window.location.href.split("/").pop();
-    //     this.setState({ subCategoryId: id })
-    // }
     componentDidMount() {
-        debugger
+        //     var id = window.location.href.split("/").pop();
+        //     this.setState({ subCategoryId: id })
         imagesubcriber.subscribe((x) => {
             debugger
             this.setState({ image: x })
@@ -103,32 +70,21 @@ class ManageUploadSubCategoryImage extends Component {
         }
     }
     SuccessFailSweetAlert(msg, type) {
-        let getAlert = '';
-        if (type == 'success') {
-            getAlert = () => (
-                <SweetAlert
-                    success
-                    title={msg}
-                    onConfirm={() => this.hideAlert(true)}
-                >
-                </SweetAlert>
-            );
-
-        }
-        else {
-            getAlert = () => (
-                <SweetAlert
-                    error
-                    title={msg}
-                    onConfirm={() => this.hideAlert(false)}
-                >
-                </SweetAlert>
-            );
-        }
-
+        this.setState({ showModal: true, message: msg, alertType: type })
+    }
+    hideModelError = () => {
         this.setState({
-            alert: getAlert()
-        });
+            message: '',
+            showModal: false,
+        })
+    }
+
+    hideModelSuccess = () => {
+        this.setState({
+            alert: '',
+            showModal: false,
+            isRedirect: true
+        })
     }
     fileToDataUri = (image) => {
         return new Promise((res) => {
@@ -142,7 +98,6 @@ class ManageUploadSubCategoryImage extends Component {
                     size: size,
                 })
             });
-            // console.log();
             reader.readAsDataURL(image);
         })
     };
@@ -155,61 +110,30 @@ class ManageUploadSubCategoryImage extends Component {
             const newImages = await Promise.all(newImagesPromises)
             this.setState({ baseImage: [...newImages] })
         }
-        //#region Single Image Upload
-        // const file = e.target.files[0];
-        // const base64 = await this.convertBase64(file);
-        // this.setState({ baseImage: base64 })
-        //#endregion
     };
 
     onSubmit = async (formValues) => {
-        //#region Split Base64 Data
-        const data = []
-        var base64Data = this.state.baseImage
-        for (let index = 0; index < base64Data.length; index++) {
-            data.push(base64Data[index].base64.split(',')[1])
-        }
-        const newImagess = await Promise.all(data)
-        this.setState({ imageData: [...newImagess] })
-        //-------------------------------//
         let indexOfItem = this.state.subCategoryData.filter(tag => tag.Checked === true)
-        if (indexOfItem.length == 0) {
-            this.SuccessFailSweetAlert("Please select at least one SubCategory", "error");
-            this.setState({ isLoading: false });
-        }
-        else {
-            let x = this.state.image
-            console.log(x, "PLPLPLPLPLPLPLPLPLPLP");
+        if (indexOfItem.length != 0) {
+            let image = this.state.image
             var subCategoryId = indexOfItem[0].inSubCategoryId
             this.setState({ isLoading: true });
-            for (var i = 0; i < x.length; i++) {
+            for (var i = 0; i < image.length; i++) {
                 const fd = new FormData();
                 var subCategoryId = subCategoryId
-                var SubCategoryImageId = 0
-
-                fd.append('image', x[i]['file']);
+                var SubCategoryImageId = formValues.inSubCategoryImageId == undefined || formValues.inSubCategoryImageId == "" ? 0 : formValues.inSubCategoryImageId
+                fd.append('image', image[i]['file']);
                 fd.append('inSubCategoryImageId', SubCategoryImageId);   //Image Id
-                fd.append('stImageDatabase64', x[i]['data_url'].split(',')[1]);  // Imaeg Data base64
                 fd.append('inSubCategoryId', subCategoryId); // Sub Caetgory Id
                 fd.append('inCreatedBy', this.state.currentUserData.inUserID); // user Id
                 this.props.AddSubCategoryImage(fd);
-                this.setState({ isLoading: true });
             }
-            // var subCategoryId = indexOfItem[0].inSubCategoryId
-            // this.setState({ isLoading: true });
-            // this.state.imageData.forEach(element => {
-            //     var data = {
-            //         inSubCategoryImageId: formValues.inSubCategoryImageId == undefined || formValues.inSubCategoryImageId == "" ? 0 : formValues.inSubCategoryImageId,
-            //         // stImageDatabase64: this.state.baseImage.split(',')[1],
-            //         stImageDatabase64: element,
-            //         inSubCategoryId: subCategoryId,
-            //         inCreatedBy: this.state.currentUserData.inUserID
-            //     }
-            //     console.log(data, "SUB CATEGORY IMAGE SCREEN");
-            //     this.props.AddSubCategoryImage(data);
-            //     debugger
-            // })
-
+            this.setState({ isLoading: false });
+            this.SuccessFailSweetAlert("Image has been saved successfully!", "success");
+        }
+        else {
+            this.SuccessFailSweetAlert("Please select at least one Category", "error");
+            this.setState({ isLoading: false });
         }
     }
 
@@ -260,7 +184,7 @@ class ManageUploadSubCategoryImage extends Component {
                         </div> */}
                     <div className="col-sm-12">
                         <h6>Image Upload</h6>
-                        <DemoPage />
+                        <ImageUplaodComponents />
                         {/* <input
                                 type="file"
                                 multiple
@@ -312,20 +236,35 @@ class ManageUploadSubCategoryImage extends Component {
                     <OverlayTrigger
                         placement="bottom"
                         overlay={<Tooltip>Add SubCategory Image</Tooltip>}>
-                        {/* <button style={{ width: 120, marginRight: 10 }}
-                                id="kw_dtn_add_carrier"
-                                type="submit"
-                                className={`btn btn-primary`}>
-                                Submit
-                            </button> */}
-                        <button style={{ width: 120, marginRight: 0 }}
+                        <button style={{ width: 120, marginRight: 10 }}
                             id="kw_dtn_add_carrier"
                             type="submit"
                             className="btn btn-primary"
                             onClick={(this.onSubmit)}>Submit
                         </button>
                     </OverlayTrigger>
+                    <OverlayTrigger
+                        placement="bottom"
+                        overlay={<Tooltip>Cancel</Tooltip>}>
+                        <Link style={{width:120}} className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageSubCategory">
+                            Cancel
+                        </Link>
+                    </OverlayTrigger>
                 </div>
+                {this.state.showModal && this.state.alertType == 'error' ?
+                    <SweetAlert
+                        error
+                        title={this.state.message}
+                        onConfirm={() => this.hideModelError()}>
+                    </SweetAlert>
+                    :
+                    this.state.showModal &&
+                    <SweetAlert
+                        success
+                        title={this.state.message}
+                        onConfirm={() => this.hideModelSuccess()}>
+                    </SweetAlert>
+                }
                 {/* </form> */}
             </div>
         )
