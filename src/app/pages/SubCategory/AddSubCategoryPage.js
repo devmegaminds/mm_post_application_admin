@@ -5,8 +5,9 @@ import * as auth from "../../modules/Auth/_redux/authRedux";
 import { Link, Redirect } from "react-router-dom";
 import "../custom.css";
 import SweetAlert from 'react-bootstrap-sweetalert';
-import { OverlayTrigger, Tooltip ,Dropdown} from "react-bootstrap";
+import { OverlayTrigger, Tooltip, Dropdown } from "react-bootstrap";
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+const baseURL = "http://megaminds-001-site12.itempurl.com"
 
 const renderFields = ({
     input, label, type, data, placeholder, meta: { asyncValidating, touched, error } }) => (
@@ -32,9 +33,12 @@ const validate = values => {
     ]
     requiredFields.forEach(field => {
         if (!values[field]) {
-            errors[field] = field.substring(2) + ' is required.'
+            errors[field] = 'Sub Category Name is required.'
         }
     })
+    if (values.stSubCategoryName && values.stSubCategoryName.trim() == "") {
+        errors["stSubCategoryName"] = "Sub Category Name is required."
+    }
     return errors
 }
 
@@ -53,6 +57,7 @@ class AddSubCategoryPage extends Component {
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
+        debugger
         console.log(formValues, "LLLLLL");
         let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
         // var Tags = indexOfItem.map(function (x) {
@@ -73,12 +78,11 @@ class AddSubCategoryPage extends Component {
                 inSubCategoryId: formValues.inSubCategoryId == undefined || formValues.inSubCategoryId == "" ? 0 : formValues.inSubCategoryId,
                 stSubCategoryName: formValues.stSubCategoryName,
                 inCategoryId: categoryId,
-                inCreatedBy: this.state.currentUserData.inUserID
+                inCreatedBy: this.state.currentUserData.inUserID,
+                inDisplayPriority: this.state.priority
             }
             this.props.AddSubCategory(data);
         }
-       
-
     }
 
     hideModel = () => {
@@ -88,6 +92,33 @@ class AddSubCategoryPage extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
+        var id = window.location.href.split("/").pop();    // "1"   "ASDASD"
+        var value = parseInt(id)
+        if (isNaN(value)) {
+            if (nextProps.checkSubCategoryPriorityResponse) {
+                if (nextProps.checkSubCategoryPriorityResponse && nextProps.checkSubCategoryPriorityResponse != this.props.checkSubCategoryPriorityResponse) {
+                    if (nextProps.checkSubCategoryPriorityResponse.statusCode == 200) {
+                        var newPriority = nextProps.checkSubCategoryPriorityResponse.data[0].DisplayPriority + 1
+                        this.setState({ priority: newPriority })
+                        //         this.setState({ isLoading: false })
+                        //         this.setState({ totalno: nextProps.checkCategoryPriorityResponse.data.length })
+                        //         this.setState({ tagsData: nextProps.checkCategoryPriorityResponse.data })
+                    }
+                }
+            }
+        }
+        else {
+            if (nextProps.GetSubCategoryInfoByIdResponse) {
+                if (nextProps.GetSubCategoryInfoByIdResponse && nextProps.GetSubCategoryInfoByIdResponse != this.props.GetSubCategoryInfoByIdResponse) {
+                    if (nextProps.GetSubCategoryInfoByIdResponse.statusCode == 200) {
+                        var oldPriority = nextProps.GetSubCategoryInfoByIdResponse.data[0].inDisplayPriority
+                        console.log(oldPriority, "OLD");
+                        this.setState({ priority: oldPriority })
+
+                    }
+                }
+            }
+        }
         if (nextProps.getSubCategoryInfoByIDResponse) {
             if (nextProps.getSubCategoryInfoByIDResponse && nextProps.getSubCategoryInfoByIDResponse != this.props.getSubCategoryInfoByIDResponse) {
                 if (nextProps.getSubCategoryInfoByIDResponse.statusCode == 200) {
@@ -115,11 +146,25 @@ class AddSubCategoryPage extends Component {
                 }
             }
         }
+        if (nextProps.getImageBySubCategoryResponse) {
+            if (nextProps.getImageBySubCategoryResponse && nextProps.getImageBySubCategoryResponse != this.props.getImageBySubCategoryResponse) {
+                if (nextProps.getImageBySubCategoryResponse.statusCode == 200) {
+                    var x = nextProps.getImageBySubCategoryResponse.data
+                    this.setState({ imageData: x })
+                }
+            }
+        }
         if (nextProps.GetCategoryResponse) {
             if (nextProps.GetCategoryResponse && nextProps.GetCategoryResponse != this.props.GetCategoryResponse) {
                 if (nextProps.GetCategoryResponse.data.length > 0) {
                     this.setState({ isGettingTags: false });
                     this.setState({ categoryData: nextProps.GetCategoryResponse.data })
+                }
+            }
+            if (nextProps.GetSubCategoryInfoByIdResponse && nextProps.GetSubCategoryInfoByIdResponse) {
+                if (nextProps.GetSubCategoryInfoByIdResponse.data.length > 0) {
+                    var AssignedTags = nextProps.GetSubCategoryInfoByIdResponse.data[0].inCategoryId - 1
+                    nextProps.GetCategoryResponse.data[AssignedTags].Checked = true
                 }
             }
         }
@@ -145,7 +190,19 @@ class AddSubCategoryPage extends Component {
             }
             this.props.ResetTag(data);
         }
+        this.props.CheckSubCategoryPriority()
+        this.getSubCategoryImage();
     }
+
+    getSubCategoryImage = () => {
+        var id = window.location.href.split("/").pop();
+        console.log(id, "ASASASASASAS");
+        var data = {
+            inSubCategroyId: id
+        }
+        this.props.GetImageBySubCategory(data);
+    }
+
     hideAlert(isSaved) {
         this.setState({
             alert: null
@@ -162,7 +219,6 @@ class AddSubCategoryPage extends Component {
                 >
                 </SweetAlert>
             );
-
         }
         else {
             getAlert = () => (
@@ -180,9 +236,10 @@ class AddSubCategoryPage extends Component {
         });
     }
     onChangesTagName = (e, index) => {
-            this.setState({isChecked: this.state.categoryData[index].Checked ? false : true})
-            this.state.categoryData[index].Checked = !this.state.isChecked ? !this.state.categoryData[index].Checked : false;
-            this.setState({ categoryData: this.state.categoryData });
+        this.setState({ isChecked: this.state.categoryData[index].Checked ? false : true })
+        debugger
+        this.state.categoryData[index].Checked = !this.state.isChecked ? !this.state.categoryData[index].Checked : false;
+        this.setState({ categoryData: this.state.categoryData });
     }
     render() {
         var $this = this;
@@ -213,15 +270,19 @@ class AddSubCategoryPage extends Component {
                                 <Field
                                     type="text"
                                     name="stSubCategoryName"
-                                    placeholder="Enter SubCategory Name"
+                                    placeholder="Enter Sub Category Name"
                                     component={renderFields}
                                 />
-                                {/* <Field
-                                    type="text"
-                                    name="ID"
-                                    placeholder="ID"
-                                    component={renderFields}
-                                /> */}
+                            </div>
+                            <div className="row-sm-6">
+                                <h6 >Priority of New Category</h6>
+                                <input style={{ marginTop: "-2%", width: "30%" }}
+                                    disabled={true}
+                                    defaultValue={this.state.priority}
+                                    className="form-control"
+                                // onChange={(e)=>console.log(e,"11111")}
+                                />
+                                {/* <label>{this.state.priority}</label> */}
                             </div>
                             <div className="col-sm-8">
                                 <h6 >Category</h6><br></br>
@@ -255,7 +316,7 @@ class AddSubCategoryPage extends Component {
                                 <OverlayTrigger
                                     placement="bottom"
                                     overlay={<Tooltip>Cancel</Tooltip>}>
-                                    <Link className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/Tags">
+                                    <Link className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageSubCategory">
                                         Cancel
                                     </Link>
                                 </OverlayTrigger>
@@ -276,6 +337,26 @@ class AddSubCategoryPage extends Component {
                             </SweetAlert>
                         }
                     </form>
+
+                    <div class="row">
+                        {this.state.imageData != null && this.state.imageData != "" && this.state.imageData != undefined && this.state.imageData.map((image, index) => (
+                            <div class="col-2">
+                                <div className="image-item mt-5 mb-5 mr-5">
+                                    <div key={index} className="image-item mt-5 mb-5 mr-5">
+                                        <img width="140px"
+                                            height="140px"
+                                            src={`${baseURL}${image.stImagePath}`}
+                                        />
+                                    </div>
+                                    {/* <div className="image-item__btn-wrapper">
+                                        <button style={{ marginRight: 5 }} className="btn btn-icon btn-sm btn-primary" onClick={() => onImageUpdate(index)}><i style={{ alignSelf: "center" }} className="fas fa-edit icon-nm"></i></button>
+                                        <button className="btn btn-icon btn-sm btn-danger" onClick={() => onImageRemove(index)}><i className="ki ki-close icon-nm"></i></button>
+                                    </div> */}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
                 </div>
             </div>
         )
@@ -290,17 +371,22 @@ AddSubCategoryPage = reduxForm({
 })(AddSubCategoryPage);
 
 function mapStateToProps(state) {
-    
+
     return {
         initialValues: {
             inSubCategoryId: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.inSubCategoryId : "",
-            stSubCategoryName: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.stSubCategoryName : ""
+            stSubCategoryName: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.stSubCategoryName : "",
+            inCategoryId: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.inCategoryId : "",
+            inDisplayPriority: state.auth.GetSubCategoryInfoByIdResponse != undefined && state.auth.GetSubCategoryInfoByIdResponse.data != undefined ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.inDisplayPriority : ""
         },
         // insuranceTypeResponse: state.auth.insuranceTypeResponse,
+        checkSubCategoryPriorityResponse: state.auth.checkSubCategoryPriorityResponse,
         subCategoryResponse: state.auth.subCategoryResponse,
         GetSubCategoryInfoByIdResponse: state.auth.GetSubCategoryInfoByIdResponse,
         randomNumbers: state.auth.randomNumbers,
         GetCategoryResponse: state.auth.GetCategoryResponse,
+        getImageBySubCategoryResponse: state.auth.getImageBySubCategoryResponse,
+
         // DeleteCategoryByIdResponse: state.auth.DeleteCategoryByIdResponse,
 
     }
@@ -309,9 +395,12 @@ const mapDispatchToProps = (dispatch) => {
     return {
         ResetTag: (data) => dispatch(auth.actions.ResetInsuranceType(data)),
         GetSubCategoryInfoById: (data) => dispatch(auth.actions.GetSubCategoryInfoById(data)),
+        CheckSubCategoryPriority: (data) => dispatch(auth.actions.CheckSubCategoryPriority(data)),
         //SaveTag: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
         AddSubCategory: (data) => dispatch(auth.actions.AddSubCategory(data)),
         GetCategory: (data) => dispatch(auth.actions.GetCategory(data)),
+        GetImageBySubCategory: (data) => dispatch(auth.actions.GetImageBySubCategory(data)),
+
 
     }
 }
