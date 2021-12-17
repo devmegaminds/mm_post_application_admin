@@ -76,7 +76,7 @@ class AddCategoryPage extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        var id = window.location.href.split("/").pop();    // "1"   "ASDASD"
+        var id = window.location.href.split("/").pop(); //Get Cetegory Id from the URL
         var value = parseInt(id)
         if (isNaN(value)) {
             if (nextProps.checkCategoryPriorityResponse) {
@@ -84,25 +84,18 @@ class AddCategoryPage extends Component {
                     if (nextProps.checkCategoryPriorityResponse.statusCode == 200) {
                         var newPriority = nextProps.checkCategoryPriorityResponse.data[0].DisplayPriority + 1
                         this.setState({ priority: newPriority })
-                        console.log(newPriority, "NEW");
-
                     }
                 }
             }
         }
         else {
-            debugger
             if (nextProps.GetCategoryInfoByIDResponse) {
                 if (nextProps.GetCategoryInfoByIDResponse && nextProps.GetCategoryInfoByIDResponse != this.props.GetCategoryInfoByIDResponse) {
                     if (nextProps.GetCategoryInfoByIDResponse.statusCode == 200) {
                         var prePriority = nextProps.GetCategoryInfoByIDResponse.data[0].inDisplayPriority
                         var isChecked = nextProps.GetCategoryInfoByIDResponse.data[0].isHaveSubCategory
-                        // var isCheckValue = isChecked == 1 ? true : false;
                         this.setState({ isChecked: isChecked == 1 ? true : false })
                         this.setState({ priority: prePriority })
-                        console.log(prePriority, "OLD");
-                        console.log(isChecked, "isChecked");
-
                     }
                 }
             }
@@ -112,7 +105,6 @@ class AddCategoryPage extends Component {
                 if (nextProps.getImageByCategoryResponse.statusCode == 200) {
                     var image = nextProps.getImageByCategoryResponse.data
                     this.setState({ imageData: image })
-
                 }
             }
         }
@@ -175,8 +167,8 @@ class AddCategoryPage extends Component {
             <SweetAlert
                 error
                 title={msg}
-                onConfirm={() => this.handleDelete(index, image)}
                 showCancel
+                onConfirm={() => this.handleDelete(index, image)}
                 cancelBtnBsStyle='danger'
                 onCancel={() => this.hideAlert(false)}
 
@@ -189,31 +181,29 @@ class AddCategoryPage extends Component {
     }
     handleDelete(index, image) {
         var inCategoryImageId = image.inCategoryImageId
-        console.log(inCategoryImageId, "112121212121212");
+        this.setState({ inCategoryImageId: inCategoryImageId })
         var data = {
             inCategoryImageId: inCategoryImageId,
             inModifiedBy: this.state.currentUserData.inUserID,
         }
         this.props.DeleteCategoryImage(data)
         this.hideAlert(false);
-        var id = window.location.href.split("/").pop();
-        this.props.GetCategoryInfoByID(id)
+        // var id = window.location.href.split("/").pop();
+        // this.props.GetCategoryInfoByID(id)
+        var image = this.props.getImageByCategoryResponse.data
+        this.setState({ imageData: image })
+        // this.getImage();
 
-        // window.location.reload();
-        // if (row != null)
-        //     this.hideAlert(false);
-        // this.props.DeleteCategoryById(row.inCategoryId)
-        debugger
+
     }
     hideAlert(isSaved) {
         this.setState({
             alert: null
         });
     }
+
     getImage = () => {
-        debugger
         var id = window.location.href.split("/").pop();
-        console.log(id, "ASASASASASAS");
         var data = {
             inCategroyId: id
         }
@@ -270,7 +260,7 @@ class AddCategoryPage extends Component {
                         <input type="hidden" name="inCategoryId" />
                         <div className="row">
                             <div className="col-sm-6">
-                                <label >Category Name <span className="text-danger">*</span></label>
+                                <h6 >Category Name <span className="text-danger">*</span></h6>
                                 <Field
                                     type="text"
                                     name="stCategoryName"
@@ -279,7 +269,7 @@ class AddCategoryPage extends Component {
                                 />
                             </div>
                             <div className="row-sm-6">
-                                <h6 >Priority of New Category</h6>
+                                <h6>Priority of New Category</h6>
                                 <input style={{ marginTop: "-2%", width: "30%" }}
                                     disabled={true}
                                     name="inDisplayPriority"
@@ -325,7 +315,7 @@ class AddCategoryPage extends Component {
                                 </OverlayTrigger>
                             </div>
                         </div>
-                  
+
 
                         {this.state.showModal &&
                             <SweetAlert
@@ -342,6 +332,9 @@ class AddCategoryPage extends Component {
                             </SweetAlert>
                         }
                     </form>
+                    {
+                        (isChecked == true) ? (<ManageSubCategory history={this.props.history} />) : (<ManageUploadCategoryImage history={this.props.history} />)
+                    }
                     <div class="row">
                         {this.state.imageData != null && this.state.imageData != "" && this.state.imageData != undefined && this.state.imageData.map((image, index) => (
                             <div class="col-2">
@@ -354,16 +347,13 @@ class AddCategoryPage extends Component {
                                     </div>
                                     <div className="image-item__btn-wrapper">
                                         {/* <button style={{ marginRight: 5 }} className="btn btn-icon btn-sm btn-primary" onClick={() => console.log(image)}><i style={{ alignSelf: "center" }} className="fas fa-edit icon-nm"></i></button> */}
-                                        <button className="btn btn-icon btn-sm btn-danger" onClick={() => this.ConfirmationSweetAlert(index, image, "Are you sure want to delete it.?")}><i className="ki ki-close icon-nm"></i></button>
+                                        <button className="btn btn-icon btn-sm btn-danger" onClick={() => this.ConfirmationSweetAlert(index, image, "Are you sure want to delete this image?")}><i className="ki ki-close icon-nm"></i></button>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    {
-                            //(isChecked == true) ? (<ManageSubCategory />) : (isChecked == false) ? (null) : (<ManageUploadCategoryImage />) 
-                            (isChecked == true) ? (<ManageSubCategory history={this.props.history} />) : (<ManageUploadCategoryImage history={this.props.history} />)
-                        }
+
                 </div>
             </div>
         )

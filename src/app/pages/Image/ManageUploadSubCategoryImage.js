@@ -9,6 +9,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ImageUplaodComponents from '../../components/ImageUplaod'
 import { imagesubcriber } from '../../env/subBehaviour';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { subCategoryIdsubcriber } from '../../env/subCategoryId';
 
 const renderCheckboxField = ({
     input, label, type, checked, id, txtId, data, onClick, meta: { asyncValidating, touched, error } }) => (
@@ -51,11 +52,14 @@ class ManageUploadSubCategoryImage extends Component {
     }
 
     componentDidMount() {
-        //     var id = window.location.href.split("/").pop();
-        //     this.setState({ subCategoryId: id })
+        debugger
         imagesubcriber.subscribe((x) => {
-            debugger
             this.setState({ image: x })
+        })
+        debugger
+        subCategoryIdsubcriber.subscribe((Id) => {
+            var subCategoyId = Id
+            this.setState({ subCategoyIdData: subCategoyId })
         })
     }
 
@@ -113,10 +117,15 @@ class ManageUploadSubCategoryImage extends Component {
     };
 
     onSubmit = async (formValues) => {
-        let indexOfItem = this.state.subCategoryData.filter(tag => tag.Checked === true)
-        if (indexOfItem.length != 0) {
-            let image = this.state.image
-            var subCategoryId = indexOfItem[0].inSubCategoryId
+        debugger
+        // let indexOfItem = this.state.subCategoryData.filter(tag => tag.Checked === true)
+        // if (indexOfItem.length != 0) {
+        let image = this.state.image
+        if (this.state.image.length > 0) {
+            debugger
+            // var subCategoryId = indexOfItem[0].inSubCategoryId
+            var subCategoryId = parseInt(this.state.subCategoyIdData)
+            // var subCategoryId = indexOfItem[0].inSubCategoryId
             this.setState({ isLoading: true });
             for (var i = 0; i < image.length; i++) {
                 const fd = new FormData();
@@ -130,11 +139,15 @@ class ManageUploadSubCategoryImage extends Component {
             }
             this.setState({ isLoading: false });
             this.SuccessFailSweetAlert("Image has been saved successfully!", "success");
-        }
-        else {
-            this.SuccessFailSweetAlert("Please select at least one Category", "error");
+        } else {
+            this.SuccessFailSweetAlert("Please upload at least one Image", "error");
             this.setState({ isLoading: false });
         }
+        // }
+        // else {
+        //     this.SuccessFailSweetAlert("Please select at least one Category", "error");
+        //     this.setState({ isLoading: false });
+        // }
     }
 
     convertBase64 = (file) => {
@@ -194,7 +207,7 @@ class ManageUploadSubCategoryImage extends Component {
                             /> */}
                     </div>
                     <br></br>
-                    <div className="col-sm-8">
+                    {/* <div className="col-sm-8">
                         <h6 >Sub Category</h6>
                         {this.state.subCategoryData != null && this.state.subCategoryData != "" && this.state.subCategoryData != undefined && this.state.subCategoryData.map(function (tag, i) {
                             return (
@@ -207,7 +220,7 @@ class ManageUploadSubCategoryImage extends Component {
                                     component={renderCheckboxField} />
                             )
                         })}
-                    </div>
+                    </div> */}
                     {
                         x.length > 0
                             ? x.map((imageObj, i) => {
@@ -236,20 +249,20 @@ class ManageUploadSubCategoryImage extends Component {
                     <OverlayTrigger
                         placement="bottom"
                         overlay={<Tooltip>Add SubCategory Image</Tooltip>}>
-                        <button style={{ width: 120, marginRight: 10 }}
+                        <button style={{ width: 150, marginRight: 10 }}
                             id="kw_dtn_add_carrier"
                             type="submit"
                             className="btn btn-primary"
-                            onClick={(this.onSubmit)}>Submit
+                            onClick={(this.onSubmit)}>Upload Image
                         </button>
                     </OverlayTrigger>
-                    <OverlayTrigger
+                    {/* <OverlayTrigger
                         placement="bottom"
                         overlay={<Tooltip>Cancel</Tooltip>}>
-                        <Link style={{width:120}} className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageSubCategory">
+                        <Link style={{width:120}} className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageCategory">
                             Cancel
                         </Link>
-                    </OverlayTrigger>
+                    </OverlayTrigger> */}
                 </div>
                 {this.state.showModal && this.state.alertType == 'error' ?
                     <SweetAlert

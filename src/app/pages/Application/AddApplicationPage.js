@@ -194,7 +194,7 @@ class AddApplicationPage extends Component {
                         <input type="hidden" name="inApplicationId" />
                         <div className="row">
                             <div className="col-sm-6">
-                                <label >Application Name <span className="text-danger">*</span></label>
+                                <h6 >Application Name <span className="text-danger">*</span></h6>
                                 <Field
                                     type="text"
                                     name="stApplication"

@@ -121,6 +121,9 @@ export const actionTypes = {
   GetSubCategoryInfoById: "[GetSubCategoryInfoById] Action",
   GetSubCategoryInfoByIdResponse: "[GetSubCategoryInfoByIdResponse] Action",
 
+  GetSubCategoryByCategoryId: "[GetSubCategoryByCategoryId] Action",
+  GetSubCategoryByCategoryIdResponse: "[GetSubCategoryByCategoryIdResponse] Action",
+
   CheckSubCategory: "[CheckSubCategory] Action",
   CheckSubCategoryResponse: "[CheckSubCategoryResponse] Action",
 
@@ -424,6 +427,15 @@ export const reducer = persistReducer(
       case actionTypes.GetSubCategoryResponse: {
         const GetSubCategoryResponse = action.payload.GetSubCategoryResponse.data && action.payload.GetSubCategoryResponse.data;
         return { ...state, GetSubCategoryResponse };
+      }
+
+      case actionTypes.GetSubCategoryByCategoryId: {
+        const { getSubCategoryByCategoryId } = action.payload;
+        return { ...state, getSubCategoryByCategoryId };
+      }
+      case actionTypes.GetSubCategoryByCategoryIdResponse: {
+        const getSubCategoryByCategoryIdResponse = action.payload.getSubCategoryByCategoryIdResponse.data && action.payload.getSubCategoryByCategoryIdResponse.data;
+        return { ...state, getSubCategoryByCategoryIdResponse };
       }
 
       case actionTypes.DeleteSubCategoryById: {
@@ -820,6 +832,9 @@ export const actions = {
   GetSubCategoryInfoById: (RequestSubCategoryInfoById) => ({ type: actionTypes.GetSubCategoryInfoById, payload: { RequestSubCategoryInfoById } }),
   GetSubCategoryInfoByIdResponse: (GetSubCategoryInfoByIdResponse) => ({ type: actionTypes.GetSubCategoryInfoByIdResponse, payload: { GetSubCategoryInfoByIdResponse } }),
 
+  GetSubCategoryByCategoryId: (getSubCategoryByCategoryId) => ({ type: actionTypes.GetSubCategoryByCategoryId, payload: { getSubCategoryByCategoryId } }),
+  GetSubCategoryByCategoryIdResponse: (getSubCategoryByCategoryIdResponse) => ({ type: actionTypes.GetSubCategoryByCategoryIdResponse, payload: { getSubCategoryByCategoryIdResponse } }),
+
   CheckSubCategory: (checkSubCategory) => ({ type: actionTypes.CheckSubCategory, payload: { checkSubCategory } }),
   CheckSubCategoryResponse: (CheckSubCategoryResponse) => ({ type: actionTypes.CheckSubCategoryResponse, payload: { CheckSubCategoryResponse } }),
 
@@ -1059,6 +1074,11 @@ export function* saga() {
   yield takeLatest(actionTypes.GetSubCategoryInfoById, function* GetSubCategoryInfoByIDRequest(payload) {
     const response = yield call(GetSubCategoryInfoByIDRequestedApi, payload.payload);
     yield put(actions.GetSubCategoryInfoByIdResponse(response));
+  });
+
+  yield takeLatest(actionTypes.GetSubCategoryByCategoryId, function* GetSubCategoryByCategoryIdRequest(payload) {
+    const response = yield call(getSubCategoryByCategoryIdRequestedApi, payload.payload);
+    yield put(actions.GetSubCategoryByCategoryIdResponse(response));
   });
   //#endregion Mange Sub Category
 
@@ -1519,6 +1539,19 @@ const GetSubCategoryInfoByIDRequestedApi = async (payload) => {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
   const respo = instance.get(`${BASE_URL}SubCategory/GetSubCategoryById?inSubCategoryId=${data}`, options);
+  return respo;
+};
+
+const getSubCategoryByCategoryIdRequestedApi = async (payload) => {
+  var data = payload.getSubCategoryByCategoryId;
+  const instance = await axios.create({
+  });
+  debugger
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  debugger
+  const respo = instance.get(`${BASE_URL}SubCategory/GetSubCategoryByCategoryId`, data, options);
   return respo;
 };
 

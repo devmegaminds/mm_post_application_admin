@@ -7,6 +7,8 @@ import "../custom.css";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { OverlayTrigger, Tooltip, Dropdown } from "react-bootstrap";
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import ManageUploadSubCategoryImage from "../Image/ManageUploadSubCategoryImage"
+import { subCategoryIdsubcriber } from '../../env/subCategoryId';
 const baseURL = "http://megaminds-001-site12.itempurl.com"
 
 const renderFields = ({
@@ -154,6 +156,7 @@ class AddSubCategoryPage extends Component {
                 }
             }
         }
+        debugger
         if (nextProps.GetCategoryResponse) {
             if (nextProps.GetCategoryResponse && nextProps.GetCategoryResponse != this.props.GetCategoryResponse) {
                 if (nextProps.GetCategoryResponse.data.length > 0) {
@@ -179,6 +182,7 @@ class AddSubCategoryPage extends Component {
     componentDidMount() {
         this.setState({ isGettingTags: true })
         var id = window.location.href.split("/").pop();
+        subCategoryIdsubcriber.next(id)
         if (id != "SubCategory")
             this.props.GetSubCategoryInfoById(id)
         else {
@@ -266,7 +270,7 @@ class AddSubCategoryPage extends Component {
                         <input type="hidden" name="inSubCategoryId" />
                         <div className="row">
                             <div className="col-sm-6">
-                                <h6 >Sub Category Name <span className="text-danger">*</span></h6>
+                                <h6>Sub Category Name <span className="text-danger">*</span></h6>
                                 <Field
                                     type="text"
                                     name="stSubCategoryName"
@@ -284,7 +288,7 @@ class AddSubCategoryPage extends Component {
                                 />
                                 {/* <label>{this.state.priority}</label> */}
                             </div>
-                            <div className="col-sm-8">
+                            {/* <div className="col-sm-8">
                                 <h6 >Category</h6><br></br>
                                 {this.state.categoryData != null && this.state.categoryData != "" && this.state.categoryData != undefined && this.state.categoryData.map(function (tag, i) {
                                     return (
@@ -297,7 +301,7 @@ class AddSubCategoryPage extends Component {
                                             component={renderCheckboxField} />
                                     )
                                 })}
-                            </div>
+                            </div> */}
                         </div>
 
                         <div className="row mt-3 mb-3" >
@@ -316,7 +320,7 @@ class AddSubCategoryPage extends Component {
                                 <OverlayTrigger
                                     placement="bottom"
                                     overlay={<Tooltip>Cancel</Tooltip>}>
-                                    <Link className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageSubCategory">
+                                    <Link className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageCategory">
                                         Cancel
                                     </Link>
                                 </OverlayTrigger>
@@ -356,7 +360,7 @@ class AddSubCategoryPage extends Component {
                             </div>
                         ))}
                     </div>
-
+                    <ManageUploadSubCategoryImage />
                 </div>
             </div>
         )

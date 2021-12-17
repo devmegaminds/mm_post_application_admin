@@ -3,6 +3,7 @@ import '../pages/custom.css';
 import ImageUploading from 'react-images-uploading';
 import { imagesubcriber } from '../env/subBehaviour';
 // const BASE_URL = "http://localhost:4200/api/"
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 export function App() {
     let [images, setImages] = React.useState([]);
@@ -36,6 +37,9 @@ export function App() {
                         // write your building UI
                         <div className="upload__image-wrapper">
                             <div className="mainbtndiv">
+                            <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={<Tooltip>Upload</Tooltip>}>
                                 <button
                                     // className="btn btn-primary"
                                     className="btn btn-icon btn-sm btn-primary"
@@ -46,7 +50,11 @@ export function App() {
                                     {/* Uplaod Image */}
                                     <i className="fa fa-upload"></i>
                                 </button>
-                                <button className="btn btn-icon btn-sm btn-danger" onClick={onImageRemoveAll}><i className="ki ki-close icon-nm"></i></button>
+                                </OverlayTrigger>
+                                <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={<Tooltip>Remove All</Tooltip>}>
+                                <button className="btn btn-icon btn-sm btn-danger" onClick={onImageRemoveAll}><i className="ki ki-close icon-nm"></i></button></OverlayTrigger>
                             </div>
                             <div class="row">
                                 {imageList.map((image, index) => (

@@ -129,12 +129,12 @@ class ManageUploadCategoryImage extends Component {
 
     onSubmit = async (formValues) => {
         debugger
-        let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
-        if (indexOfItem.length != 0) {
-            let image = this.state.image.length
+        // let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
+        // if (indexOfItem.length != 0) {
+            let image = this.state.image
             if (this.state.image.length > 0) {
-                var categoryId = indexOfItem[0].inCategoryId
-                // var categoryId = parseInt(this.state.categoryId)
+                // var categoryId = indexOfItem[0].inCategoryId
+                var categoryId = parseInt(this.state.categoryId)
                 for (var i = 0; i < image.length; i++) {
                     const fd = new FormData();
                     var categoryId = categoryId
@@ -151,12 +151,11 @@ class ManageUploadCategoryImage extends Component {
                 this.setState({ isLoading: false });
             }
 
-        }
-        else {
-            this.SuccessFailSweetAlert("Please select at least one Category", "error");
-            this.setState({ isLoading: false });
-        }
-
+        // }
+        // else {
+        //     this.SuccessFailSweetAlert("Please select at least one Category", "error");
+        //     this.setState({ isLoading: false });
+        // }
     }
     convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -214,7 +213,7 @@ class ManageUploadCategoryImage extends Component {
                             </div> */}
                     </div>
                     <br></br>
-                    <div className="col-sm-8">
+                    {/* <div className="col-sm-8">
                         <h6 >Category</h6>
                         {this.state.categoryData != null && this.state.categoryData != "" && this.state.categoryData != undefined && this.state.categoryData.map(function (tag, i) {
                             return (
@@ -227,7 +226,7 @@ class ManageUploadCategoryImage extends Component {
                                     component={renderCheckboxField} />
                             )
                         })}
-                    </div>
+                    </div> */}
                     {/* {
                             base64ImageData.length > 0
                                 ? base64ImageData.map((imageObj, i) => {
@@ -258,20 +257,20 @@ class ManageUploadCategoryImage extends Component {
                                 className={`btn btn-primary`}>
                                 Submit
                             </button> */}
-                        <button style={{ width: 120, marginRight: 10 }}
+                        <button style={{ width: 150, marginRight: 10 }}
                             id="kw_dtn_add_carrier"
                             type="submit"
                             className="btn btn-primary"
-                            onClick={(this.onSubmit)}>Submit
+                            onClick={(this.onSubmit)}>Upload Image
                         </button>
                     </OverlayTrigger>
-                    <OverlayTrigger
+                    {/* <OverlayTrigger
                         placement="bottom"
                         overlay={<Tooltip>Cancel</Tooltip>}>
                         <Link style={{ width: 120 }} className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageCategory">
                             Cancel
                         </Link>
-                    </OverlayTrigger>
+                    </OverlayTrigger> */}
                 </div>
                 {this.state.showModal && this.state.alertType == 'error' ?
                     <SweetAlert

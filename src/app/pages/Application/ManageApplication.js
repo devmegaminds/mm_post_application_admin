@@ -102,7 +102,6 @@ class ManageApplication extends Component {
                 showCancel
                 cancelBtnBsStyle='danger'
                 onCancel={() => this.hideAlert(false)}
-
             >
             </SweetAlert>
         );
@@ -172,7 +171,7 @@ class ManageApplication extends Component {
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={<Tooltip>Delete Application</Tooltip>}>
-                                <a className="btn btn-icon btn-sm btn-danger" data-toggle="tooltip" data-placement="buttom" onClick={(e) => this.ConfirmationSweetAlert(row, "Are you sure want to delete it.?")}>
+                                <a className="btn btn-icon btn-sm btn-danger" data-toggle="tooltip" data-placement="buttom" onClick={(e) => this.ConfirmationSweetAlert(row, "Are you sure want to delete this application?")}>
                                     <i className="ki ki-close icon-nm"></i>
                                 </a>
                             </OverlayTrigger>

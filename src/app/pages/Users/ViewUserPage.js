@@ -237,7 +237,7 @@ class ViewUserPage extends Component {
                             </div>
                             <OverlayTrigger
                                 placement="bottom"
-                                overlay={<Tooltip>Cancel</Tooltip>}>
+                                overlay={<Tooltip>Back</Tooltip>}>
                                 <Link style={{ width: 120 }} className="btn btn-primary" id="kw_lnk_cancel_carrier" to="/ManageUsersPage">
                                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                 </Link>

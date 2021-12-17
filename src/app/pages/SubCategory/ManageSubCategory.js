@@ -46,17 +46,56 @@ class ManageSubCategory extends Component {
         this.props.DeleteSubCategoryById(row.inSubCategoryId)
     }
     componentDidMount() {
+
         this.setState({ isGettingSubCategory: true })
         this.props.GetSubCategory("");
+        // this.getSubCategorybyID();
+        idsubcriber.subscribe((Id) => {
+            var categoryId = Id
+            this.setState({ categoryId: categoryId })
+        })
     }
+    getSubCategorybyID = () => {
+        debugger
+        var data = {
+            inCategoryId: 1
+        }
+        this.props.GetSubCategoryByCategoryId(data);
+        // var x = this.state.categoryId
+    }
+
     componentWillReceiveProps(nextProps) {
+        // debugger
+        // if (nextProps.getSubCategoryByCategoryIdResponse) {
+        //     if (nextProps.getSubCategoryByCategoryIdResponse && nextProps.getSubCategoryByCategoryIdResponse != this.props.getSubCategoryByCategoryIdResponse) {
+        //         if (nextProps.getSubCategoryByCategoryIdResponse.statusCode == 200) {
+        //             this.setState({ isGettingSubCategory: false });
+        //             this.setState({ isLoading: false })
+        //             this.setState({ totalno: nextProps.getSubCategoryByCategoryIdResponse.data.length })
+        //             this.setState({ subcategoryData: nextProps.getSubCategoryByCategoryIdResponse.data })
+        //         }
+        //     }
+        // }
+        debugger
         if (nextProps.GetSubCategoryResponse) {
             if (nextProps.GetSubCategoryResponse && nextProps.GetSubCategoryResponse != this.props.GetSubCategoryResponse) {
                 if (nextProps.GetSubCategoryResponse.statusCode == 200) {
                     this.setState({ isGettingSubCategory: false });
                     this.setState({ isLoading: false })
                     this.setState({ totalno: nextProps.GetSubCategoryResponse.data.length })
-                    this.setState({ subcategoryData: nextProps.GetSubCategoryResponse.data })
+                    // this.setState({ subcategoryData: nextProps.GetSubCategoryResponse.data })
+                    var data = nextProps.GetSubCategoryResponse.data
+                    var xx = this.state.categoryId
+                    // var xx = 1
+                    let subCategory = [];
+                    for (let i = 0; i < data.length; i++) {
+                        if (data[i].inCategoryId == xx) {
+                            subCategory.push(data[i]);
+                        }
+                    }
+                    this.setState({ subcategoryData: subCategory })
+
+                    console.log(subCategory);
                 }
             }
         }
@@ -273,7 +312,7 @@ class ManageSubCategory extends Component {
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={<Tooltip>Delete Sub Category</Tooltip>}>
-                                <a className="btn btn-icon btn-sm btn-danger" data-toggle="tooltip" data-placement="buttom" onClick={(e) => this.ConfirmationSweetAlert(row, "Are you sure want to delete it.?")}>
+                                <a className="btn btn-icon btn-sm btn-danger" data-toggle="tooltip" data-placement="buttom" onClick={(e) => this.ConfirmationSweetAlert(row, "Are you sure want to delete this sub categoy?")}>
                                     <i className="ki ki-close icon-nm"></i>
                                 </a>
                             </OverlayTrigger>
@@ -328,7 +367,7 @@ class ManageSubCategory extends Component {
                                 Add Sub Category
                             </Link>
                         </OverlayTrigger>
-                        <div style={{ marginLeft: 20 }}>
+                        {/* <div style={{ marginLeft: 20 }}>
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={<Tooltip>Add Sub Category Image</Tooltip>}>
@@ -336,7 +375,7 @@ class ManageSubCategory extends Component {
                                     Add Sub Category Image
                                 </Link>
                             </OverlayTrigger>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
@@ -347,7 +386,6 @@ class ManageSubCategory extends Component {
                         keyField='kw_insuranceType_datatable'
                         data={this.state.subcategoryData}
                         columns={columns}
-
                         search
                     >
                         {
@@ -386,6 +424,7 @@ function mapStateToProps(state) {
 
         },
         GetSubCategoryResponse: state.auth.GetSubCategoryResponse,
+        GetSubCategoryByCategoryIdResponse: state.auth.GetSubCategoryByCategoryIdResponse,
         DeleteSubCategoryByIdResponse: state.auth.DeleteSubCategoryByIdResponse,
         insuranceTypeResponse: state.auth.insuranceTypeResponse,
     }
@@ -398,6 +437,7 @@ const mapDispatchToProps = (dispatch) => {
         UpdateSubCategoryPriority: (data) => dispatch(auth.actions.UpdateSubCategoryPriority(data)),
         SaveInsuranceType: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
         UpdateSubCategoryStatus: (data) => dispatch(auth.actions.UpdateSubCategoryStatus(data)),
+        GetSubCategoryByCategoryId: (data) => dispatch(auth.actions.GetSubCategoryByCategoryId(data)),
     }
 }
 

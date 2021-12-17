@@ -286,7 +286,7 @@ class ManageCategory extends Component {
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={<Tooltip>Delete Category</Tooltip>}>
-                                <a className="btn btn-icon btn-sm btn-danger" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }} onClick={(e) => this.ConfirmationSweetAlert(row, "Are you sure want to delete it.?")}>
+                                <a className="btn btn-icon btn-sm btn-danger" data-toggle="tooltip" data-placement="buttom" style={{ marginRight: 10 }} onClick={(e) => this.ConfirmationSweetAlert(row, "Are you sure want to delete this categoy?")}>
                                     <i className="ki ki-close icon-nm"></i>
                                 </a>
                             </OverlayTrigger>
@@ -345,7 +345,7 @@ class ManageCategory extends Component {
                                 Add Category
                             </Link>
                         </OverlayTrigger>
-                        <div style={{ marginLeft: 20 }}>
+                        {/* <div style={{ marginLeft: 20 }}>
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={<Tooltip>Add Category Image</Tooltip>}>
@@ -353,7 +353,7 @@ class ManageCategory extends Component {
                                     Add Category Image
                                 </Link>
                             </OverlayTrigger>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
