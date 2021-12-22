@@ -8,7 +8,6 @@ import SweetAlert from 'react-bootstrap-sweetalert';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ManageSubCategory from "../SubCategory/ManageSubCategory"
 import ManageUploadCategoryImage from "../Image/ManageUploadCategoryImage"
-import { categoryIdsubcriber, idsub, imagesubcriber } from '../../env/subBehaviour';
 import { idsubcriber } from '../../env/categoryId';
 const baseURL = "http://megaminds-001-site12.itempurl.com"
 
@@ -44,7 +43,6 @@ const validate = values => {
 
 class AddCategoryPage extends Component {
     constructor(props) {
-        debugger
         super(props)
         this.state = {
             isError: false,
@@ -55,6 +53,7 @@ class AddCategoryPage extends Component {
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
+        debugger
         this.setState({ isLoading: true });
         if (formValues.stCategoryName.trim() != "") {
             var isCheckValue = this.state.isChecked == true ? 1 : 0;
@@ -66,6 +65,8 @@ class AddCategoryPage extends Component {
                 isHaveSubCategory: isCheckValue
             }
             this.props.AddCategory(data);
+            console.log(data,"::::::::::");
+            debugger
         }
     }
 
@@ -88,6 +89,7 @@ class AddCategoryPage extends Component {
                 }
             }
         }
+
         else {
             if (nextProps.GetCategoryInfoByIDResponse) {
                 if (nextProps.GetCategoryInfoByIDResponse && nextProps.GetCategoryInfoByIDResponse != this.props.GetCategoryInfoByIDResponse) {
@@ -123,10 +125,14 @@ class AddCategoryPage extends Component {
         if (nextProps.categoryResponse) {
             if (nextProps.categoryResponse && nextProps.categoryResponse != this.props.categoryResponse) {
                 if (nextProps.categoryResponse.statusCode == 200) {
-                    this.setState({ isLoading: false, isRedirect: true });
+                    this.setState({ categoryId: nextProps.categoryResponse.data.inCategoryId })
+                    this.setState({ isLoading: false });
+                    var categoryId = nextProps.categoryResponse.data.inCategoryId
+                    this.props.history.push(`/AddCategoryPage/${categoryId}`)
                 }
                 else if (nextProps.categoryResponse.status == "Error") {
-                    this.setState({ Message: nextProps.categoryResponse.errorMessage });
+                    // this.setState({ Message: nextProps.categoryResponse.errorMessage });
+                    this.setState({ Message: "Category is already exist." });
                     this.setState({ showModal: true });
                     this.setState({ isLoading: false });
                 }
@@ -144,9 +150,13 @@ class AddCategoryPage extends Component {
         })
     }
     componentDidMount() {
-        debugger
         var id = window.location.href.split("/").pop();
         idsubcriber.next(id)
+        // console.log()
+        var value = parseInt(id)
+        if (!isNaN(value)) {
+            this.setState({ categoryId: id })
+        }
         if (id != "Category")
             this.props.GetCategoryInfoByID(id)
         else {
@@ -168,6 +178,7 @@ class AddCategoryPage extends Component {
                 error
                 title={msg}
                 showCancel
+                reverseButtons
                 onConfirm={() => this.handleDelete(index, image)}
                 cancelBtnBsStyle='danger'
                 onCancel={() => this.hideAlert(false)}
@@ -192,9 +203,8 @@ class AddCategoryPage extends Component {
         // this.props.GetCategoryInfoByID(id)
         var image = this.props.getImageByCategoryResponse.data
         this.setState({ imageData: image })
+        this.setState({ isRedirect: true })
         // this.getImage();
-
-
     }
     hideAlert(isSaved) {
         this.setState({
@@ -240,7 +250,6 @@ class AddCategoryPage extends Component {
 
     onChangesTagName = (e, index) => {
         this.setState({ isChecked: this.state.isChecked ? false : true })
-        // debugger
         // this.state.categoryData[index].Checked = !this.state.isChecked ? !this.state.categoryData[index].Checked : false;
         // this.setState({ categoryData: this.state.categoryData });
     }
@@ -249,9 +258,16 @@ class AddCategoryPage extends Component {
         var $this = this;
         const { handleSubmit, pristine, reset, submitting, formValues, change } = this.props;
         if (this.state.isRedirect) {
+            // if(categoryId != undefined){
+            //     console.log("SDASDASD")
+            //     // var navigationURL = `/AddCategoryPage/${categoryId}`   //   /AddCategoryPage/18
+            //     return <Redirect to={`/AddCategoryPage/${categoryId}`} />
+            // }
+            // console.log("1212121212")
             return <Redirect to="/ManageCategory" />
         }
         let isChecked = this.state.isChecked
+        let categoryId = this.state.categoryId
         return (
             <div className="card card-custom gutter-b example example-compact">
                 {this.state.alert}
@@ -313,9 +329,16 @@ class AddCategoryPage extends Component {
                                         Cancel
                                     </Link>
                                 </OverlayTrigger>
+                                {/* <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={<Tooltip>Back</Tooltip>}>
+                                    <Link className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageCategory">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                    </Link>
+                                </OverlayTrigger> */}
+                                
                             </div>
                         </div>
-
 
                         {this.state.showModal &&
                             <SweetAlert
@@ -333,7 +356,7 @@ class AddCategoryPage extends Component {
                         }
                     </form>
                     {
-                        (isChecked == true) ? (<ManageSubCategory history={this.props.history} />) : (<ManageUploadCategoryImage history={this.props.history} />)
+                        (categoryId == undefined) ? null : (isChecked == true) ? (<ManageSubCategory history={this.props.history} />) : (<ManageUploadCategoryImage history={this.props.history} />)
                     }
                     <div class="row">
                         {this.state.imageData != null && this.state.imageData != "" && this.state.imageData != undefined && this.state.imageData.map((image, index) => (
@@ -347,7 +370,7 @@ class AddCategoryPage extends Component {
                                     </div>
                                     <div className="image-item__btn-wrapper">
                                         {/* <button style={{ marginRight: 5 }} className="btn btn-icon btn-sm btn-primary" onClick={() => console.log(image)}><i style={{ alignSelf: "center" }} className="fas fa-edit icon-nm"></i></button> */}
-                                        <button className="btn btn-icon btn-sm btn-danger" onClick={() => this.ConfirmationSweetAlert(index, image, "Are you sure want to delete this image?")}><i className="ki ki-close icon-nm"></i></button>
+                                        <button className="btn btn-icon btn-sm btn-danger" onClick={() => this.ConfirmationSweetAlert(index, image, "Are you sure want to delete this image?")}><i className="fas fa-trash-alt"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -380,7 +403,7 @@ function mapStateToProps(state) {
         GetCategoryInfoByIDResponse: state.auth.GetCategoryInfoByIDResponse,
         getImageByCategoryResponse: state.auth.getImageByCategoryResponse,
         randomNumbers: state.auth.randomNumbers,
-        AddCategoryResponse: state.auth.AddCategoryResponse
+        AddCategoryResponse: state.auth.AddCategoryResponse,
 
 
     }

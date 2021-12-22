@@ -95,6 +95,9 @@ export const actionTypes = {
   DeleteCategoryImage: "[DeleteCategoryImage] Action",
   DeleteCategoryImageResponse: "[DeleteCategoryImageResponse] Action",
 
+  DeleteSubCategoryImage: "[DeleteSubCategoryImage] Action",
+  DeleteSubCategoryImageResponse: "[DeleteSubCategoryImageResponse] Action",
+
   UpdateCategoryPriority: "[UpdateCategoryPriority] Action",
   UpdateCategoryPriorityResponse: "[UpdateCategoryPriorityResponse] Action",
 
@@ -563,6 +566,15 @@ export const reducer = persistReducer(
         return { ...state, CheckSubCategoryResponse, randomNumbers: 1 + Math.random() * (100 - 1) };
       }
 
+      case actionTypes.DeleteSubCategoryImage: {
+        const deleteSubCategoryImage = action.payload;
+        return { ...state, deleteSubCategoryImage };
+      }
+
+      case actionTypes.DeleteSubCategoryImageResponse: {
+        const deleteSubCategoryImageResponse = action.payload.deleteSubCategoryImageResponse && action.payload.deleteSubCategoryImageResponse;
+        return { ...state, deleteSubCategoryImageResponse };
+      }
 
       case actionTypes.DeleteCategoryImage: {
         const deleteCategoryImage = action.payload;
@@ -882,6 +894,9 @@ export const actions = {
   DeleteCategoryImage: (deleteCategoryImage) => ({ type: actionTypes.DeleteCategoryImage, payload: { deleteCategoryImage } }),
   DeleteCategoryImageResponse: (deleteCategoryImageResponse) => ({ type: actionTypes.DeleteCategoryImageResponse, payload: { deleteCategoryImageResponse } }),
 
+  DeleteSubCategoryImage: (deleteSubCategoryImage) => ({ type: actionTypes.DeleteSubCategoryImage, payload: { deleteSubCategoryImage } }),
+  DeleteSubCategoryImageResponse: (deleteSubCategoryImageResponse) => ({ type: actionTypes.DeleteSubCategoryImageResponse, payload: { deleteSubCategoryImageResponse } }),
+
   GetCategoryInfoByID: (RequestApplicationInfoByID) => ({ type: actionTypes.GetCategoryInfoByID, payload: { RequestApplicationInfoByID } }),
   GetCategoryInfoByIDResponse: (GetCategoryInfoByIDResponse) => ({ type: actionTypes.GetCategoryInfoByIDResponse, payload: { GetCategoryInfoByIDResponse } }),
   //#endregion End Manage Category
@@ -998,6 +1013,12 @@ export function* saga() {
     const response = yield call(deleteCategoryImageRequestAPI, payload.payload);
     if (response)
       yield put(actions.DeleteCategoryImageResponse(response));
+  });
+
+  yield takeLatest(actionTypes.DeleteSubCategoryImage, function* DeleteSubCategoryImageRequested(payload) {
+    const response = yield call(deleteSubCategoryImageRequestAPI, payload.payload);
+    if (response)
+      yield put(actions.DeleteSubCategoryImageResponse(response));
   });
 
   //#endregion Manage Category
@@ -1312,6 +1333,20 @@ const deleteCategoryImageRequestAPI = async (payload) => {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
   const respo = instance.delete(`${BASE_URL}Image/DeleteImage?inCategoryImageId=${data.inCategoryImageId}&inModifiedBy=${data.inModifiedBy}`, options)
+    .catch((e) => {
+      return e.response;
+    });
+  return respo;
+};
+
+const deleteSubCategoryImageRequestAPI = async (payload) => {
+  var data = payload.deleteSubCategoryImage;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.delete(`${BASE_URL}Image/DeleteSubCategoryImage?inSubCategoryImageId=${data.inSubCategoryImageId}&inModifiedBy=${data.inModifiedBy}`, options)
     .catch((e) => {
       return e.response;
     });

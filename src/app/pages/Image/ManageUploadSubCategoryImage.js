@@ -8,6 +8,7 @@ import SweetAlert from 'react-bootstrap-sweetalert';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ImageUplaodComponents from '../../components/ImageUplaod'
 import { imagesubcriber } from '../../env/subBehaviour';
+import { idsubcriber } from '../../env/categoryId';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { subCategoryIdsubcriber } from '../../env/subCategoryId';
 
@@ -52,11 +53,14 @@ class ManageUploadSubCategoryImage extends Component {
     }
 
     componentDidMount() {
-        debugger
         imagesubcriber.subscribe((x) => {
             this.setState({ image: x })
         })
-        debugger
+        // idsubcriber.subscribe((Id) => {
+        idsubcriber.subscribe((Id) => {
+            var categoryId = Id
+            this.setState({ categoryId: categoryId })
+        })
         subCategoryIdsubcriber.subscribe((Id) => {
             var subCategoyId = Id
             this.setState({ subCategoyIdData: subCategoyId })
@@ -117,12 +121,10 @@ class ManageUploadSubCategoryImage extends Component {
     };
 
     onSubmit = async (formValues) => {
-        debugger
         // let indexOfItem = this.state.subCategoryData.filter(tag => tag.Checked === true)
         // if (indexOfItem.length != 0) {
         let image = this.state.image
         if (this.state.image.length > 0) {
-            debugger
             // var subCategoryId = indexOfItem[0].inSubCategoryId
             var subCategoryId = parseInt(this.state.subCategoyIdData)
             // var subCategoryId = indexOfItem[0].inSubCategoryId
@@ -171,7 +173,10 @@ class ManageUploadSubCategoryImage extends Component {
         var $this = this;
         const { handleSubmit, pristine, reset, submitting, formValues, change } = this.props;
         if (this.state.isRedirect) {
-            return <Redirect to="/ManageSubCategory" />
+            var categoryId = this.state.categoryId
+            // return <Redirect to="/ManageSubCategory" />
+            return <Redirect to={`/AddCategoryPage/${categoryId}`} />
+            // return <Redirect to="/ManageCategory" />
         }
         let x = this.state.baseImage
         return (
@@ -256,13 +261,6 @@ class ManageUploadSubCategoryImage extends Component {
                             onClick={(this.onSubmit)}>Upload Image
                         </button>
                     </OverlayTrigger>
-                    {/* <OverlayTrigger
-                        placement="bottom"
-                        overlay={<Tooltip>Cancel</Tooltip>}>
-                        <Link style={{width:120}} className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageCategory">
-                            Cancel
-                        </Link>
-                    </OverlayTrigger> */}
                 </div>
                 {this.state.showModal && this.state.alertType == 'error' ?
                     <SweetAlert
@@ -279,7 +277,16 @@ class ManageUploadSubCategoryImage extends Component {
                     </SweetAlert>
                 }
                 {/* </form> */}
+                <div className="mt-2" style={{marginBottom:15}}>
+                        <div className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)', marginLeft:18}}  >
+                        <i className="fa fa-upload"></i>
+                        </div> Upload Image &nbsp;&nbsp;&nbsp;
+                        <div className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}  >
+                        <i className="ki ki-close icon-nm"></i>
+                        </div> Remove All Uploaded Images &nbsp;&nbsp;&nbsp;
+                    </div>
             </div>
+            
         )
     }
 }

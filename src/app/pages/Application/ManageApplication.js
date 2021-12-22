@@ -30,8 +30,6 @@ class ManageApplication extends Component {
     handleEdit(row) {
         this.props.history.push(`/AddApplicationPage/${row.inApplicationId}`)
     }
-   
-
     handleDelete(row) {
         if (row != null)
             this.hideAlert(false);
@@ -126,7 +124,7 @@ class ManageApplication extends Component {
         }
         return `${moment(cell).format("MM-DD-YYYY") ? moment(cell).format("MM-DD-YYYY") : moment(cell).format("MM-DD-YYYY")}`;
     }
-    changeevent(e,row) {
+    changeevent(e, row) {
         console.log(row.inApplicationId);
     }
     render() {
@@ -193,10 +191,7 @@ class ManageApplication extends Component {
             { text: "10", value: 10 },
             { text: "5", value: 5 },
             { text: "3", value: 3 }
-
-
         ];
-
 
         const pagination = paginationFactory({
             page: 1,
@@ -234,7 +229,6 @@ class ManageApplication extends Component {
                     </div>
                 </div>
                 <div className="card-body">
-
                     <ToolkitProvider
                         bootstrap4
                         keyField='kw_insuranceType_datatable'
@@ -246,7 +240,6 @@ class ManageApplication extends Component {
                             props => (
                                 <div >
                                     <SearchBar {...props.searchProps} />
-
                                     <BootstrapTable
                                         defaultSorted={defaultSorted}
                                         pagination={pagination}
@@ -262,7 +255,13 @@ class ManageApplication extends Component {
                         </div> Edit Application &nbsp;&nbsp;&nbsp;
                         <div className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
                             <i className="ki ki-close icon-nm"></i>
-                        </div> Delete Application
+                        </div> Delete Application &nbsp;&nbsp;&nbsp;
+                        <div className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(3.5em + 0.40rem + 1px)' }}  >
+                            <label style={{ marginTop: 5 }}>OK</label>
+                        </div> Delete Operation &nbsp;&nbsp;&nbsp;
+                        <div className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(4.5em + 0.40rem + 1px)' }}  >
+                            <label style={{ marginTop: 5 }}>Cancle</label>
+                        </div> Cancle Delete Operation  
                     </div>
                 </div>
             </div>

@@ -18,6 +18,7 @@ import paginationFactory, { PaginationProvider } from 'react-bootstrap-table2-pa
 import { Pagination } from "../pagination/Pagination";
 import { categoryIdsubcriber, idsub, imagesubcriber } from '../../env/subBehaviour';
 import { idsubcriber } from '../../env/categoryId';
+const baseURL = "http://megaminds-001-site12.itempurl.com"
 
 class ManageSubCategory extends Component {
     constructor(props) {
@@ -149,7 +150,7 @@ class ManageSubCategory extends Component {
                 showCancel
                 cancelBtnBsStyle='danger'
                 onCancel={() => this.hideAlert(false)}
-
+                reverseButtons
             >
             </SweetAlert>
         );
@@ -226,6 +227,27 @@ class ManageSubCategory extends Component {
         const columns = [
             //#region Index of the Sub Category list
             // { dataField: 'inSubCategoryId', text: 'Sub Category Number', hidden: false,sort: true },
+            {
+                dataField: 'Image', text: 'Image', sort: false,
+                formatter: (rowContent, row) => {
+                    return (
+                        <div class="col-2">
+                            <div className="image-item mt-5 mb-5 mr-5">
+                                <div className="image-item mt-5 mb-5 mr-5">
+                                    <img width="150px"
+                                        height="150px"
+                                        style={{ marginLeft: 10 }}
+                                        src={`${baseURL}${row.stImagePath}`}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )
+                },
+            },
+
+
+
             { dataField: 'stSubCategoryName', text: 'Sub Category', sort: true },
             { dataField: 'stCategoryName', text: 'Category' },
             {
@@ -410,7 +432,13 @@ class ManageSubCategory extends Component {
                         </div> Add Sub Category Thumbnail &nbsp;&nbsp;&nbsp;
                         <div className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
                             <i className="ki ki-close icon-nm"></i>
-                        </div> Delete SubCategory
+                        </div> Delete SubCategory &nbsp;&nbsp;&nbsp;
+                        <div className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(3.5em + 0.40rem + 1px)' }}  >
+                            <label style={{ marginTop: 5 }}>OK</label>
+                        </div> Delete Operation &nbsp;&nbsp;&nbsp;
+                        <div className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(4.5em + 0.40rem + 1px)' }}  >
+                            <label style={{ marginTop: 5 }}>Cancle</label>
+                        </div> Cancle Delete Operation
                     </div>
                 </div>
             </div>

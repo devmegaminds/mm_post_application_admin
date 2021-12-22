@@ -123,7 +123,7 @@ class ManageCategory extends Component {
                 showCancel
                 cancelBtnBsStyle='danger'
                 onCancel={() => this.hideAlert(false)}
-
+                reverseButtons
             >
             </SweetAlert>
         );
@@ -385,7 +385,13 @@ class ManageCategory extends Component {
                         </div> Edit Category &nbsp;&nbsp;&nbsp;
                         <div className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
                             <i className="ki ki-close icon-nm"></i>
-                        </div> Delete Category
+                        </div> Delete Category &nbsp;&nbsp;&nbsp;
+                        <div className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(3.5em + 0.40rem + 1px)' }}  >
+                            <label style={{ marginTop: 5 }}>OK</label>
+                        </div> Delete Operation &nbsp;&nbsp;&nbsp;
+                        <div className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(4.5em + 0.40rem + 1px)' }}  >
+                            <label style={{ marginTop: 5 }}>Cancle</label>
+                        </div> Cancle Delete Operation  &nbsp;&nbsp;&nbsp;
                     </div>
                 </div>
             </div>

@@ -77,7 +77,6 @@ class AddApplicationPage extends Component {
                 stApplicationName: formValues.stApplication.trim(),
                 inCreatedBy: this.state.currentUserData.inUserID,
             }
-            console.log(data,"ASDASD");
             this.props.AddApplication(data);
         }
     }
@@ -107,7 +106,7 @@ class AddApplicationPage extends Component {
                     this.setState({ isLoading: false, isRedirect: true });
                 }
                 else if (nextProps.applicationResponse.status == "Error") {
-                    this.setState({ Message: nextProps.applicationResponse.errorMessage });
+                    this.setState({ Message: "Application is already exist." });
                     this.setState({ showModal: true });
                     this.setState({ isLoading: false });
                 }

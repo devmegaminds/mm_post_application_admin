@@ -53,7 +53,6 @@ class ManageUploadCategoryImage extends Component {
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     componentDidMount() {
-        debugger
         idsubcriber.subscribe((Id) => {
             var categoryId = Id
             this.setState({ categoryId: categoryId })
@@ -128,7 +127,6 @@ class ManageUploadCategoryImage extends Component {
     };
 
     onSubmit = async (formValues) => {
-        debugger
         // let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
         // if (indexOfItem.length != 0) {
             let image = this.state.image

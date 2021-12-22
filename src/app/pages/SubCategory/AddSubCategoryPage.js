@@ -9,6 +9,7 @@ import { OverlayTrigger, Tooltip, Dropdown } from "react-bootstrap";
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import ManageUploadSubCategoryImage from "../Image/ManageUploadSubCategoryImage"
 import { subCategoryIdsubcriber } from '../../env/subCategoryId';
+import { idsubcriber } from '../../env/categoryId';
 const baseURL = "http://megaminds-001-site12.itempurl.com"
 
 const renderFields = ({
@@ -59,22 +60,20 @@ class AddSubCategoryPage extends Component {
         this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
     onSubmit = (formValues) => {
-        debugger
-        console.log(formValues, "LLLLLL");
-        let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
+        // let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
         // var Tags = indexOfItem.map(function (x) {
         //     return x.inCategoryId;
         // }).join(',');
-        if (indexOfItem.length == 0) {
-            this.SuccessFailSweetAlert("Please select at least one Category", "error");
-            this.setState({ isLoading: false });
-        }
-        else if (indexOfItem.length > 1) {
-            this.SuccessFailSweetAlert("You can select One categary only", "error");
-            this.setState({ isLoading: false });
-        }
-        else {
-            var categoryId = indexOfItem[0].inCategoryId
+        // if (indexOfItem.length == 0) {
+        //     this.SuccessFailSweetAlert("Please select at least one Category", "error");
+        //     this.setState({ isLoading: false });
+        // }
+        // else if (indexOfItem.length > 1) {
+        //     this.SuccessFailSweetAlert("You can select One categary only", "error");
+        //     this.setState({ isLoading: false });
+        // }
+        // else {
+            var categoryId = this.state.categoryId
             this.setState({ isLoading: true });
             var data = {
                 inSubCategoryId: formValues.inSubCategoryId == undefined || formValues.inSubCategoryId == "" ? 0 : formValues.inSubCategoryId,
@@ -84,7 +83,7 @@ class AddSubCategoryPage extends Component {
                 inDisplayPriority: this.state.priority
             }
             this.props.AddSubCategory(data);
-        }
+        // }
     }
 
     hideModel = () => {
@@ -102,9 +101,6 @@ class AddSubCategoryPage extends Component {
                     if (nextProps.checkSubCategoryPriorityResponse.statusCode == 200) {
                         var newPriority = nextProps.checkSubCategoryPriorityResponse.data[0].DisplayPriority + 1
                         this.setState({ priority: newPriority })
-                        //         this.setState({ isLoading: false })
-                        //         this.setState({ totalno: nextProps.checkCategoryPriorityResponse.data.length })
-                        //         this.setState({ tagsData: nextProps.checkCategoryPriorityResponse.data })
                     }
                 }
             }
@@ -139,7 +135,7 @@ class AddSubCategoryPage extends Component {
                     this.setState({ isLoading: false, isRedirect: true });
                 }
                 else if (nextProps.subCategoryResponse.status == "Error") {
-                    this.setState({ Message: nextProps.subCategoryResponse.errorMessage });
+                    this.setState({ Message: "Sub Category is already exist." });
                     this.setState({ showModal: true });
                     this.setState({ isLoading: false });
                 }
@@ -166,6 +162,7 @@ class AddSubCategoryPage extends Component {
             }
             if (nextProps.GetSubCategoryInfoByIdResponse && nextProps.GetSubCategoryInfoByIdResponse) {
                 if (nextProps.GetSubCategoryInfoByIdResponse.data.length > 0) {
+                    this.setState({thumbnailImage:nextProps.GetSubCategoryInfoByIdResponse.data[0].stImagePath})
                     var AssignedTags = nextProps.GetSubCategoryInfoByIdResponse.data[0].inCategoryId - 1
                     nextProps.GetCategoryResponse.data[AssignedTags].Checked = true
                 }
@@ -181,7 +178,16 @@ class AddSubCategoryPage extends Component {
     }
     componentDidMount() {
         this.setState({ isGettingTags: true })
+        idsubcriber.subscribe((Id) => {
+            var categoryId = Id
+            this.setState({ categoryId: categoryId })
+        })
+        debugger
         var id = window.location.href.split("/").pop();
+        var value = parseInt(id)
+        if (!isNaN(value)) {
+            this.setState({ subCategoryId: id })
+        }
         subCategoryIdsubcriber.next(id)
         if (id != "SubCategory")
             this.props.GetSubCategoryInfoById(id)
@@ -200,7 +206,6 @@ class AddSubCategoryPage extends Component {
 
     getSubCategoryImage = () => {
         var id = window.location.href.split("/").pop();
-        console.log(id, "ASASASASASAS");
         var data = {
             inSubCategroyId: id
         }
@@ -245,6 +250,37 @@ class AddSubCategoryPage extends Component {
         this.state.categoryData[index].Checked = !this.state.isChecked ? !this.state.categoryData[index].Checked : false;
         this.setState({ categoryData: this.state.categoryData });
     }
+
+    ConfirmationSweetAlert(index, image, msg) {
+        let getAlert = '';
+        getAlert = () => (
+            <SweetAlert
+                error
+                title={msg}
+                showCancel
+                reverseButtons
+                onConfirm={() => this.handleDelete(index, image)}
+                cancelBtnBsStyle='danger'
+                onCancel={() => this.hideAlert(false)}
+
+            >
+            </SweetAlert>
+        );
+        this.setState({
+            alert: getAlert()
+        });
+    }
+    handleDelete(index, image) {
+        var inSubCategoryImageId = image.inSubCategoryImageId
+        this.setState({ inSubCategoryImageId: inSubCategoryImageId })
+        var data = {
+            inSubCategoryImageId: inSubCategoryImageId,
+            inModifiedBy: this.state.currentUserData.inUserID,
+        }
+        this.props.DeleteSubCategoryImage(data)
+        this.hideAlert(false);
+        this.setState({ isRedirect: true })
+    }
     render() {
         var $this = this;
         // const columns = [
@@ -254,8 +290,13 @@ class AddSubCategoryPage extends Component {
         // ];
         const { handleSubmit, pristine, reset, submitting, formValues, change } = this.props;
         if (this.state.isRedirect) {
-            return <Redirect to="/ManageSubCategory" />
+            var categoryId = this.state.categoryId
+            return <Redirect to={`/AddCategoryPage/${categoryId}`} />
         }
+        debugger
+        var thumbnailImage = this.state.thumbnailImage
+        var sub = this.state.subCategoryId
+        console.log(sub,"LOLOLOLOLOLOLO");
         return (
             <div className="card card-custom gutter-b example example-compact">
 
@@ -284,10 +325,9 @@ class AddSubCategoryPage extends Component {
                                     disabled={true}
                                     defaultValue={this.state.priority}
                                     className="form-control"
-                                // onChange={(e)=>console.log(e,"11111")}
                                 />
-                                {/* <label>{this.state.priority}</label> */}
                             </div>
+                      
                             {/* <div className="col-sm-8">
                                 <h6 >Category</h6><br></br>
                                 {this.state.categoryData != null && this.state.categoryData != "" && this.state.categoryData != undefined && this.state.categoryData.map(function (tag, i) {
@@ -303,7 +343,18 @@ class AddSubCategoryPage extends Component {
                                 })}
                             </div> */}
                         </div>
-
+                        {(sub == undefined) ? null :
+                            <div className="row-sm-6">
+                                <h6>Thumbnail Image</h6>
+                                <div className="image-item mt-5 mb-5 mr-5" >
+                                    <img width="150px"
+                                        height="150px"
+                                        style={{ border: '2px solid black' }}
+                                        src={`${baseURL}${thumbnailImage}`}
+                                    />
+                                </div>
+                            </div>
+                        }
                         <div className="row mt-3 mb-3" >
                             <div className="col-sm-9 text-left userprofile-btn">
                                 <OverlayTrigger
@@ -324,6 +375,7 @@ class AddSubCategoryPage extends Component {
                                         Cancel
                                     </Link>
                                 </OverlayTrigger>
+                            
                             </div>
                         </div>
                         {this.state.showModal &&
@@ -352,10 +404,12 @@ class AddSubCategoryPage extends Component {
                                             src={`${baseURL}${image.stImagePath}`}
                                         />
                                     </div>
-                                    {/* <div className="image-item__btn-wrapper">
-                                        <button style={{ marginRight: 5 }} className="btn btn-icon btn-sm btn-primary" onClick={() => onImageUpdate(index)}><i style={{ alignSelf: "center" }} className="fas fa-edit icon-nm"></i></button>
-                                        <button className="btn btn-icon btn-sm btn-danger" onClick={() => onImageRemove(index)}><i className="ki ki-close icon-nm"></i></button>
-                                    </div> */}
+                                    <div className="image-item__btn-wrapper">
+                                        {/* <button style={{ marginRight: 5 }} className="btn btn-icon btn-sm btn-primary" onClick={() => onImageUpdate(index)}><i style={{ alignSelf: "center" }} className="fas fa-edit icon-nm"></i></button> */}
+                                        {/* <button className="btn btn-icon btn-sm btn-danger" onClick={() => onImageRemove(index)}><i className="ki ki-close icon-nm"></i></button> */}
+                                        {/* <button className="btn btn-icon btn-sm btn-danger" onClick={() => this.ConfirmationSweetAlert(index, image, "Are you sure want to delete this image?")}><i className="ki ki-close icon-nm"></i></button> */}
+                                        <button className="btn btn-icon btn-sm btn-danger" onClick={() => this.ConfirmationSweetAlert(index, image, "Are you sure want to delete this image?")}><i class="fas fa-trash-alt"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -404,6 +458,7 @@ const mapDispatchToProps = (dispatch) => {
         AddSubCategory: (data) => dispatch(auth.actions.AddSubCategory(data)),
         GetCategory: (data) => dispatch(auth.actions.GetCategory(data)),
         GetImageBySubCategory: (data) => dispatch(auth.actions.GetImageBySubCategory(data)),
+        DeleteSubCategoryImage: (data) => dispatch(auth.actions.DeleteSubCategoryImage(data)),
 
 
     }
