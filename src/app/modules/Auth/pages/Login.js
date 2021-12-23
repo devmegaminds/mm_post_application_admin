@@ -20,8 +20,8 @@ import { login } from "../_redux/authCrud";
 const initialValues = {
   email: "",
   password: ""
-  // email: "dev.megaminds@gmail.com",
-  // password: "CFvgbhnj12#"
+  //   email: "dev.megaminds@gmail.com",
+  //   password: "CFvgbhnj12#"
 };
 // const initialValues = {
 //   email: "johndoe@gmail.com",
@@ -80,7 +80,7 @@ function Login(props) {
       enableLoading();
       login(values.email, values.password)//,"154.125.658.12","India Standard Time"
         .then((data) => {
-          if(data.data.data.inUserID != 0){
+          if(data.data.data.inAdminUserId != 0){
             disableLoading();
             props.login(data.data);
           }else{

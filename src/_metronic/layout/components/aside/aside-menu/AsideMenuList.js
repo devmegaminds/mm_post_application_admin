@@ -42,7 +42,6 @@ export function AsideMenuList({ layoutProps }) {
             </span>
             <span className="menu-text">Application</span>
           </NavLink>
-
           <div className="menu-submenu ">
             <i className="menu-arrow" />
             <ul className="menu-subnav">
@@ -120,38 +119,59 @@ export function AsideMenuList({ layoutProps }) {
           </div>
         </li> */}
 
-        {/* <li
-          className={`menu-item ${getMenuItemActive("/ManageUploadCategoryImage", true)}`}
+        <li
+          className={`menu-item menu-item-submenu ${getMenuItemActive(
+            "/appsetting",
+            true
+          )}`}
           aria-haspopup="true"
-        >
-          <NavLink className="menu-link" to="/ManageUploadCategoryImage">
+          data-menu-toggle="hover">
+          <NavLink className="menu-link menu-toggle" to="/appsetting">
             <span className="svg-icon menu-icon">
               <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Design/Image.svg")}
+                src={toAbsoluteUrl("/media/svg/icons/General/Settings-2.svg")}
               />
             </span>
-            <span className="menu-text">Image</span>
-          </NavLink> */}
-
-          {/* <div className="menu-submenu ">
+            <span className="menu-text">User</span>
+            <i className="menu-arrow" />
+          </NavLink>
+          <div className="menu-submenu ">
             <i className="menu-arrow" />
             <ul className="menu-subnav">
+              <li className="menu-item  menu-item-parent" aria-haspopup="true">
+                <span className="menu-link">
+                  <span className="menu-text">App Setting</span>
+                </span>
+              </li>
 
               <li
-                className={`menu-item ${getMenuItemActive("/user/favoriteVideo")}`}
-                aria-haspopup="true" style={{ display: 'none' }}
+                className={`menu-item ${getMenuItemActive("/ManageMobileUsersPage")}`}
+                aria-haspopup="true"
               >
-                <NavLink className="menu-link" to="/users/favoriteVideo">
+                <NavLink className="menu-link" to="/ManageMobileUsersPage">
                   <i className="menu-bullet menu-bullet-dot">
                     <span />
                   </i>
+                  <span className="menu-text">Mobile User</span>
+                </NavLink>
+              </li>
+
+              <li
+                className={`menu-item ${getMenuItemActive("/ManageAdminUsersPage")}`}
+                aria-haspopup="true"
+              >
+                <NavLink className="menu-link" to="/ManageAdminUsersPage">
+                  <i className="menu-bullet menu-bullet-dot">
+                    <span />
+                  </i>
+                  <span className="menu-text">Admin User</span>
                 </NavLink>
               </li>
             </ul>
-          </div> */}
-        {/* </li> */}
+          </div>
+        </li>
 
-        <li
+        {/* <li
           className={`menu-item ${getMenuItemActive("/ManageUsersPage", true)}`}
           aria-haspopup="true"
         >
@@ -161,26 +181,9 @@ export function AsideMenuList({ layoutProps }) {
                 src={toAbsoluteUrl("/media/svg/icons/Communication/Shield-user.svg")}
               />
             </span>
-            <span className="menu-text">Users</span>
+            <span className="menu-text">Customer</span>
           </NavLink>
-
-          {/* <div className="menu-submenu ">
-            <i className="menu-arrow" />
-            <ul className="menu-subnav">
-
-              <li
-                className={`menu-item ${getMenuItemActive("/user/favoriteVideo")}`}
-                aria-haspopup="true" style={{ display: 'none' }}
-              >
-                <NavLink className="menu-link" to="/users/favoriteVideo">
-                  <i className="menu-bullet menu-bullet-dot">
-                    <span />
-                  </i>
-                </NavLink>
-              </li>
-            </ul>
-          </div> */}
-        </li>
+        </li> */}
 
         {/* <li
           className={`menu-item ${getMenuItemActive("/ImageUploadTest", true)}`}

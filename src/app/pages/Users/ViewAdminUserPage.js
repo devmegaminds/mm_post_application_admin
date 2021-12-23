@@ -71,13 +71,13 @@ class ViewUserPage extends Component {
         }
     }
     componentWillReceiveProps(nextProps) {
-        if (nextProps.GetUserByIdResponse) {
-            if (nextProps.GetUserByIdResponse && nextProps.GetUserByIdResponse != this.props.GetUserByIdResponse) {
-                if (nextProps.GetUserByIdResponse.statusCode == 200) {
-                    this.setState({ isGettingTags: false });
-                    this.setState({ isLoading: false })
-                    this.setState({ totalno: nextProps.GetUserByIdResponse.data.length })
-                    this.setState({ ViewUserVideos: nextProps.GetUserByIdResponse.data })
+        if (nextProps.getAdminUserByIdResponse) {
+            if (nextProps.getAdminUserByIdResponse && nextProps.getAdminUserByIdResponse != this.props.getAdminUserByIdResponse) {
+                if (nextProps.getAdminUserByIdResponse.statusCode == 200) {
+                    // this.setState({ isGettingTags: false });
+                    // this.setState({ isLoading: false })
+                    // this.setState({ totalno: nextProps.getAdminUserByIdResponse.data.length })
+                    // this.setState({ ViewUserVideos: nextProps.getAdminUserByIdResponse.data })
                 } else {
                     this.setState({ isGettingTags: false });
                     this.setState({ isLoading: false })
@@ -90,10 +90,10 @@ class ViewUserPage extends Component {
         if (id != "view") {
             this.setState({ isGettingTags: true })
             var data = {
-                inUserID: id
+                inAdminUserId: id
             }
             console.log(data, "DATA");
-            this.props.GetUserById(data)
+            this.props.GetAdminUserById(data)
         }
         //this.props.GetUserPaymentMethods(id)
 
@@ -257,24 +257,24 @@ ViewUserPage = reduxForm({
     destroyOnUnmount: true
 })(ViewUserPage);
 function mapStateToProps(state) {
-    console.log(state.auth.GetUseFavoriteVideoDataResponse);
     return {
         initialValues: {
-            inUserID: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.inUserID : "",
-            stFirstName: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stFirstName : "",
-            stLastName: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stLastName : "",
-            stContact: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stContact : "",
-            stBusinessName: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stBusinessName : "",
-            stWebsite: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stWebsite : "",
-            stAddress: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stAddress : "",
-            stEmail: state.auth.GetUseFavoriteVideoDataResponse != undefined && state.auth.GetUseFavoriteVideoDataResponse.data != undefined ? state.auth.GetUseFavoriteVideoDataResponse.data.stEmail : "",
+            inAdminUserId: state.auth.GetAdminUserByIdResponse != undefined && state.auth.GetAdminUserByIdResponse.data != undefined ? state.auth.GetAdminUserByIdResponse.data.inAdminUserId : "",
+            stFirstName: state.auth.GetAdminUserByIdResponse != undefined && state.auth.GetAdminUserByIdResponse.data != undefined ? state.auth.GetAdminUserByIdResponse.data.stFirstName : "",
+            stLastName: state.auth.GetAdminUserByIdResponse != undefined && state.auth.GetAdminUserByIdResponse.data != undefined ? state.auth.GetAdminUserByIdResponse.data.stLastName : "",
+            stContact: state.auth.GetAdminUserByIdResponse != undefined && state.auth.GetAdminUserByIdResponse.data != undefined ? state.auth.GetAdminUserByIdResponse.data.stContact : "",
+            // stBusinessName: state.auth.GetAdminUserByIdResponse != undefined && state.auth.GetAdminUserByIdResponse.data != undefined ? state.auth.GetAdminUserByIdResponse.data.stBusinessName : "",
+            // stWebsite: state.auth.GetAdminUserByIdResponse != undefined && state.auth.GetAdminUserByIdResponse.data != undefined ? state.auth.GetAdminUserByIdResponse.data.stWebsite : "",
+            // stAddress: state.auth.GetAdminUserByIdResponse != undefined && state.auth.GetAdminUserByIdResponse.data != undefined ? state.auth.GetAdminUserByIdResponse.data.stAddress : "",
+            stEmail: state.auth.GetAdminUserByIdResponse != undefined && state.auth.GetAdminUserByIdResponse.data != undefined ? state.auth.GetAdminUserByIdResponse.data.stEmail : "",
         },
-        GetUserByIdResponse: state.auth.GetUseFavoriteVideoDataResponse,
+        getAdminUserByIdResponse: state.auth.GetAdminUserByIdResponse,
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        GetUserById: (data) => dispatch(auth.actions.GetUseFavoriteVideoData(data)),
+        GetAdminUserById: (data) => dispatch(auth.actions.GetAdminUserById(data)),
+        // GetAdminUserByinAdminUserId: (data) => dispatch(auth.actions.GetAdminUserByinAdminUserId(data)),
         //GetUserPaymentMethods: (data) => dispatch(auth.actions.GetUserPaymentMethods(data)),
     }
 }

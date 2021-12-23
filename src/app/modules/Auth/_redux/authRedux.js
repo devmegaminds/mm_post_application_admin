@@ -28,8 +28,14 @@ export const actionTypes = {
   GetUserData: "[GetUserData] Action",
   GetUserDataResponse: "[GetUserDataResponse] Action",
 
+  GetAdminUserData: "[GetAdminUserData] Action",
+  GetAdminUserDataResponse: "[GetAdminUserDataResponse] Action",
+
   GetUseFavoriteVideoData: "[GetUseFavoriteVideoData] Action",
   GetUseFavoriteVideoDataResponse: "[GetUseFavoriteVideoDataResponse] Action",
+
+  GetAdminUserById: "[GetAdminUserById] Action",
+  GetAdminUserByIdResponse: "[GetAdminUserByIdResponse] Action",
 
   UpdateProfile: "[UpdateProfile] Action",
   UpdateProfileResponse: "[UpdateProfileResponse] Action",
@@ -120,6 +126,9 @@ export const actionTypes = {
 
   DeleteSubCategoryById: "[DeleteSubCategoryById] Action",
   DeleteSubCategoryByIdResponse: "[DeleteSubCategoryByIdResponse] Action",
+
+  DeleteSubCategoryByCategoryId: "[DeleteSubCategoryByCategoryId] Action",
+  DeleteSubCategoryByCategoryIdResponse: "[DeleteSubCategoryByCategoryIdResponse] Action",
 
   GetSubCategoryInfoById: "[GetSubCategoryInfoById] Action",
   GetSubCategoryInfoByIdResponse: "[GetSubCategoryInfoByIdResponse] Action",
@@ -317,6 +326,15 @@ export const reducer = persistReducer(
         return { ...state, GetUserDataResponse };
       }
 
+      case actionTypes.GetAdminUserData: {
+        const { adminUserData } = action.payload;
+        return { ...state, adminUserData };
+      }
+      case actionTypes.GetAdminUserDataResponse: {
+        const GetAdminUserDataResponse = action.payload.GetAdminUserDataResponse.data && action.payload.GetAdminUserDataResponse.data;
+        return { ...state, GetAdminUserDataResponse };
+      }
+
       case actionTypes.GetUseFavoriteVideoData: {
         const { userFavoriteData } = action.payload;
         return { ...state, userFavoriteData };
@@ -324,6 +342,15 @@ export const reducer = persistReducer(
       case actionTypes.GetUseFavoriteVideoDataResponse: {
         const GetUseFavoriteVideoDataResponse = action.payload.GetUseFavoriteVideoDataResponse.data && action.payload.GetUseFavoriteVideoDataResponse.data;
         return { ...state, GetUseFavoriteVideoDataResponse };
+      }
+
+      case actionTypes.GetAdminUserById: {
+        const { getAdminUserById } = action.payload;
+        return { ...state, getAdminUserById };
+      }
+      case actionTypes.GetAdminUserByIdResponse: {
+        const GetAdminUserByIdResponse = action.payload.GetAdminUserByIdResponse.data && action.payload.GetAdminUserByIdResponse.data;
+        return { ...state, GetAdminUserByIdResponse };
       }
 
       case actionTypes.UpdateProfile: {
@@ -449,6 +476,16 @@ export const reducer = persistReducer(
       case actionTypes.DeleteSubCategoryByIdResponse: {
         const DeleteSubCategoryByIdResponse = action.payload.DeleteSubCategoryByIdResponse && action.payload.DeleteSubCategoryByIdResponse;
         return { ...state, DeleteSubCategoryByIdResponse };
+      }
+
+      case actionTypes.DeleteSubCategoryByCategoryId: {
+        const deleteSubCategoryByCategoryId = action.payload;
+        return { ...state, deleteSubCategoryByCategoryId };
+      }
+
+      case actionTypes.DeleteSubCategoryByCategoryIdResponse: {
+        const deleteSubCategoryByCategoryIdResponse = action.payload.deleteSubCategoryByCategoryIdResponse && action.payload.deleteSubCategoryByCategoryIdResponse;
+        return { ...state, deleteSubCategoryByCategoryIdResponse };
       }
 
       case actionTypes.GetSubCategoryInfoByIdResponse: {
@@ -792,11 +829,17 @@ export const actions = {
 
 
   //#region Manage Profile
+  GetAdminUserData: (adminUserData) => ({ type: actionTypes.GetAdminUserData, payload: { adminUserData } }),
+  GetAdminUserDataResponse: (GetAdminUserDataResponse) => ({ type: actionTypes.GetAdminUserDataResponse, payload: { GetAdminUserDataResponse } }),
+
   GetUserData: (userData) => ({ type: actionTypes.GetUserData, payload: { userData } }),
   GetUserDataResponse: (GetUserDataResponse) => ({ type: actionTypes.GetUserDataResponse, payload: { GetUserDataResponse } }),
 
   GetUseFavoriteVideoData: (userFavoriteData) => ({ type: actionTypes.GetUseFavoriteVideoData, payload: { userFavoriteData } }),
   GetUseFavoriteVideoDataResponse: (GetUseFavoriteVideoDataResponse) => ({ type: actionTypes.GetUseFavoriteVideoDataResponse, payload: { GetUseFavoriteVideoDataResponse } }),
+
+  GetAdminUserById: (getAdminUserById) => ({ type: actionTypes.GetAdminUserById, payload: { getAdminUserById } }),
+  GetAdminUserByIdResponse: (GetAdminUserByIdResponse) => ({ type: actionTypes.GetAdminUserByIdResponse, payload: { GetAdminUserByIdResponse } }),
 
   UpdateProfile: (profile) => ({ type: actionTypes.UpdateProfile, payload: { profile } }),
   UpdateProfileResponse: (updateResponse) => ({ type: actionTypes.UpdateProfileResponse, payload: { updateResponse } }),
@@ -840,6 +883,9 @@ export const actions = {
 
   DeleteSubCategoryById: (RequestParmDeleteSubCategoryId) => ({ type: actionTypes.DeleteSubCategoryById, payload: { RequestParmDeleteSubCategoryId } }),
   DeleteSubCategoryByIdResponse: (DeleteSubCategoryByIdResponse) => ({ type: actionTypes.DeleteSubCategoryByIdResponse, payload: { DeleteSubCategoryByIdResponse } }),
+
+  DeleteSubCategoryByCategoryId: (deleteSubCategoryByCategoryId) => ({ type: actionTypes.DeleteSubCategoryByCategoryId, payload: { deleteSubCategoryByCategoryId } }),
+  DeleteSubCategoryByCategoryIdResponse: (deleteSubCategoryByCategoryIdResponse) => ({ type: actionTypes.DeleteSubCategoryByCategoryIdResponse, payload: { deleteSubCategoryByCategoryIdResponse } }),
 
   GetSubCategoryInfoById: (RequestSubCategoryInfoById) => ({ type: actionTypes.GetSubCategoryInfoById, payload: { RequestSubCategoryInfoById } }),
   GetSubCategoryInfoByIdResponse: (GetSubCategoryInfoByIdResponse) => ({ type: actionTypes.GetSubCategoryInfoByIdResponse, payload: { GetSubCategoryInfoByIdResponse } }),
@@ -917,6 +963,14 @@ export function* saga() {
 
   //#region Manage Profile 
 
+  yield takeLatest(actionTypes.GetAdminUserData, function* getAdminUserDataRequested(payload) {
+
+    const response = yield call(getAdminUserDataRequestApi, payload.payload);
+    console.log(response)
+    if (response)
+      yield put(actions.GetAdminUserDataResponse(response));
+  });
+
   yield takeLatest(actionTypes.GetUserData, function* getUserDataRequested(payload) {
 
     const response = yield call(getUserDataRequestApi, payload.payload);
@@ -930,6 +984,13 @@ export function* saga() {
     console.log(response)
     if (response)
       yield put(actions.GetUseFavoriteVideoDataResponse(response));
+  });
+
+  yield takeLatest(actionTypes.GetAdminUserById, function* getAdminUserByIdRequested(payload) {
+    const response = yield call(GetAdminUserByIdRequestApi, payload.payload);
+    console.log(response)
+    if (response)
+      yield put(actions.GetAdminUserByIdResponse(response));
   });
 
   yield takeLatest(actionTypes.UpdateProfile, function* updateProfileRequested(payload) {
@@ -1092,6 +1153,12 @@ export function* saga() {
       yield put(actions.DeleteSubCategoryByIdResponse(response));
   });
 
+  yield takeLatest(actionTypes.DeleteSubCategoryByCategoryId, function* deleteSubCategoryByCategoryIdRequested(payload) {
+    const response = yield call(DeleteSubCategoryByCategoryIdApi, payload.payload);
+    if (response)
+      yield put(actions.DeleteSubCategoryByCategoryIdResponse(response));
+  });
+
   yield takeLatest(actionTypes.GetSubCategoryInfoById, function* GetSubCategoryInfoByIDRequest(payload) {
     const response = yield call(GetSubCategoryInfoByIDRequestedApi, payload.payload);
     yield put(actions.GetSubCategoryInfoByIdResponse(response));
@@ -1136,6 +1203,21 @@ const getUserDataRequestApi = async (payload) => {
   return respo;
 };
 
+const getAdminUserDataRequestApi = async (payload) => {
+
+  var data = payload.adminUserData;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.get(`${BASE_URL}Authentication/GetAllAdminUser`, options)
+    .catch((e) => {
+      return e.response;
+    });
+  return respo;
+};
+
 const getUseFavoriteVideoDataRequestApi = async (payload) => {
   var data = payload.userFavoriteData;
   const instance = await axios.create({
@@ -1149,6 +1231,23 @@ const getUseFavoriteVideoDataRequestApi = async (payload) => {
     });
   return respo;
 };
+
+const GetAdminUserByIdRequestApi = async (payload) => {
+  debugger
+  var data = payload.getAdminUserById;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.post(`${BASE_URL}Authentication/GetAdminUserByinAdminUserId`, data, options)
+    .catch((e) => {
+      return e.response;
+    });
+  return respo;
+  debugger
+};
+
 
 const updateProfileRequestApi = async (payload) => {
   var data = payload.profile;
@@ -1212,14 +1311,14 @@ const checkCategoryPriorityRequestAPI = async (payload) => {
 };
 
 const updateCategoryStatusRequestAPI = async (payload) => {
-  debugger
+   
   var data = payload.updateCategoryStatus;
   const instance = await axios.create({
   });
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  debugger
+   
   const respo = instance.post(`${BASE_URL}Category/UpdateCategoryStatus`, data,options)
     .catch((e) => {
       return e.response;
@@ -1229,14 +1328,14 @@ const updateCategoryStatusRequestAPI = async (payload) => {
 };
 
 const updateSubCategoryStatusRequestAPI = async (payload) => {
-  debugger
+   
   var data = payload.updateSubCategoryStatus;
   const instance = await axios.create({
   });
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  debugger
+   
   const respo = instance.post(`${BASE_URL}SubCategory/UpdateSubCategoryStatus`, data,options)
     .catch((e) => {
       return e.response;
@@ -1387,22 +1486,22 @@ const GetCategoryInfoByIDRequestedApi = async (payload) => {
 
 //#region Manage Image
 const addCategoryImageRequestApi = async (payload) => {
-  debugger
+   
   var data = payload.categoryImage;
   const instance = await axios.create({
   });
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  debugger
+   
   const respo = instance.post(`${BASE_URL}Image/addEditImage`, data, options)
     .catch((e) => {
-      debugger
+       
       console.log("121121212121212");
       return e.response;
     });
   return respo;
-  debugger
+   
 };
 
 const getImageByCategoryRequestedApi = async (payload) => {
@@ -1418,11 +1517,11 @@ const getImageByCategoryRequestedApi = async (payload) => {
 };
 
 const getImageBySubCategoryRequestedApi = async (payload) => {
-  debugger
+   
   var data = payload.getImageBySubCategory;
   const instance = await axios.create({
   });
-  debugger
+   
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
     //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
@@ -1559,7 +1658,21 @@ const deleteSubCategoryApi = async (payload) => {
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  const respo = instance.delete(`${BASE_URL}SubCategory/DeleteSubCategory?inSubCategoryId=${data}&inModifiedBy=22`, options)
+  const respo = instance.delete(`${BASE_URL}SubCategory/DeleteSubCategory?inSubCategoryId=${data.inSubCategoryId}&inModifiedBy=${data.inModifiedBy}`, options)
+    .catch((e) => {
+      return e.response;
+    });
+  return respo;
+};
+
+const DeleteSubCategoryByCategoryIdApi = async (payload) => {
+  var data = payload.deleteSubCategoryByCategoryId;
+  const instance = await axios.create({
+  });
+  const options = {
+    headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
+  };
+  const respo = instance.delete(`${BASE_URL}SubCategory/DeleteSubCategoryByCategoryId?inCategoryId=${data.inCategoryId}`, options)
     .catch((e) => {
       return e.response;
     });
@@ -1581,11 +1694,11 @@ const getSubCategoryByCategoryIdRequestedApi = async (payload) => {
   var data = payload.getSubCategoryByCategoryId;
   const instance = await axios.create({
   });
-  debugger
+   
   const options = {
     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
   };
-  debugger
+   
   const respo = instance.get(`${BASE_URL}SubCategory/GetSubCategoryByCategoryId`, data, options);
   return respo;
 };

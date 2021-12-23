@@ -6,6 +6,7 @@ import DashboardPage from "./pages/DashboardPage";
 import AddApplicationPage from "./pages/Application/AddApplicationPage";
 import ManageApplication from "./pages/Application/ManageApplication";
 import ViewUserPage from "./pages/Users/ViewUserPage";
+import ViewAdminUserPage from "./pages/Users/ViewAdminUserPage";
 import AddCategoryPage from "./pages/Category/AddCategoryPage";
 import ManageCategory from "./pages/Category/ManageCategory";
 import ManageUploadCategoryImage from "./pages/Image/ManageUploadCategoryImage";
@@ -13,7 +14,8 @@ import ManageUploadSubCategoryImage from "./pages/Image/ManageUploadSubCategoryI
 import AddSubCategoryPage from "./pages/SubCategory/AddSubCategoryPage";
 import ManageSubCategory from "./pages/SubCategory/ManageSubCategory";
 import AddThumbnailImage from "./pages/ThumbnailImage/AddThumbnailImage";
-import ManageUsersPage from "./pages/Users/ManageUsersPage"
+import ManageMobileUsersPage from "./pages/Users/ManageMobileUsersPage"
+import ManageAdminUsersPage from "./pages/Users/ManageAdminUsersPage"
 //#endregion
 
 //#region It's Extra Screen
@@ -41,8 +43,10 @@ export default function BasePage() {
                 <ContentRoute path="/ManageApplication" component={ManageApplication} />
                 <ContentRoute path="/AddApplicationPage" component={AddApplicationPage} />
                 {/* User */}
-                <ContentRoute path="/ManageUsersPage" component={ManageUsersPage} />
+                <ContentRoute path="/ManageMobileUsersPage" component={ManageMobileUsersPage} />
+                <ContentRoute path="/ManageAdminUsersPage" component={ManageAdminUsersPage} />
                 <ContentRoute path="/ViewUserPage" component={ViewUserPage} />
+                <ContentRoute path="/ViewAdminUserPage" component={ViewAdminUserPage} />
                 {/* Category */}
                 <ContentRoute path="/ManageCategory" component={ManageCategory} />
                 <ContentRoute path="/AddCategoryPage" component={AddCategoryPage} />

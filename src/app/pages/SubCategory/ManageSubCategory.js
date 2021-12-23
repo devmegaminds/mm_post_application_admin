@@ -27,8 +27,10 @@ class ManageSubCategory extends Component {
             pageNumber: 1,
             subcategoryData: [],
             isGettingSubCategory: false,
+            currentUserData: {},
         }
         this.handleEdit = this.handleEdit.bind(this);
+        this.state.currentUserData = JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data
     }
 
     handleEdit(row) {
@@ -44,7 +46,11 @@ class ManageSubCategory extends Component {
     handleDelete(row) {
         if (row != null)
             this.hideAlert(false);
-        this.props.DeleteSubCategoryById(row.inSubCategoryId)
+        var data = {
+            inSubCategoryId: row.inSubCategoryId,
+            inModifiedBy: this.state.currentUserData.inAdminUserId
+        }
+        this.props.DeleteSubCategoryById(data)
     }
     componentDidMount() {
 
@@ -57,7 +63,6 @@ class ManageSubCategory extends Component {
         })
     }
     getSubCategorybyID = () => {
-        debugger
         var data = {
             inCategoryId: 1
         }
@@ -66,7 +71,6 @@ class ManageSubCategory extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        // debugger
         // if (nextProps.getSubCategoryByCategoryIdResponse) {
         //     if (nextProps.getSubCategoryByCategoryIdResponse && nextProps.getSubCategoryByCategoryIdResponse != this.props.getSubCategoryByCategoryIdResponse) {
         //         if (nextProps.getSubCategoryByCategoryIdResponse.statusCode == 200) {
@@ -77,7 +81,6 @@ class ManageSubCategory extends Component {
         //         }
         //     }
         // }
-        debugger
         if (nextProps.GetSubCategoryResponse) {
             if (nextProps.GetSubCategoryResponse && nextProps.GetSubCategoryResponse != this.props.GetSubCategoryResponse) {
                 if (nextProps.GetSubCategoryResponse.statusCode == 200) {
@@ -158,6 +161,35 @@ class ManageSubCategory extends Component {
             alert: getAlert()
         });
     }
+    deleteSubCategoryConfirmationBox(row, msg) {
+        let getAlert = '';
+        getAlert = () => (
+            <SweetAlert
+                error
+                title={'Are you sure want to delete all the sub category?'}
+                onConfirm={() => this.handleSubCategoryDelete()}
+                showCancel
+                cancelBtnBsStyle='danger'
+                onCancel={() => this.hideAlert(false)}
+                reverseButtons
+            >
+            </SweetAlert>
+        );
+        this.setState({
+            alert: getAlert()
+        });
+    }
+
+    handleSubCategoryDelete(row) {
+        var categoryId = this.state.categoryId
+        var data = {
+            inCategoryId: categoryId
+        }
+        // if (row != null)
+            this.hideAlert(false);
+        this.props.DeleteSubCategoryByCategoryId(data)
+        this.props.history.push(`/ManageCategory`)
+    }
 
     hideAlert(isSaved) {
         this.setState({
@@ -182,7 +214,6 @@ class ManageSubCategory extends Component {
 
     onBlur = (e, row) => {
         if (e.target.value != "") {
-            debugger
             var DisplayPriority = e.target.defaultValue = e.target.value
             var data = {
                 inDisplayPriority: DisplayPriority,
@@ -389,15 +420,16 @@ class ManageSubCategory extends Component {
                                 Add Sub Category
                             </Link>
                         </OverlayTrigger>
-                        {/* <div style={{ marginLeft: 20 }}>
+                        <div style={{ marginLeft: 20 }}>
                             <OverlayTrigger
                                 placement="bottom"
-                                overlay={<Tooltip>Add Sub Category Image</Tooltip>}>
-                                <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/ManageUploadSubCategoryImage">
-                                    Add Sub Category Image
-                                </Link>
+                                overlay={<Tooltip>Delete All sub category</Tooltip>}>
+                               <a className="btn btn-danger" data-toggle="tooltip" data-placement="buttom" onClick={(e) => this.deleteSubCategoryConfirmationBox( "Are you sure want to delete this sub categoy?")}>
+                                {/* <Link className="btn btn-danger" id="kw_lnk_new_insurance_type" to="/ManageUploadSubCategoryImage"> */}
+                                   Delete All sub category
+                                </a>
                             </OverlayTrigger>
-                        </div> */}
+                        </div>
                     </div>
                 </div>
 
@@ -465,6 +497,7 @@ const mapDispatchToProps = (dispatch) => {
         UpdateSubCategoryPriority: (data) => dispatch(auth.actions.UpdateSubCategoryPriority(data)),
         SaveInsuranceType: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
         UpdateSubCategoryStatus: (data) => dispatch(auth.actions.UpdateSubCategoryStatus(data)),
+        DeleteSubCategoryByCategoryId: (data) => dispatch(auth.actions.DeleteSubCategoryByCategoryId(data)),
         GetSubCategoryByCategoryId: (data) => dispatch(auth.actions.GetSubCategoryByCategoryId(data)),
     }
 }

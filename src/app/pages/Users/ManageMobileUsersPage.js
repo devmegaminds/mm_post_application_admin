@@ -54,8 +54,12 @@ class ManageSubCategory extends Component {
                 if (nextProps.GetUserDataResponse.statusCode == 200) {
                     this.setState({ isGettingListData: false });
                     this.setState({ totalno: nextProps.GetUserDataResponse.data[0].TotalRecords });
-
-                    this.setState({ userResponseData: nextProps.GetUserDataResponse.data }, () => {
+                    var userDataResponse = nextProps.GetUserDataResponse 
+                    var newArray = userDataResponse.data.filter(function (el) {
+                        return el.stUserType == 1;
+                    });
+                    console.log(newArray);
+                    this.setState({ userResponseData: newArray }, () => {
                     });
                     this.setState({ listLoading: false });
                 }

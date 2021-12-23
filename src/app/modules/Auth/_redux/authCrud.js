@@ -22,7 +22,6 @@ export function login(email, password) {
   };
   const respo = instance.post(`${BASE_URL}Authentication/login`, data, options);
   return respo;
-
 }
 
 export function register(email, fullname, username, password) {
