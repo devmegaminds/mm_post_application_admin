@@ -17,9 +17,9 @@ class Demo extends React.Component {
         // this.handleChange = this.handleChange.bind(this);
     }
     componentDidMount() {
-        debugger
+            
         imagesubcriber.subscribe((x) => {
-            debugger
+                
             this.setState({image: x})
         })
     }
@@ -31,7 +31,7 @@ class Demo extends React.Component {
     // }
 
     addFormData() {
-        debugger
+            
         let x = this.state.image
         console.log(x, "PLPLPLPLPLPLPLPLPLPLP");
 

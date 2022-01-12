@@ -2,25 +2,35 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import { connect } from "react-redux";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useHistory } from "react-router-dom";
 import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { register } from "../_redux/authCrud";
 
 const initialValues = {
-  fullname: "",
+  firstname: "",
+  lastname: "",
   email: "",
-  username: "",
+  contactnumber: "",
   password: "",
   changepassword: "",
   acceptTerms: false,
 };
 
 function Registration(props) {
+  const history = useHistory();
   const { intl } = props;
   const [loading, setLoading] = useState(false);
   const RegistrationSchema = Yup.object().shape({
-    fullname: Yup.string()
+    firstname: Yup.string()
+      .min(3, "Minimum 3 symbols")
+      .max(50, "Maximum 50 symbols")
+      .required(
+        intl.formatMessage({
+          id: "AUTH.VALIDATION.REQUIRED_FIELD",
+        })
+      ),
+    lastname: Yup.string()
       .min(3, "Minimum 3 symbols")
       .max(50, "Maximum 50 symbols")
       .required(
@@ -37,7 +47,7 @@ function Registration(props) {
           id: "AUTH.VALIDATION.REQUIRED_FIELD",
         })
       ),
-    username: Yup.string()
+    contactnumber: Yup.string()
       .min(3, "Minimum 3 symbols")
       .max(50, "Maximum 50 symbols")
       .required(
@@ -97,8 +107,15 @@ function Registration(props) {
     onSubmit: (values, { setStatus, setSubmitting }) => {
       setSubmitting(true);
       enableLoading();
-      register(values.email, values.fullname, values.username, values.password)
+      register(
+        values.email,
+        values.firstname,
+        values.lastname,
+        values.contactnumber,
+        values.password
+      )
         .then(({ data: { accessToken } }) => {
+          history.push("/login");
           props.register(accessToken);
           disableLoading();
           setSubmitting(false);
@@ -139,24 +156,43 @@ function Registration(props) {
         )}
         {/* end: Alert */}
 
-        {/* begin: Fullname */}
+        {/* begin: Firstname */}
         <div className="form-group fv-plugins-icon-container">
           <input
-            placeholder="Full name"
+            placeholder="First name"
             type="text"
             className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
-              "fullname"
+              "firstname"
             )}`}
-            name="fullname"
-            {...formik.getFieldProps("fullname")}
+            name="firstname"
+            {...formik.getFieldProps("firstname")}
           />
-          {formik.touched.fullname && formik.errors.fullname ? (
+          {formik.touched.firstname && formik.errors.firstname ? (
             <div className="fv-plugins-message-container">
-              <div className="fv-help-block">{formik.errors.fullname}</div>
+              <div className="fv-help-block">{formik.errors.firstname}</div>
             </div>
           ) : null}
         </div>
-        {/* end: Fullname */}
+        {/* end: Firstname */}
+
+        {/* begin: Lastname */}
+        <div className="form-group fv-plugins-icon-container">
+          <input
+            placeholder="Last name"
+            type="text"
+            className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
+              "lastname"
+            )}`}
+            name="lastname"
+            {...formik.getFieldProps("lastname")}
+          />
+          {formik.touched.lastname && formik.errors.lastname ? (
+            <div className="fv-plugins-message-container">
+              <div className="fv-help-block">{formik.errors.lastname}</div>
+            </div>
+          ) : null}
+        </div>
+        {/* end: Lastname */}
 
         {/* begin: Email */}
         <div className="form-group fv-plugins-icon-container">
@@ -180,17 +216,17 @@ function Registration(props) {
         {/* begin: Username */}
         <div className="form-group fv-plugins-icon-container">
           <input
-            placeholder="User name"
+            placeholder="Contact number"
             type="text"
             className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
-              "username"
+              "contactnumber"
             )}`}
-            name="username"
-            {...formik.getFieldProps("username")}
+            name="contactnumber"
+            {...formik.getFieldProps("contactnumber")}
           />
-          {formik.touched.username && formik.errors.username ? (
+          {formik.touched.contactnumber && formik.errors.contactnumber ? (
             <div className="fv-plugins-message-container">
-              <div className="fv-help-block">{formik.errors.username}</div>
+              <div className="fv-help-block">{formik.errors.contactnumber}</div>
             </div>
           ) : null}
         </div>
@@ -237,7 +273,7 @@ function Registration(props) {
         {/* end: Confirm Password */}
 
         {/* begin: Terms and Conditions */}
-        <div className="form-group">
+        {/* <div className="form-group">
           <label className="checkbox">
             <input
               type="checkbox"
@@ -260,16 +296,16 @@ function Registration(props) {
               <div className="fv-help-block">{formik.errors.acceptTerms}</div>
             </div>
           ) : null}
-        </div>
+        </div> */}
         {/* end: Terms and Conditions */}
         <div className="form-group d-flex flex-wrap flex-center">
           <button
             type="submit"
-            disabled={
-              formik.isSubmitting ||
-              !formik.isValid ||
-              !formik.values.acceptTerms
-            }
+            // disabled={
+            //   formik.isSubmitting ||
+            //   !formik.isValid ||
+            //   !formik.values.acceptTerms
+            // }
             className="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4"
           >
             <span>Submit</span>

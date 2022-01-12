@@ -19,7 +19,7 @@ import { login } from "../_redux/authCrud";
 
 const initialValues = {
   email: "",
-  password: ""
+  password: "",
   //   email: "dev.megaminds@gmail.com",
   //   password: "CFvgbhnj12#"
 };
@@ -29,7 +29,6 @@ const initialValues = {
 // };
 
 function Login(props) {
-
   const { intl } = props;
   const [loading, setLoading] = useState(false);
   const LoginSchema = Yup.object().shape({
@@ -76,14 +75,13 @@ function Login(props) {
     initialValues,
     validationSchema: LoginSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
-        
       enableLoading();
-      login(values.email, values.password)//,"154.125.658.12","India Standard Time"
+      login(values.email, values.password) //,"154.125.658.12","India Standard Time"
         .then((data) => {
-          if(data.data.data.inAdminUserId != 0){
+          if (data.data.data.inAdminUserId != 0) {
             disableLoading();
             props.login(data.data);
-          }else{
+          } else {
             disableLoading();
             setSubmitting(false);
             setStatus(
@@ -160,6 +158,26 @@ function Login(props) {
               <div className="fv-help-block">{formik.errors.password}</div>
             </div>
           ) : null}
+
+          {/* For Register new user in admin panel  */}
+          {/* <label
+            style={{
+              marginLeft: "20%",
+              marginTop: 10,
+              color: "#B5B5C3",
+              fontWeight: "500",
+            }}
+          >
+            Don't have an account?
+            <Link
+              style={{ marginLeft: 5, color: "#FFBB1C" }}
+              to="/auth/registration"
+              className="text-hover-primary my-3 mr-2"
+              id="kt_login_forgot"
+            >
+              <FormattedMessage id="AUTH.GENERAL.SIGNUP_BUTTON" />
+            </Link>
+          </label> */}
         </div>
         <div className="form-group d-flex flex-wrap justify-content-between align-items-center">
           <Link
