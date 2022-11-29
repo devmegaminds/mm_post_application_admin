@@ -146,17 +146,12 @@ class DashboardPage extends Component {
 function mapStateToProps(state) {
   return {
     initialValues: {
-
     },
     GetCategoryResponse: state.auth.GetCategoryResponse,
     GetApplicationResponse: state.auth.GetApplicationResponse,
     GetSubCategoryDataResponse: state.auth.getSubCategoryDataResponse,
     GetAdminUserDataResponse: state.auth.GetAdminUserDataResponse,
     GetUserDataResponse: state.auth.GetUserDataResponse,
-
-
-
-
   }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -166,9 +161,6 @@ const mapDispatchToProps = (dispatch) => {
     GetSubCategoryData: (data) => dispatch(auth.actions.GetSubCategoryData(data)),
     GetAdminUserData: (data) => dispatch(auth.actions.GetAdminUserData(data)),
     GetUsers: (data) => dispatch(auth.actions.GetUserData(data)),
-
-
-
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);

@@ -63,9 +63,9 @@ class ManageSubCategory extends Component {
           });
           var userDataResponse = nextProps.GetUserDataResponse;
           var newArray = userDataResponse.data.filter(function(el) {
-            return el.stUserType == 1;
+            return el.stUserType != 2;
           });
-          console.log(newArray);
+          console.log(userDataResponse, "------");
           this.setState({ userResponseData: newArray }, () => {});
           this.setState({ listLoading: false });
         }
@@ -145,37 +145,12 @@ class ManageSubCategory extends Component {
     debugger;
     var $this = this;
     const columns = [
-      //   console.log("===================================="),
-      //   console.log(columns),
-      //   console.log("===================================="),
-      //#region Index of the Sub Category list
-      // { dataField: 'inUserID', text: 'User Unique Id', hidden: true },
-      // { dataField: "stUniqueId", text: "Unique Id", sort: true },
-      { dataField: "stFirstName", text: "First Name", sort: true },
-      { dataField: "stLastName", text: "Last Name", sort: true },
+      // { dataField: "stFirstName", text: "First Name", sort: true },
+      // { dataField: "stLastName", text: "Last Name", sort: true },
       { dataField: "stContact", text: "Contact Number", sort: true },
-      { dataField: "stAddress", text: "Address", sort: true },
-      { dataField: "stEmail", text: "Email", sort: true },
-      // { dataField: "inApiLevel", text: "API Level", sort: true },
-      //   { dataField: "stIpAddress", text: "Ip Address", sort: true },
-      //   { dataField: "stMacAddress", text: "Mac Address", sort: true },
-      //   { dataField: "stbaseOS", text: "Base Os", sort: true },
-      //   { dataField: "stBootloader", text: "Boot loader", sort: true },
-      //   { dataField: "stBuildId", text: "Build Id", sort: true },
-      //   { dataField: "stDeviceName", text: "Device Name", sort: true },
-      //   { dataField: "stInstanceId", text: "Instance Id", sort: true },
-      //   { dataField: "stHardware", text: "Hardware", sort: true },
-      //   { dataField: "stMaxMemory", text: "MaxMemory", sort: true },
-      //   { dataField: "stProduct", text: "Product", sort: true },
-      //   { dataField: "stCarrier", text: "Carrier", sort: true },
-      //   { dataField: "stTotalMemory", text: "TotalMemory", sort: true },
-      //   { dataField: "stUsedMemory", text: "UsedMemory", sort: true },
-      // {
-      //   dataField: "stSynchronizedUniqueId",
-      //   text: "SynchronizedUnique Id",
-      //   sort: true,
-      // },
-      // { dataField: 'flgIsActive', text: 'Is Active', sort: false },
+      { dataField: "profile_count", text: "Number Profile", sort: true },
+      // { dataField: "stAddress", text: "Address", sort: true },
+      // { dataField: "stEmail", text: "Email", sort: true },
       {
         dataField: "dtCreatedOn",
         text: "Created Date",
@@ -253,57 +228,7 @@ class ManageSubCategory extends Component {
               <Spinner animation="border" variant="primary" />
             )}
           </div>
-          <div className="card-toolbar">
-            {/* <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>Add SubCategory</Tooltip>}>
-                            <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/AddSubCategoryPage">
-                                Add SubCategory
-                            </Link>
-                        </OverlayTrigger>
-                        <div style={{ marginLeft: 20 }}>
-                            <OverlayTrigger
-                                placement="bottom"
-                                overlay={<Tooltip>Add Category Image</Tooltip>}>
-                                <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/ManageUploadSubCategoryImage">
-                                    Add Sub-Category Image
-                                </Link>
-                            </OverlayTrigger>
-                        </div> */}
-            {/* <div style={{ marginLeft: 20 }}>
-                            <OverlayTrigger
-                                placement="bottom"
-                                overlay={<Tooltip>Add Thumbnail Image</Tooltip>}>
-                                <Link className="btn btn-primary" id="kw_lnk_new_insurance_type" to="/AddThumbnailImage">
-                                    Add Thumbnail Image
-                                </Link>
-                            </OverlayTrigger>
-                        </div> */}
-
-            {/* <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-                            Launch demo modal
-                        </button>
-
-                        <div class="modal fade" id="exampleModalLong" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <i aria-hidden="true" class="ki ki-close"></i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                       <p>Modal</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary font-weight-bold">Save changes</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
-          </div>
+          <div className="card-toolbar"></div>
         </div>
 
         <div className="card-body">

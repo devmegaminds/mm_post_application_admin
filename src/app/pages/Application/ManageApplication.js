@@ -25,7 +25,7 @@ class ManageApplication extends Component {
     this.state = {
       pageNumber: 1,
       tagsData: [],
-      isGettingTags: false,
+      IsLoaderShow: false,
     };
   }
 
@@ -37,7 +37,7 @@ class ManageApplication extends Component {
     this.props.DeleteApplicationById(row.inApplicationId);
   }
   componentDidMount() {
-    this.setState({ isGettingTags: true });
+    this.setState({ IsLoaderShow: true });
     this.props.GetApplication("");
   }
   componentWillReceiveProps(nextProps) {
@@ -47,14 +47,14 @@ class ManageApplication extends Component {
         nextProps.GetApplicationResponse != this.props.GetApplicationResponse
       ) {
         if (nextProps.GetApplicationResponse.statusCode == 200) {
-          this.setState({ isGettingTags: false });
+          this.setState({ IsLoaderShow: false });
           this.setState({ isLoading: false });
           this.setState({
             totalno: nextProps.GetApplicationResponse.data.length,
           });
-
           this.setState({ tagsData: nextProps.GetApplicationResponse.data });
         }
+        this.setState({ IsLoaderShow: false });
       }
     }
     if (nextProps.DeleteApplicationByIdResponse) {
@@ -65,12 +65,13 @@ class ManageApplication extends Component {
       ) {
         if (nextProps.DeleteApplicationByIdResponse.data.statusCode == 200) {
           this.props.GetApplication("");
-          this.setState({ isGettingTags: false });
+          this.setState({ IsLoaderShow: false });
           this.SuccessFailSweetAlert(
             nextProps.DeleteApplicationByIdResponse.data.messgae,
             "success"
           );
         }
+        this.setState({ IsLoaderShow: false });
       }
     }
   }
@@ -166,14 +167,6 @@ class ManageApplication extends Component {
         formatter: (rowContent, row) => {
           return (
             <div>
-              {/* <div class="col-3">
-                                <span class="switch switch-outline switch-icon switch-success">
-                                    <label>
-                                        <input type="checkbox" checked="checked" name="select" onClick={(e) => this.changeevent(e,row)} />
-                                        <span></span>
-                                    </label>
-                                </span>
-                            </div> */}
               <OverlayTrigger
                 placement="bottom"
                 overlay={<Tooltip>Edit Application</Tooltip>}
@@ -249,7 +242,7 @@ class ManageApplication extends Component {
         <div className="card-header">
           <div className="card-title">
             <h3 className="card-label">Application</h3>
-            {this.state.isGettingTags && (
+            {this.state.IsLoaderShow && (
               <Spinner animation="border" variant="primary" />
             )}
           </div>
@@ -310,12 +303,6 @@ class ManageApplication extends Component {
               <i className="ki ki-close icon-nm"></i>
             </div>{" "}
             Delete Application &nbsp;&nbsp;&nbsp;
-            {/* <div className="btn btn-icon btn-sm btn-primary" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(3.5em + 0.40rem + 1px)' }}  >
-                            <label style={{ marginTop: 5 }}>OK</label>
-                        </div> Delete Operation &nbsp;&nbsp;&nbsp;
-                        <div className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(4.5em + 0.40rem + 1px)' }}  >
-                            <label style={{ marginTop: 5 }}>Cancle</label>
-                        </div> Cancle Delete Operation   */}
           </div>
         </div>
       </div>

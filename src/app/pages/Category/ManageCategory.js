@@ -73,18 +73,6 @@ class ManageCategory extends Component {
           this.setState({ isLoading: false });
           this.setState({ totalno: nextProps.GetCategoryResponse.data.length });
           this.setState({ tagsData: nextProps.GetCategoryResponse.data });
-
-          // var x = nextProps.GetCategoryResponse.data
-          // for (let index = 0; index < x.length; index++) {
-          //     const element = x[index];
-          //     this.setState({ active:nextProps.GetCategoryResponse.data[index].flgIsActive.data[0] })
-
-          //     // if(nextProps.GetCategoryResponse.data[index].flgIsActive.data[0] == 2){
-          //     //     this.setState({isChecked: true})
-          //     // }
-          // }
-
-          // nextProps.GetCategoryResponse.data[0].flgIsActive.data[0]
         }
       }
     }
@@ -469,13 +457,9 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
   return {
     GetCategory: (data) => dispatch(auth.actions.GetCategory(data)),
-    DeleteCategoryById: (data) =>
-      dispatch(auth.actions.DeleteCategoryById(data)),
-    SaveInsuranceType: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
-    UpdateCategoryPriority: (data) =>
-      dispatch(auth.actions.UpdateCategoryPriority(data)),
-    UpdateCategoryStatus: (data) =>
-      dispatch(auth.actions.UpdateCategoryStatus(data)),
+    DeleteCategoryById: (data) =>  dispatch(auth.actions.DeleteCategoryById(data)),
+    UpdateCategoryPriority: (data) => dispatch(auth.actions.UpdateCategoryPriority(data)),
+    UpdateCategoryStatus: (data) => dispatch(auth.actions.UpdateCategoryStatus(data)),
   };
 };
 

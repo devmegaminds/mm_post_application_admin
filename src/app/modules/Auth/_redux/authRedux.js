@@ -1644,12 +1644,12 @@ export function* saga() {
   //#endregion Manage Category
 
   //#region Manage Image
-  yield takeLatest(actionTypes.AddImageTest, function* addImageRequestedTest(
-    payload
-  ) {
-    const response = yield call(ImageUploadTest, payload.payload);
-    if (response) yield put(actions.AddImageResponseTest(response));
-  });
+  // yield takeLatest(actionTypes.AddImageTest, function* addImageRequestedTest(
+  //   payload
+  // ) {
+  //   const response = yield call(ImageUploadTest, payload.payload);
+  //   if (response) yield put(actions.AddImageResponseTest(response));
+  // });
 
   //#region Manage Image
   yield takeLatest(actionTypes.AddImage, function* addImageRequested(payload) {
@@ -1965,8 +1965,6 @@ const updateProfileRequestApi = async (payload) => {
   return respo;
 };
 
-//#endregion Manage Profile
-//#region Manage Category
 const addCategoryRequestApi = async (payload) => {
   var data = payload.category;
   const instance = await axios.create({});
@@ -2647,35 +2645,6 @@ const getSubCategoryByCategoryIdRequestedApi = async (payload) => {
   return respo;
 };
 
-const ImageUploadTest = async (payload) => {
-  var data = payload.categoryImageTest;
-  const instance = await axios.create({});
-  // const options = {
-  //   headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
-  // };
-  const respo = instance
-    .post(`${BASE_URL}Image/addEditImageTest`, data)
-    .catch((e) => {
-      return e.response;
-    });
-  return respo;
-};
-
-// export const sendUploadImageNotificationApi = async () => {
-//   // var data = payload.addSubCategoryImageNotification;
-//   const instance = await axios.create({
-//   });
-//   const options = {
-//     headers: { 'authorization': `Bearer ${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.token}` }
-//   };
-//   const respo = instance.post(`${BASE_URL}Image/sendNotification`, options)
-//     // const respo = instance.post(`${BASE_URL}Image/sendNotification`, data, options)
-//     .catch((e) => {
-//       return e.response;
-//     });
-//   return respo;
-// };
-
 export const sendUploadImageNotificationApi = async (payload) => {
   // var data = payload.application;
   const instance = await axios.create({});
@@ -2718,7 +2687,6 @@ const sendNotificationApi = async (payload) => {
 
 const addSubCategoryNotificationApi = async (payload) => {
   var data = payload.subCategory;
-  console.log(data, "DATADTADTADTADTADTADTADT");
   const instance = await axios.create({});
   const options = {
     headers: {

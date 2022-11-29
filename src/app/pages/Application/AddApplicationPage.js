@@ -351,9 +351,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
   return {
     ResetTag: (data) => dispatch(auth.actions.ResetInsuranceType(data)),
-    GetApplicationInfoById: (data) =>
-      dispatch(auth.actions.GetApplicationInfoById(data)),
-    //SaveTag: (data) => dispatch(auth.actions.SaveInsuranceType(data)),
+    GetApplicationInfoById: (data) => dispatch(auth.actions.GetApplicationInfoById(data)),
     AddApplication: (data) => dispatch(auth.actions.AddApplication(data)),
     GetCategory: (data) => dispatch(auth.actions.GetCategory(data)),
   };
