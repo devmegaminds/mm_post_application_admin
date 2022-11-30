@@ -224,14 +224,6 @@ class ManageUploadCategoryImage extends Component {
     let base64ImageData = this.state.baseImage;
     return (
       <div className="card card-custom gutter-b example example-compact">
-        {/* <div className="card-header">
-                    <div className="card-title">
-                        <h3 className="card-label">Category Image</h3>
-                    </div>
-                    <div className="card-toolbar">
-                    </div>
-                </div> */}
-        {/* <form className="form-horizontal" onSubmit={(this.onSubmit)}> */}
         <div
           style={{ margin: 25 }}
           className="form-group fv-plugins-icon-container"
@@ -240,63 +232,15 @@ class ManageUploadCategoryImage extends Component {
             <h3>Upload Category</h3>
             {/* Imaeg Uplaod  */}
             <ImageUplaodComponents />
-            {/* <div className="form-group">
-                                <input
-                                    className="form-control"
-                                    type="file"
-                                    multiple
-                                    onChange={(e) => {
-                                        this.uploadImage(e);
-                                    }}
-                                />
-                            </div> */}
           </div>
           <br></br>
-          {/* <div className="col-sm-8">
-                        <h6 >Category</h6>
-                        {this.state.categoryData != null && this.state.categoryData != "" && this.state.categoryData != undefined && this.state.categoryData.map(function (tag, i) {
-                            return (
-                                <Field
-                                    type="checkbox"
-                                    name={tag.stCategoryName}
-                                    label={tag.stCategoryName}
-                                    data={tag.Checked}
-                                    onChange={(evt) => $this.onChangesTagName(evt, i)}
-                                    component={renderCheckboxField} />
-                            )
-                        })}
-                    </div> */}
-          {/* {
-                            base64ImageData.length > 0
-                                ? base64ImageData.map((imageObj, i) => {
-                                    return (
-                                        <div >
-                                            <img
-                                                width="75px"
-                                                height="75px"
-                                                src={imageObj.base64}
-                                                alt=''
-                                            />
-                                        </div>
-                                    )
-                                })
-                                : null
-                        } */}
         </div>
-        {/* <div style={{ margin: 20 }}>
-                        <img src={this.state.baseImage} height="200px" />
-                    </div> */}
+
         <div style={{ margin: 20 }}>
           <OverlayTrigger
             placement="bottom"
             overlay={<Tooltip>Add category Image</Tooltip>}
           >
-            {/* <button style={{ width: 120, marginRight: 10 }}
-                                id="kw_dtn_add_carrier"
-                                type="submit"
-                                className={`btn btn-primary`}>
-                                Submit
-                            </button> */}
             <button
               style={{ width: 150, marginRight: 10 }}
               id="kw_dtn_add_carrier"
@@ -307,13 +251,6 @@ class ManageUploadCategoryImage extends Component {
               Upload Image
             </button>
           </OverlayTrigger>
-          {/* <OverlayTrigger
-                        placement="bottom"
-                        overlay={<Tooltip>Cancel</Tooltip>}>
-                        <Link style={{ width: 120 }} className="btn btn-danger" id="kw_lnk_cancel_carrier" to="/ManageCategory">
-                            Cancel
-                        </Link>
-                    </OverlayTrigger> */}
         </div>
         {this.state.showModal && this.state.alertType == "error" ? (
           <SweetAlert

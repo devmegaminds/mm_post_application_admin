@@ -66,7 +66,7 @@ class DashboardPage extends Component {
           this.setState({ isGettingListData: false });
           var userDataResponse = nextProps.GetUserDataResponse
           var newArray = userDataResponse.data.filter(function (el) {
-            return el.stUserType == 1;
+            return el.stUserType != 2;
           });
           this.setState({ userResponseData: newArray }, () => { });
           this.setState({ userlength: newArray.length });
@@ -89,57 +89,90 @@ class DashboardPage extends Component {
             </div>
           </div>
         </div>
-        <div className='row'>
-
-          <div style={{ width: 350, background: "white", borderRadius: 10, marginLeft: 13 }}>
+        <div className="row" style={{ width: "100%" }}>
+          <div
+            style={{
+              width: "25%",
+              background: "white",
+              borderRadius: 10,
+              marginLeft: 13,
+            }}
+          >
             <div className="card-body">
-              {
-                this.state?.categoryLength != null &&
-                <h4>Number Of Category:- {this.state.categoryLength}  </h4>
-              }
+              {this.state?.categoryLength != null && (
+                <h4>Number Of Category:- {this.state.categoryLength} </h4>
+              )}
             </div>
           </div>
 
-          <div style={{ width: 350, background: "white", borderRadius: 10, marginLeft: 20 }}>
+          <div
+            style={{
+              width: "25%",
+              background: "white",
+              borderRadius: 10,
+              marginLeft: 20,
+            }}
+          >
             <div className="card-body">
-              {
-                this.state?.applicationLength != null &&
+              {this.state?.applicationLength != null && (
                 <h4>Number Of Application:- {this.state.applicationLength}</h4>
-                // <h4>Number Of Application<SVG src={toAbsoluteUrl("/media/svg/icons/Devices/Android.svg")} />:- {this.state.applicationLength}</h4>
+              )
+              // <h4>Number Of Application<SVG src={toAbsoluteUrl("/media/svg/icons/Devices/Android.svg")} />:- {this.state.applicationLength}</h4>
               }
             </div>
           </div>
 
-          <div style={{ width: 350, background: "white", borderRadius: 10, marginLeft: 20 }}>
+          <div
+            style={{
+              width: "25%",
+              background: "white",
+              borderRadius: 10,
+              marginLeft: 20,
+            }}
+          >
             <div className="card-body">
-              {
-                this.state?.subCategoryLength != null &&
+              {this.state?.subCategoryLength != null && (
                 <h4>Number Of Sub Category:- {this.state.subCategoryLength}</h4>
-              }
+              )}
             </div>
           </div>
 
-          <div style={{ width: 350, background: "white", borderRadius: 10, marginLeft: 20 }}>
+          <div
+            style={{
+              width: "25%",
+              background: "white",
+              borderRadius: 10,
+              marginLeft: 20,
+              marginTop: 20,
+            }}
+          >
             <div className="card-body">
-              {
-                this.state?.adminUserLength != null &&
+              {this.state?.adminUserLength != null && (
                 <h4>Number Of Admin:- {this.state.adminUserLength}</h4>
-              }
+              )}
             </div>
           </div>
 
-          <div style={{ width: 350, background: "white", borderRadius: 10, marginLeft: 13, marginTop: 20 }}>
-            <div className="card-body">
-              {
-                this.state?.userlength != null &&
-                <h4>Number Of User:- {this.state.userlength}</h4>
-              }
+          <div
+            style={{
+              width: "25%",
+              height: 50,
+              background: "red",
+              borderRadius: 10,
+              marginLeft: 13,
+              marginTop: 20,
+              // justifyContent:"center"
+            }}
+          >
+            <div>
+              {this.state?.userlength != null && (
+                <h4 style={{justifyContent:'center',paddingBottom:20}}>Number Of User:- {this.state.userlength}</h4>
+              )}
             </div>
           </div>
-
         </div>
       </>
-    )
+    );
   }
 }
 

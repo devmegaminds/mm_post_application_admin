@@ -38,6 +38,9 @@ export const actionTypes = {
   GetAdminUserById: "[GetAdminUserById] Action",
   GetAdminUserByIdResponse: "[GetAdminUserByIdResponse] Action",
 
+  GetProfileDetailsByUserId: "[GetProfileDetailsByUserId] Action",
+  GetProfileDetailsByUserIdResponse: "[GetProfileDetailsByUserIdResponse] Action",
+
   UpdateProfile: "[UpdateProfile] Action",
   UpdateProfileResponse: "[UpdateProfileResponse] Action",
   //#endregion End Manage Profile
@@ -391,6 +394,17 @@ export const reducer = persistReducer(
           action.payload.GetAdminUserByIdResponse.data &&
           action.payload.GetAdminUserByIdResponse.data;
         return { ...state, GetAdminUserByIdResponse };
+      }
+
+      case actionTypes.GetProfileDetailsByUserId: {
+        const { getProfileDetailsByUserId } = action.payload;
+        return { ...state, getProfileDetailsByUserId };
+      }
+      case actionTypes.GetProfileDetailsByUserIdResponse: {
+        const GetProfileDetailsByUserIdResponse =
+          action.payload.GetProfileDetailsByUserIdResponse.data &&
+          action.payload.GetProfileDetailsByUserIdResponse.data;
+        return { ...state, GetProfileDetailsByUserIdResponse };
       }
 
       case actionTypes.UpdateProfile: {
@@ -1105,6 +1119,15 @@ export const actions = {
     payload: { GetAdminUserByIdResponse },
   }),
 
+  GetProfileDetailsByUserId: (getProfileDetailsByUserId) => ({
+    type: actionTypes.GetProfileDetailsByUserId,
+    payload: { getProfileDetailsByUserId },
+  }),
+  GetProfileDetailsByUserIdResponse: (GetProfileDetailsByUserIdResponse) => ({
+    type: actionTypes.GetProfileDetailsByUserIdResponse,
+    payload: { GetProfileDetailsByUserIdResponse },
+  }),
+
   UpdateProfile: (profile) => ({
     type: actionTypes.UpdateProfile,
     payload: { profile },
@@ -1487,6 +1510,15 @@ export function* saga() {
       const response = yield call(GetAdminUserByIdRequestApi, payload.payload);
       console.log(response);
       if (response) yield put(actions.GetAdminUserByIdResponse(response));
+    }
+  );
+
+  yield takeLatest(
+    actionTypes.GetProfileDetailsByUserId,
+    function* getProfileDetailsByUserIdRequested(payload) {
+      const response = yield call(GetProfileDetailsByUserIdRequestApi, payload.payload);
+      console.log(response);
+      if (response) yield put(actions.GetProfileDetailsByUserIdResponse(response));
     }
   );
 
@@ -1945,6 +1977,31 @@ const GetAdminUserByIdRequestApi = async (payload) => {
   return respo;
 };
 
+const GetProfileDetailsByUserIdRequestApi = async (payload) => {
+  var data = payload.getProfileDetailsByUserId;
+  const instance = await axios.create({});
+  const options = {
+    headers: {
+      authorization: `Bearer ${
+        JSON.parse(
+          JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user
+        ).data.token
+      }`,
+    },
+  };
+  const respo = instance
+    .post(
+      `http://megaminds-001-site4.itempurl.com/api/Authentication/GetProfilesListByUserId`,
+      data,
+      options
+    )
+    .catch((e) => {
+      return e.response;
+    });
+  return respo;
+};
+
+
 const updateProfileRequestApi = async (payload) => {
   var data = payload.profile;
   const instance = await axios.create({});
@@ -2291,7 +2348,6 @@ const getImageByCategoryRequestedApi = async (payload) => {
         ).data.token
       }`,
     },
-    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
   };
   const respo = instance.post(
     `${BASE_URL}Image/GetImageByCategoryId`,
@@ -2313,7 +2369,6 @@ const getImageBySubCategoryRequestedApi = async (payload) => {
         ).data.token
       }`,
     },
-    //headers: { 'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklzVmVyaWZpZWRPVFAiOnRydWV9LCJpYXQiOjE2MjIwMTkyNzJ9.aK19zILPRxnCZLmX_ECXYzkEOzxThrc92pZ2J-2h980` }//${JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).accessToken}
   };
   const respo = instance.post(
     `${BASE_URL}SubCategory/GetImageBySubCategoryId`,

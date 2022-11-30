@@ -147,6 +147,7 @@ class ManageSubCategory extends Component {
     const columns = [
       // { dataField: "stFirstName", text: "First Name", sort: true },
       // { dataField: "stLastName", text: "Last Name", sort: true },
+      { dataField: "inUserID", text: "User-Id", sort: true },
       { dataField: "stContact", text: "Contact Number", sort: true },
       { dataField: "profile_count", text: "Number Profile", sort: true },
       // { dataField: "stAddress", text: "Address", sort: true },

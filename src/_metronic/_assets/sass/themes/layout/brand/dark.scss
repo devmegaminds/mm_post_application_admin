@@ -46,7 +46,7 @@ $header-mobile-icon-color-hover: $primary;
 }
 
 // Tablet & Mobile Modes
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(md) { 
 	.header-mobile {
 		background-color: $header-mobile-bg;
 		//box-shadow: $header-mobile-shadow;

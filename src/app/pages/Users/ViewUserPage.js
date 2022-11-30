@@ -5,28 +5,40 @@ import * as auth from "../../modules/Auth/_redux/authRedux";
 import { Search } from "react-bootstrap-table2-toolkit";
 import { Link, Redirect } from "react-router-dom";
 import { Field, FieldArray, reduxForm, getFormValues } from "redux-form";
+import {
+  Card,
+  CardImg,
+  CardText,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  Button,
+  Container,
+  Row,
+  Col,
 
+} from "reactstrap";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-const renderField = ({
-  input,
-  label,
-  type,
-  placeholder,
-  meta: { asyncValidating, touched, error },
-}) => (
-  <div className="form-group col-sm-10" style={{ padding: 0 }}>
-    <label>{label}</label>
-    <input
-      {...input}
-      type={type}
-      placeholder={placeholder}
-      className="form-control "
-    />
-    {touched && error && (
-      <small className="error-msg text-danger form-text">{error}</small>
-    )}
-  </div>
-);
+// const renderField = ({
+//   input,
+//   label,
+//   type,
+//   placeholder,
+//   meta: { asyncValidating, touched, error },
+// }) => (
+//   <div className="form-group col-sm-10" style={{ padding: 0 }}>
+//     <label>{label}</label>
+//     <input
+//       {...input}
+//       type={type}
+//       placeholder={placeholder}
+//       className="form-control "
+//     />
+//     {touched && error && (
+//       <small className="error-msg text-danger form-text">{error}</small>
+//     )}
+//   </div>
+// );
 
 const renderdisableField = ({
   input,
@@ -61,12 +73,14 @@ const validate = (values) => {
 
   return errors;
 };
+
 class ViewUserPage extends Component {
   constructor(props) {
     super();
     this.state = {
       pageNumber: 1,
       ViewUserVideos: [],
+      userProfilesListData: [],
       isGettingTags: false,
 
       userCoverDetails: [],
@@ -93,18 +107,42 @@ class ViewUserPage extends Component {
         }
       }
     }
+    if (nextProps.getProfileDetailsByUserIdResponse) {
+      if (
+        nextProps.getProfileDetailsByUserIdResponse &&
+        nextProps.getProfileDetailsByUserIdResponse !=
+          this.props.getProfileDetailsByUserIdResponse
+      ) {
+        if (nextProps.getProfileDetailsByUserIdResponse.statusCode == 200) {
+          this.setState({
+            userProfilesNumber:
+              nextProps.getProfileDetailsByUserIdResponse.data.length,
+          });
+          this.setState({
+            userProfilesData: nextProps.getProfileDetailsByUserIdResponse.data,
+          });
+          console.log(
+            "/-/-/-/-/--//-/-",
+            nextProps.getProfileDetailsByUserIdResponse.data
+          );
+        } else {
+          // this.setState({ isLoading: false });
+        }
+      }
+    }
   }
   componentDidMount() {
     var id = window.location.href.split("/").pop();
     if (id != "view") {
       this.setState({ isGettingTags: true });
       var data = {
+        // inUserID: 446,
         inUserID: id,
       };
       console.log(data, "DATA");
       this.props.GetUserById(data);
+      this.props.GetProfileByUserId(data);
     }
-    //this.props.GetUserPaymentMethods(id)
   }
   // handleView(row) {
   //     this.props.history.push(`/userview/${row.uiUserId}`)
@@ -172,7 +210,6 @@ class ViewUserPage extends Component {
             <form
               className="form-horizontal"
               ref={(el) => (this.myFormRef = el)}
-              // onSubmit={handleSubmit(this.onSubmit)}
             >
               <div className="card card-custom gutter-b example example-compact">
                 <div className="card-title">
@@ -245,20 +282,82 @@ class ViewUserPage extends Component {
                     />
                   </div>
                 </div>
-
-                {/* <div className="card-body">
-                <div className="card card-custom gutter-b example example-compact">
-                  <div className="card-title">
-                    <h3 className="card-label">User Details</h3>
-                  </div>
-                  <div className="card-toolbar"></div>
-                </div>
-              </div> */}
               </div>
             </form>
           </div>
         </div>
 
+        <div className="card card-custom gutter-b example example-compact" style={{padding:10}}>
+        <h3 className="card-label">Profile List</h3>
+          <Row xs={3}>
+            {this.state.userProfilesData?.map((item, index) => {
+              console.log(item);
+              return (
+                <Col>
+                  <Card style={{ marginBottom: 5,background:item.inDeviceId != null ?  '#C8F7F4' : "#c4c4c4" }}>
+                    <CardBody>
+                      <CardTitle tag="h5">
+                        {item.stProfileType == 1
+                          ? "Personal Profile"
+                          : "Business Profile"}
+                      </CardTitle>
+                      {item.stProfileType == 1 ? (
+                        <div>
+                          <CardText>
+                            <b>FirstName:-</b>{" "}
+                            {item.stFirstName == null
+                              ? "Guest"
+                              : item.stFirstName}
+                          </CardText>
+                          <CardText>
+                            <b>LastName:-</b>{" "}
+                            {item.stLastName == null
+                              ? "Guest"
+                              : item.stLastName}
+                          </CardText>
+                          <CardText>
+                            <b>Address:-</b>{" "}
+                            {item.stAddress == null ? "Guest" : item.stAddress}
+                          </CardText>
+                          <CardText>
+                            <b>Email:-</b>{" "}
+                            {item.stEmail == null ? "Guest" : item.stEmail}
+                          </CardText>
+                          <CardText>
+                            <b>MobileNumber:-</b>{" "}
+                            {item.stMobileNumber == null
+                              ? "Guest"
+                              : item.stMobileNumber}
+                          </CardText>
+                        </div>
+                      ) : (
+                        <div>
+                          <CardText>
+                            <b>BusinessName:-</b> {item.stBusinessName}
+                          </CardText>
+                          <CardText>
+                            <b>BusinessSite:-</b> {item.stBusinessSite}
+                          </CardText>
+                          <CardText>
+                            <b>BusinessAddress:-</b> {item.stBusinessAddress}
+                          </CardText>
+                          <CardText>
+                            <b>BusinessEmail:-</b> {item.stBusinessEmail}
+                          </CardText>
+                          <CardText>
+                            <b>MobileNumber:-</b> {item.stMobileNumber}
+                          </CardText>
+                        </div>
+                      )}
+                    </CardBody>
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
+        </div>
+
+        <div style={{ marginBottom: 5 }} />
         <div className="card card-custom gutter-b example example-compact">
           <div className="card-body">
             <form className="form-horizontal">
@@ -440,8 +539,8 @@ ViewUserPage = reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: true,
 })(ViewUserPage);
+
 function mapStateToProps(state) {
-  console.log(state.auth.GetUseFavoriteVideoDataResponse);
   return {
     initialValues: {
       inUserID:
@@ -572,12 +671,16 @@ function mapStateToProps(state) {
           : "",
     },
     GetUserByIdResponse: state.auth.GetUseFavoriteVideoDataResponse,
+    getProfileDetailsByUserIdResponse:
+      state.auth.GetProfileDetailsByUserIdResponse,
   };
 }
+
 const mapDispatchToProps = (dispatch) => {
   return {
     GetUserById: (data) => dispatch(auth.actions.GetUseFavoriteVideoData(data)),
-    //GetUserPaymentMethods: (data) => dispatch(auth.actions.GetUserPaymentMethods(data)),
+    GetProfileByUserId: (data) =>
+      dispatch(auth.actions.GetProfileDetailsByUserId(data)),
   };
 };
 
