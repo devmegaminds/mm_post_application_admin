@@ -24,7 +24,6 @@ class ManageSubCategory extends Component {
     super();
     this.state = {
       pageNumber: 1,
-      // subcategoryData: [],
       userResponseData: [],
       isGettingListData: false,
     };
@@ -41,15 +40,11 @@ class ManageSubCategory extends Component {
     });
   };
 
-  // handleDelete(row) {
-  //     if (row != null)
-  //         this.hideAlert(false);
-  //     this.props.DeleteSubCategoryById(row.inSubCategoryId)
-  // }
   componentDidMount() {
     this.setState({ isGettingListData: true });
     this.props.GetUsers("");
   }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.GetUserDataResponse) {
       if (
@@ -79,6 +74,7 @@ class ManageSubCategory extends Component {
       }
     }
   }
+
   SuccessFailSweetAlert(msg, type) {
     let getAlert = "";
     if (type == "success") {
@@ -126,11 +122,13 @@ class ManageSubCategory extends Component {
       alert: null,
     });
   }
+
   hideAlert(isSaved) {
     this.setState({
       alert: null,
     });
   }
+
   dateFormatter(cell) {
     if (!cell) {
       return "";
@@ -141,17 +139,14 @@ class ManageSubCategory extends Component {
         : moment(cell).format("MM-DD-YYYY")
     }`;
   }
+
   render() {
-    debugger;
     var $this = this;
+    debugger
     const columns = [
-      // { dataField: "stFirstName", text: "First Name", sort: true },
-      // { dataField: "stLastName", text: "Last Name", sort: true },
       { dataField: "inUserID", text: "User-Id", sort: true },
       { dataField: "stContact", text: "Contact Number", sort: true },
       { dataField: "profile_count", text: "Number Profile", sort: true },
-      // { dataField: "stAddress", text: "Address", sort: true },
-      // { dataField: "stEmail", text: "Email", sort: true },
       {
         dataField: "dtCreatedOn",
         text: "Created Date",
@@ -163,7 +158,6 @@ class ManageSubCategory extends Component {
           return moment(cell).format("MM/DD/YYYY");
         },
       },
-      //#endregion
       {
         dataField: "link",
         text: "Action",
@@ -217,6 +211,7 @@ class ManageSubCategory extends Component {
         console.log("sizePerPage", sizePerPage);
       },
     });
+
     const { SearchBar, ClearSearchButton } = Search;
 
     return (
@@ -264,9 +259,6 @@ class ManageSubCategory extends Component {
               <i className="far fa-eye"></i>
             </a>{" "}
             View User Detail &nbsp;&nbsp;&nbsp;
-            {/* <a className="btn btn-icon btn-sm btn-danger" data-placement="buttom" style={{ height: 'calc(1.5em + 0.40rem + 1px)', width: 'calc(1.5em + 0.40rem + 1px)' }}>
-                            <i className="ki ki-close icon-nm"></i>
-                        </a> Delete SubCategory */}
           </div>
         </div>
       </div>

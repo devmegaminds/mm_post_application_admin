@@ -40,6 +40,9 @@ export const actionTypes = {
 
   GetProfileDetailsByUserId: "[GetProfileDetailsByUserId] Action",
   GetProfileDetailsByUserIdResponse: "[GetProfileDetailsByUserIdResponse] Action",
+  
+  GetDeviceDetailsByUserId: "[GetDeviceDetailsByUserId] Action",
+  GetDeviceDetailsByUserIdResponse: "[GetDeviceDetailsByUserIdResponse] Action",
 
   UpdateProfile: "[UpdateProfile] Action",
   UpdateProfileResponse: "[UpdateProfileResponse] Action",
@@ -405,6 +408,17 @@ export const reducer = persistReducer(
           action.payload.GetProfileDetailsByUserIdResponse.data &&
           action.payload.GetProfileDetailsByUserIdResponse.data;
         return { ...state, GetProfileDetailsByUserIdResponse };
+      }
+
+      case actionTypes.GetDeviceDetailsByUserId: {
+        const { getDeviceDetailsByUserId } = action.payload;
+        return { ...state, getDeviceDetailsByUserId };
+      }
+      case actionTypes.GetDeviceDetailsByUserIdResponse: {
+        const GetDeviceDetailsByUserIdResponse =
+          action.payload.GetDeviceDetailsByUserIdResponse.data &&
+          action.payload.GetDeviceDetailsByUserIdResponse.data;
+        return { ...state, GetDeviceDetailsByUserIdResponse };
       }
 
       case actionTypes.UpdateProfile: {
@@ -1128,6 +1142,15 @@ export const actions = {
     payload: { GetProfileDetailsByUserIdResponse },
   }),
 
+  GetDeviceDetailsByUserId: (getDeviceDetailsByUserId) => ({
+    type: actionTypes.GetDeviceDetailsByUserId,
+    payload: { getDeviceDetailsByUserId },
+  }),
+  GetDeviceDetailsByUserIdResponse: (GetDeviceDetailsByUserIdResponse) => ({
+    type: actionTypes.GetDeviceDetailsByUserIdResponse,
+    payload: { GetDeviceDetailsByUserIdResponse },
+  }),
+
   UpdateProfile: (profile) => ({
     type: actionTypes.UpdateProfile,
     payload: { profile },
@@ -1519,6 +1542,15 @@ export function* saga() {
       const response = yield call(GetProfileDetailsByUserIdRequestApi, payload.payload);
       console.log(response);
       if (response) yield put(actions.GetProfileDetailsByUserIdResponse(response));
+    }
+  );
+
+  yield takeLatest(
+    actionTypes.GetDeviceDetailsByUserId,
+    function* getDeviceDetailsByUserIdRequested(payload) {
+      const response = yield call(GetDeviceDetailsByUserIdRequestApi, payload.payload);
+      console.log(response);
+      if (response) yield put(actions.GetDeviceDetailsByUserIdResponse(response));
     }
   );
 
@@ -1992,6 +2024,30 @@ const GetProfileDetailsByUserIdRequestApi = async (payload) => {
   const respo = instance
     .post(
       `http://megaminds-001-site4.itempurl.com/api/Authentication/GetProfilesListByUserId`,
+      data,
+      options
+    )
+    .catch((e) => {
+      return e.response;
+    });
+  return respo;
+};
+
+const GetDeviceDetailsByUserIdRequestApi = async (payload) => {
+  var data = payload.getDeviceDetailsByUserId;
+  const instance = await axios.create({});
+  const options = {
+    headers: {
+      authorization: `Bearer ${
+        JSON.parse(
+          JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user
+        ).data.token
+      }`,
+    },
+  };
+  const respo = instance
+    .post(
+      `http://megaminds-001-site4.itempurl.com/api/Authentication/GetDeviceListByUserID`,
       data,
       options
     )
