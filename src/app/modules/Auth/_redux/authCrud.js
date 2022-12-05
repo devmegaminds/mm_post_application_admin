@@ -5,15 +5,19 @@ export const REGISTER_URL = "api/auth/register";
 export const REQUEST_PASSWORD_URL = "api/auth/forgot-password";
 
 export const ME_URL = "api/me";
-const BASE_URL = "http://megaminds-001-site12.itempurl.com/api/";
 // const BASE_URL = "http://localhost:4200/api/"
 export function login(email, password) {
+  var devMode = localStorage.getItem("devMode");
+  const BASE_URL =
+    devMode == "Enable"
+      ? "http://megaminds-001-site4.itempurl.com/api/"
+      : "http://megaminds-001-site12.itempurl.com/api/";
+  console.log("------------", `${BASE_URL}Authentication/login`, "---------");
   var data = {
     stEmail: email,
     stPassword: password,
-    // "IPAddress": ipAddress,
-    // "TimeZone": timeZone,
   };
+
   const instance = axios.create({});
   const options = {
     headers: { "Content-Type": "application/json" },
@@ -23,7 +27,13 @@ export function login(email, password) {
 }
 
 export function register(email, firstname, lastname, contactnumber, password) {
-  debugger;
+  var devMode = localStorage.getItem("devMode");
+
+  const BASE_URL =
+    devMode == "On"
+      ? "http://megaminds-001-site4.itempurl.com/api/"
+      : "http://megaminds-001-site12.itempurl.com/api/";
+  console.log("------------", `${BASE_URL}Authentication/login`, "---------");
   var data = {
     inAdminUserId: 0,
     stFirstName: firstname,
@@ -38,8 +48,3 @@ export function register(email, firstname, lastname, contactnumber, password) {
 export function requestPassword(email) {
   return axios.post(REQUEST_PASSWORD_URL, { email });
 }
-
-// export function getUserByToken() {
-//   // Authorization head should be fulfilled in interceptor.
-//   return axios.get(ME_URL);
-// }

@@ -190,8 +190,13 @@ export const actionTypes = {
 
   //#endregion End Manage Video
 };
-
-const BASE_URL = "http://megaminds-001-site12.itempurl.com/api/";
+var devMode = localStorage.getItem("devMode");
+console.log(devMode,'-=-=-=-=-==-=-=-=-=-=ßððððððß');
+  const BASE_URL =
+    devMode == "Enable"
+      ? "http://megaminds-001-site4.itempurl.com/api/"
+      : "http://megaminds-001-site12.itempurl.com/api/";
+// const BASE_URL = "http://megaminds-001-site12.itempurl.com/api/";
 // const BASE_URL = "http://localhost:4200/api/"
 
 const initialAuthState = {
@@ -1966,6 +1971,7 @@ const getAdminUserDataRequestApi = async (payload) => {
 };
 
 const getUseFavoriteVideoDataRequestApi = async (payload) => {
+  console.log(`${BASE_URL}Authentication/GetUserByUserId`,'RRRRRRRR')
   var data = payload.userFavoriteData;
   const instance = await axios.create({});
   const options = {
@@ -2023,7 +2029,8 @@ const GetProfileDetailsByUserIdRequestApi = async (payload) => {
   };
   const respo = instance
     .post(
-      `http://megaminds-001-site4.itempurl.com/api/Authentication/GetProfilesListByUserId`,
+      `${BASE_URL}Authentication/GetProfilesListByUserId`,
+      // `http://megaminds-001-site4.itempurl.com/api/Authentication/GetProfilesListByUserId`,
       data,
       options
     )
@@ -2047,7 +2054,8 @@ const GetDeviceDetailsByUserIdRequestApi = async (payload) => {
   };
   const respo = instance
     .post(
-      `http://megaminds-001-site4.itempurl.com/api/Authentication/GetDeviceListByUserID`,
+      `${BASE_URL}Authentication/GetDeviceListByUserID`,
+      // `http://megaminds-001-site4.itempurl.com/api/Authentication/GetDeviceListByUserID`,
       data,
       options
     )

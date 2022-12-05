@@ -31,7 +31,7 @@ export function AuthPage() {
                 <img
                   alt="Logo"
                   className="max-h-100px"
-                  src={toAbsoluteUrl("/media/logos/feel_brand.png")}
+                  src={toAbsoluteUrl("/media/logos/appIcon.png")}
                   // logo-letter-1.png
                 />
               </Link>
@@ -75,7 +75,10 @@ export function AuthPage() {
           {/*begin::Content*/}
           <div className="d-flex flex-column flex-row-fluid position-relative p-7 overflow-hidden">
             {/*begin::Content header*/}
-            <div className="position-absolute top-0 right-0 text-right mt-5 mb-15 mb-lg-0 flex-column-auto justify-content-center py-5 px-10" style={{display: 'none'}}>
+            <div
+              className="position-absolute top-0 right-0 text-right mt-5 mb-15 mb-lg-0 flex-column-auto justify-content-center py-5 px-10"
+              style={{ display: "none" }}
+            >
               <span className="font-weight-bold text-dark-50">
                 Don't have an account yet?
               </span>

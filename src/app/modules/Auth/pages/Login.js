@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { login } from "../_redux/authCrud";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 /*
   INTL (i18n) docs:
@@ -31,6 +32,8 @@ const initialValues = {
 function Login(props) {
   const { intl } = props;
   const [loading, setLoading] = useState(false);
+  const [isShowModel, setIsShowModel] = useState(false);
+  const [devMode, setDevMode] = useState("");
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
       .email("Wrong email format")
@@ -75,13 +78,38 @@ function Login(props) {
     initialValues,
     validationSchema: LoginSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
-      enableLoading();
-      login(values.email, values.password) //,"154.125.658.12","India Standard Time"
-        .then((data) => {
-          if (data.data.data.inAdminUserId != 0) {
-            disableLoading();
-            props.login(data.data);
-          } else {
+      if (
+        values.email == "feelbrand@gmail.com" &&
+        values.password == "CFvgbhnj12#"
+      ) {
+        var devMode = localStorage.getItem("devMode");
+        if (devMode == "Enable") {
+          localStorage.setItem("devMode", "Disable");
+          setDevMode("Disable");
+        } else {
+          localStorage.setItem("devMode", "Enable");
+          setDevMode("Enable");
+          setIsShowModel(true);
+        }
+
+      } else {
+        enableLoading();
+        login(values.email, values.password) //,"154.125.658.12","India Standard Time"
+          .then((data) => {
+            if (data.data.data.inAdminUserId != 0) {
+              disableLoading();
+              props.login(data.data);
+            } else {
+              disableLoading();
+              setSubmitting(false);
+              setStatus(
+                intl.formatMessage({
+                  id: "AUTH.VALIDATION.INVALID_LOGIN",
+                })
+              );
+            }
+          })
+          .catch((e) => {
             disableLoading();
             setSubmitting(false);
             setStatus(
@@ -89,17 +117,8 @@ function Login(props) {
                 id: "AUTH.VALIDATION.INVALID_LOGIN",
               })
             );
-          }
-        })
-        .catch((e) => {
-          disableLoading();
-          setSubmitting(false);
-          setStatus(
-            intl.formatMessage({
-              id: "AUTH.VALIDATION.INVALID_LOGIN",
-            })
-          );
-        });
+          });
+      }
     },
   });
 
@@ -158,27 +177,53 @@ function Login(props) {
               <div className="fv-help-block">{formik.errors.password}</div>
             </div>
           ) : null}
-
-          {/* For Register new user in admin panel  */}
-          {/* <label
-            style={{
-              marginLeft: "20%",
-              marginTop: 10,
-              color: "#B5B5C3",
-              fontWeight: "500",
-            }}
-          >
-            Don't have an account?
-            <Link
-              style={{ marginLeft: 5, color: "#FFBB1C" }}
-              to="/auth/registration"
-              className="text-hover-primary my-3 mr-2"
-              id="kt_login_forgot"
-            >
-              <FormattedMessage id="AUTH.GENERAL.SIGNUP_BUTTON" />
-            </Link>
-          </label> */}
         </div>
+        {isShowModel == true ? (
+          // <div
+          //   className="alert alert-custom alert-outline-primary fade show mb-5"
+          //   role="alert"
+          // >
+          //   <div className="alert-icon">
+          //     <i className="flaticon-warning"></i>
+          //   </div>
+          //   <div className="alert-text">
+          //     A simple primary alert—check it out!
+          //   </div>
+          //   <div className="alert-close">
+          //     <button
+          //       onClick={() => setIsShowModel(false)}
+          //       type="button"
+          //       className="close"
+          //       data-dismiss="alert"
+          //       aria-label="Close"
+          //     >
+          //       <span aria-hidden="true">
+          //         <i className="ki ki-close"></i>
+          //       </span>
+          //     </button>
+          //   </div>
+          // </div>
+          <div
+          className="alert alert-custom alert-notice alert-light-success fade show mb-5"
+            role="alert"
+          >
+            <div className="alert-text">Dev Mode {devMode} Successfully!</div>
+            <div className="alert-close">
+              <button
+                onClick={() => setIsShowModel(false)}
+                type="button"
+                className="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">
+                  <i className="ki ki-close"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+        ) : null}
+
         <div className="form-group d-flex flex-wrap justify-content-between align-items-center">
           <Link
             to="/auth/forgot-password"
@@ -190,7 +235,7 @@ function Login(props) {
           <button
             id="kt_login_signin_submit"
             type="submit"
-            disabled={formik.isSubmitting}
+            // disabled={formik.isSubmitting}
             className={`btn btn-primary font-weight-bold px-9 py-4 my-3`}
           >
             <span>Sign In</span>

@@ -74,13 +74,11 @@ class ViewUserPage extends Component {
       isGettingdata: true,
       showUserDetails: false,
     };
-    this.parentRef = React.createRef();
-    this.changeBackground = this.changeBackground.bind(this);
-    this.resetBackground = this.resetBackground.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.GetUserByIdResponse) {
+      console.log(nextProps.GetUserByIdResponse, "/-/-/-/-/-/-");
       if (
         nextProps.GetUserByIdResponse &&
         nextProps.GetUserByIdResponse != this.props.GetUserByIdResponse
@@ -154,7 +152,6 @@ class ViewUserPage extends Component {
         }
       }
     }
-    
   }
 
   componentDidMount() {
@@ -172,107 +169,29 @@ class ViewUserPage extends Component {
     }
   }
 
-  changeBackground(e) {
-    console.log(e);
-    e.target.style.background = "red";
+  myFunction(item) {
+    console.log(item);
+    if (item.stProfileType == 1) {
+      document.getElementsByClassName(
+        `${item.inDeviceId}`
+      )[0].style.background = "#C9F7F5";
+    } else if (item.stProfileType == 2) {
+      document.getElementsByClassName(
+        `${item.inDeviceId}`
+      )[0].style.background = "#E1F0FF";
+    } else {
+      document.getElementsByClassName(
+        `${item.inDeviceId}`
+      )[0].style.background = "";
+    }
   }
-
-  resetBackground(e) {
-    console.log(e);
-    e.target.style.background = "green";
+  resetBackground(item) {
+    var xx = (document.getElementsByClassName(
+      `${item.inDeviceId}`
+    )[0].style.background = "");
   }
-
   render() {
     var $this = this;
-    const PERSONALPROFILECOLUMNS = [
-      { dataField: "stFirstName", text: "FirstName", sort: true },
-      { dataField: "stLastName", text: "LastName", sort: true },
-      { dataField: "stMobileNumber", text: "MobileNumber", sort: true },
-      { dataField: "stEmail", text: "Email", sort: true },
-      { dataField: "stAddress", text: "Address", sort: true },
-    ];
-
-    const BUSINESSPROFILECOLUMNS = [
-      {
-        dataField: "stImagePath",
-        text: "Logo",
-        formatter: (rowContent, row) => {
-          console.log(rowContent);
-          return (
-            <img
-              resizeMode="contain"
-              width="150px"
-              // src={`https://images.unsplash.com/photo-1610878180933-123728745d22?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FuYWRhJTIwbmF0dXJlfGVufDB8fDB8fA%3D%3D&w=1000&q=80`}
-              src={`${baseURL}${rowContent}`}
-            />
-          );
-        },
-      },
-      { dataField: "stBusinessName", text: "BusinessName", sort: true },
-      { dataField: "stBusinessSite", text: "BusinessSite", sort: true },
-      { dataField: "stMobileNumber", text: "MobileNumber", sort: true },
-      { dataField: "stBusinessEmail", text: "BusinessEmail", sort: true },
-      { dataField: "stBusinessAddress", text: "BusinessAddress", sort: true },
-    ];
-
-    const DEVICETABLECOLUMNS = [
-      // { dataField: "inDeviceId", text: "DeviceId", sort: true },
-      { dataField: "stDeviceName", text: "DeviceName", sort: true },
-      { dataField: "stCountry", text: "Country", sort: true },
-      { dataField: "stRegionName", text: "RegionName", sort: true },
-      // { dataField: "inProfileId", text: "ProfileId", sort: true },
-
-      {
-        dataField: "stTotalDiskCapacity",
-        text: "ProfileType",
-        sort: true,
-        formatter: (rowContent, row) => {
-          var decimals = 2;
-          const k = 1024;
-          const dm = decimals < 0 ? 0 : decimals;
-          const sizes = [
-            "Bytes",
-            "KB",
-            "MB",
-            "GB",
-            "TB",
-            "PB",
-            "EB",
-            "ZB",
-            "YB",
-          ];
-          const i = Math.floor(Math.log(rowContent) / Math.log(k));
-          return `${parseFloat((rowContent / Math.pow(k, i)).toFixed(dm))} ${
-            sizes[i]
-          }`;
-        },
-      },
-
-      {
-        dataField: "stProfileType",
-        text: "ProfileType",
-        sort: true,
-        formatter: (rowContent, row) => {
-          return (
-            <>
-              {rowContent == 2
-                ? "Business"
-                : rowContent == 1
-                ? "Personal"
-                : null}
-            </>
-          );
-        },
-      },
-      // { dataField: "stProfileType", text: "ProfileType", sort: true },
-    ];
-
-    const defaultSorted = [
-      {
-        dataField: "stTags",
-        order: "asc",
-      },
-    ];
     return (
       <>
         <div className="card card-custom gutter-b example example-compact">
@@ -287,7 +206,6 @@ class ViewUserPage extends Component {
                 </div>
                 <div className="card-toolbar"></div>
                 <div className="row">
-                 
                   <div className="col-sm-4">
                     <Field
                       type="text"
@@ -297,7 +215,6 @@ class ViewUserPage extends Component {
                       component={renderdisableField}
                     />
                   </div>
-                  
                 </div>
               </div>
             </form>
@@ -308,82 +225,162 @@ class ViewUserPage extends Component {
           <div className="card-header">
             <div className="card-title">
               <h3 className="card-label">Profile List</h3>
-              {/* {this.state.isGettingListData && (
-              // <Spinner animation="border" variant="primary" />
-            )} */}
             </div>
             <div className="card-toolbar"></div>
           </div>
-          <div className="card-body">
+          <div className="card-body table-responsive">
             <h3 className="card-label">Personal Profile List</h3>
-            <ToolkitProvider
-              debugger
-              bootstrap4
-              keyField="kw_insuranceType_datatable"
-              data={this.state.userPersonalProfilesData}
-              columns={PERSONALPROFILECOLUMNS}
-            >
-              {(props) => (
-                <div>
-                  <BootstrapTable
-                    defaultSorted={defaultSorted}
-                    {...props.baseProps}
-                  />
-                </div>
-              )}
-            </ToolkitProvider>
+            <table class="table table-hover-table-responsive">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">FirstName</th>
+                  <th scope="col">LastName</th>
+                  <th scope="col">MobileNumber</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Address</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.userPersonalProfilesData?.map((item, index) => {
+                  var indexNumber = index + 1;
+                  return (
+                    <tr className={item.inDeviceId}>
+                      <th scope="row">{indexNumber}</th>
+                      <td>{item.stFirstName}</td>
+                      <td>{item.stLastName}</td>
+                      <td>{item.stContact}</td>
+                      <td>{item.stEmail}</td>
+                      <td>{item.stAddress}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="card-body table-responsive">
             <h3 className="card-label">Business Profile List</h3>
-            <ToolkitProvider
-              debugger
-              bootstrap4
-              keyField="kw_insuranceType_datatable"
-              data={this.state.userBusinessProfilesData}
-              columns={BUSINESSPROFILECOLUMNS}
-            >
-              {(props) => (
-                <div>
-                  <BootstrapTable
-                    defaultSorted={defaultSorted}
-                    {...props.baseProps}
-                  />
-                </div>
-              )}
-            </ToolkitProvider>
+            <table class="table table-hover" id="businesstable">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Business Logo</th>
+                  <th scope="col">BusinessName</th>
+                  <th scope="col">BusinessSite</th>
+                  <th scope="col">MobileNumber</th>
+                  <th scope="col">BusinessEmail</th>
+                  <th scope="col">BusinessAddress</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.userBusinessProfilesData?.map((item, index) => {
+                  var indexNumber = index + 1;
+                  return (
+                    <tr className={item.inDeviceId}>
+                      <th scope="row">{indexNumber}</th>
+                      <td>
+                        <img
+                          resizeMode="contain"
+                          width="150px"
+                          src={`${baseURL}${item.stImagePath}`}
+                        />
+                      </td>
+                      <td>{item.stBusinessName}</td>
+                      <td>{item.stBusinessSite}</td>
+                      <td>{item.stMobileNumber}</td>
+                      <td>{item.stBusinessEmail}</td>
+                      <td>{item.stBusinessAddress}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
 
         <div className="card card-custom gutter-b">
           <div className="card-header">
             <div className="card-title">
-              <h3 className="card-label">
-                Device List
-              </h3>
+              <h3 className="card-label">Device List</h3>
             </div>
             <div className="card-toolbar"></div>
           </div>
-          <div className="card-body">
-            <ToolkitProvider
-              debugger
-              bootstrap4
-              keyField="kw_insuranceType_datatable"
-              data={this.state.getDeviceList}
-              columns={DEVICETABLECOLUMNS}
-            >
-              {(props) => (
-                <div>
-                  <BootstrapTable
-                    defaultSorted={defaultSorted}
-                    {...props.baseProps}
-                  />
-                </div>
-              )}
-            </ToolkitProvider>
+
+          <div className="card-body table-responsive">
+            <h3 className="card-label">Device List</h3>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">stDeviceName</th>
+                  <th scope="col">stCountry</th>
+                  <th scope="col">stRegionName</th>
+                  <th scope="col">stTotalDiskCapacity</th>
+                  <th scope="col">stProfileType</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.getDeviceList?.map((item, index) => {
+                  var indexNumber = index + 1;
+                  var decimals = 2;
+                  const k = 1024;
+                  const dm = decimals < 0 ? 0 : decimals;
+                  const sizes = [
+                    "Bytes",
+                    "KB",
+                    "MB",
+                    "GB",
+                    "TB",
+                    "PB",
+                    "EB",
+                    "ZB",
+                    "YB",
+                  ];
+                  const i = Math.floor(
+                    Math.log(item.stTotalDiskCapacity) / Math.log(k)
+                  );
+                  var deviceSpace = `${parseFloat(
+                    (item.stTotalDiskCapacity / Math.pow(k, i)).toFixed(dm)
+                  )} ${sizes[i]}`;
+
+                  return (
+                    <tr
+                      onMouseOver={() => this.myFunction(item)}
+                      onMouseOut={() => this.resetBackground(item)}
+                      className={item.inDeviceId}
+                      // onMouseOver={() => this.changeBackground(item)}
+                    >
+                      <th scope="row">{indexNumber}</th>
+                      <td>{item.stDeviceName}</td>
+                      <td>{item.stCountry}</td>
+                      <td>{item.stRegionName}</td>
+                      <td>{deviceSpace}</td>
+                      <td>
+                        {item.stProfileType == 1 ? (
+                          <span class="label label-inline label-light-success font-weight-bold">
+                            Personal
+                          </span>
+                        ) : item.stProfileType == 2 ? (
+                          <span class="label label-inline label-light-primary font-weight-bold">
+                            Business
+                          </span>
+                        ) : (
+                          <span class="label label-inline label-light-danger font-weight-bold">
+                            No Profile Found
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
       </>
     );
   }
-
 }
 
 ViewUserPage = reduxForm({
