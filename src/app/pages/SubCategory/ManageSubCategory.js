@@ -279,27 +279,10 @@ class ManageSubCategory extends Component {
   }
 
   render() {
+    console.log("RRR");
     var $this = this;
     const columns = [
-      // {
-      //     dataField: 'Image', text: 'Image', sort: false,
-      //     formatter: (rowContent, row) => {
-      //         return (
-      //             <div class="col-2">
-      //                 <div className="image-item mt-5 mb-5 mr-5">
-      //                     <div className="image-item mt-5 mb-5 mr-5">
-      //                         <img width="150px"
-      //                             height="150px"
-      //                             style={{ marginLeft: 10 }}
-      //                             src={`${baseURL}${row.stImagePath}`}
-      //                         />
-      //                     </div>
-      //                 </div>
-      //             </div>
-      //         )
-      //     },
-      // },
-
+    
       { dataField: "stSubCategoryName", text: "Sub Category", sort: true },
       { dataField: "stCategoryName", text: "Category" },
       {

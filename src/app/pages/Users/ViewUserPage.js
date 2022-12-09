@@ -186,9 +186,8 @@ class ViewUserPage extends Component {
     }
   }
   resetBackground(item) {
-    var xx = (document.getElementsByClassName(
-      `${item.inDeviceId}`
-    )[0].style.background = "");
+    document.getElementsByClassName(`${item.inDeviceId}`)[0].style.background =
+      "";
   }
   render() {
     var $this = this;
@@ -234,9 +233,9 @@ class ViewUserPage extends Component {
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">FirstName</th>
-                  <th scope="col">LastName</th>
-                  <th scope="col">MobileNumber</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Mobile Number</th>
                   <th scope="col">Email</th>
                   <th scope="col">Address</th>
                 </tr>
@@ -266,11 +265,11 @@ class ViewUserPage extends Component {
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Business Logo</th>
-                  <th scope="col">BusinessName</th>
-                  <th scope="col">BusinessSite</th>
-                  <th scope="col">MobileNumber</th>
-                  <th scope="col">BusinessEmail</th>
-                  <th scope="col">BusinessAddress</th>
+                  <th scope="col">Business Name</th>
+                  <th scope="col">Business Site</th>
+                  <th scope="col">Mobile Number</th>
+                  <th scope="col">Business Email</th>
+                  <th scope="col">Business Address</th>
                 </tr>
               </thead>
               <tbody>
@@ -313,11 +312,12 @@ class ViewUserPage extends Component {
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">stDeviceName</th>
-                  <th scope="col">stCountry</th>
-                  <th scope="col">stRegionName</th>
-                  <th scope="col">stTotalDiskCapacity</th>
-                  <th scope="col">stProfileType</th>
+                  <th scope="col">Device Name</th>
+                  <th scope="col">Country</th>
+                  <th scope="col">Region Name</th>
+                  <th scope="col">TotalDisk Capacity</th>
+                  <th scope="col">Profile Type</th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
@@ -358,16 +358,44 @@ class ViewUserPage extends Component {
                       <td>{deviceSpace}</td>
                       <td>
                         {item.stProfileType == 1 ? (
-                          <span class="label label-inline label-light-success font-weight-bold">
+                          <span
+                            style={{ marginRight: 5 }}
+                            class="label label-inline label-light-success font-weight-bold"
+                          >
                             Personal
                           </span>
                         ) : item.stProfileType == 2 ? (
-                          <span class="label label-inline label-light-primary font-weight-bold">
+                          <span
+                            style={{ marginRight: 5 }}
+                            class="label label-inline label-light-primary font-weight-bold"
+                          >
                             Business
                           </span>
                         ) : (
                           <span class="label label-inline label-light-danger font-weight-bold">
-                            No Profile Found
+                            No Profile Type Found
+                          </span>
+                        )}
+                      </td>
+                      <td>
+                        {item.stProfileType == 1 ? (
+                          <span>
+                            <span class="label label-inline label-light-success font-weight-bold">
+                              {item.stFirstName} {item.stLastName}
+                            </span>
+                          </span>
+                        ) : item.stProfileType == 2 ? (
+                          <span>
+                            <span
+                              style={{ fontWeight: "bold" }}
+                              class="label label-inline label-light-primary font-weight-bold"
+                            >
+                              {item.stBusinessName}
+                            </span>
+                          </span>
+                        ) : (
+                          <span class="label label-inline label-light-danger font-weight-bold">
+                            No Profile Type Found
                           </span>
                         )}
                       </td>

@@ -2365,10 +2365,11 @@ const GetCategoryInfoByIDRequestedApi = async (payload) => {
       authorization: `Bearer ${
         JSON.parse(
           JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user
-        ).data.token
-      }`,
-    },
-  };
+          ).data.token
+        }`,
+      },
+    };
+    console.log(options, "/-/--/-//-/-/-");
   const respo = instance.get(
     `${BASE_URL}Category/GetCategoryById?inCategoryId=${data}`,
     options
@@ -2755,7 +2756,7 @@ const getSubCategoryByCategoryIdRequestedApi = async (payload) => {
       }`,
     },
   };
-
+console.log(options,'.=.=.=.=.==.=.=.=.');
   const respo = instance.get(
     `${BASE_URL}SubCategory/GetSubCategoryByCategoryId`,
     data,

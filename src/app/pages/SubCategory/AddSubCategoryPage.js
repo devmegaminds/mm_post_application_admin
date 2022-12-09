@@ -12,9 +12,9 @@ import { subCategoryIdsubcriber } from "../../env/subCategoryId";
 import { idsubcriber } from "../../env/categoryId";
 import ImageUplaodComponents from "../../components/ImageUplaod";
 import AddThumbnailImage from "../ThumbnailImage/AddThumbnailImage";
-
+import { DateTimePicker } from "../../components/DatePicker";
+import moment from "moment";
 const baseURL = "http://megaminds-001-site12.itempurl.com";
-
 const renderFields = ({
   input,
   label,
@@ -92,20 +92,6 @@ class AddSubCategoryPage extends Component {
     ).data;
   }
   onSubmit = (formValues) => {
-    // let indexOfItem = this.state.categoryData.filter(tag => tag.Checked === true)
-    // var Tags = indexOfItem.map(function (x) {
-    //     return x.inCategoryId;
-    // }).join(',');
-    // if (indexOfItem.length == 0) {
-    //     this.SuccessFailSweetAlert("Please select at least one Category", "error");
-    //     this.setState({ isLoading: false });
-    // }
-    // else if (indexOfItem.length > 1) {
-    //     this.SuccessFailSweetAlert("You can select One categary only", "error");
-    //     this.setState({ isLoading: false });
-    // }
-    // else {
-
     var categoryId = this.state.categoryId;
     console.log(categoryId);
     this.setState({ isLoading: true });
@@ -119,7 +105,9 @@ class AddSubCategoryPage extends Component {
       inCategoryId: categoryId,
       inCreatedBy: this.state.currentUserData.inAdminUserId,
       inDisplayPriority: this.state.priority,
+      dtEvenetDate: this.state.date,
     };
+    console.log(data, "----");
     this.props.AddSubCategory(data);
     // }
   };
@@ -238,6 +226,13 @@ class AddSubCategoryPage extends Component {
     });
   };
   componentDidMount() {
+    const script = document.createElement("script");
+
+    script.src = "./asd";
+    script.async = true;
+
+    document.body.appendChild(script);
+
     this.setState({ isGettingTags: true });
     idsubcriber.subscribe((Id) => {
       var categoryId = Id;
@@ -342,6 +337,11 @@ class AddSubCategoryPage extends Component {
     // this.props.history.push(`/AddCategoryPage/` + categoryId)
     this.setState({ isRedirect: true });
   }
+  onChange = (key, value) => {
+    this.setState({
+      [key]: value,
+    });
+  };
   render() {
     var $this = this;
     // const columns = [
@@ -366,6 +366,8 @@ class AddSubCategoryPage extends Component {
     var Id = this.state.categoryId;
     return (
       <div className="card card-custom gutter-b example example-compact">
+        <script type="text/jsx" src="./asd.js"></script>
+
         {/* <ToolkitProvider
                     bootstrap4
                     data={this.state.categoryData}
@@ -399,6 +401,7 @@ class AddSubCategoryPage extends Component {
                   className="form-control"
                 />
               </div>
+
               <div style={{}}>
                 {sub == undefined
                   ? null
@@ -421,22 +424,54 @@ class AddSubCategoryPage extends Component {
                       ),
                     ]}
               </div>
-              {/* <AddThumbnailImage /> */}
-              {/* <div className="col-sm-8">
-                                <h6 >Category</h6><br></br>
-                                {this.state.categoryData != null && this.state.categoryData != "" && this.state.categoryData != undefined && this.state.categoryData.map(function (tag, i) {
-                                    return (
-                                        <Field
-                                            type="checkbox"
-                                            name={tag.stCategoryName}
-                                            label={tag.stCategoryName}
-                                            data={tag.Checked}
-                                            onChange={(evt) => $this.onChangesTagName(evt, i)}
-                                            component={renderCheckboxField} />
-                                    )
-                                })}
-                            </div> */}
             </div>
+            <div className="row">
+              <div className="col-sm-6">
+                <h6>
+                  DatePicker <span className="text-danger">*</span>
+                </h6>
+                <div class="input-group date">
+                  {/* <DateTimePicker
+                    format="DD/MM/YYYY"
+                    name={"bir_sey_tarihi"}
+                    id={"bir_sey_tarihi"}
+                    placeholder="Select Date"
+                    locale="tr"
+                    // specialDays={[
+                    //   { day: 1, month: 1, memo: "New Years" },
+                    //   { day: 14, month: 1, memo: "Utrayan" },
+                    // ]}
+                    onChange={(event) => {
+                      console.log(event.target.value, "--------");
+                      this.setState({ eventDate: event.target.value });
+
+                    }}
+                  /> */}
+                  {/* <input
+                    type="date"
+                    class="form-control"
+                    readonly
+                    value="05/20/2017"
+                    id="kt_datepicker_3"
+                  /> */}
+                  <input
+                    class="form-control"
+                    type="date"
+                    name="expiration date"
+                    value={this.state.eventDate}
+                    onChange={(event) => {
+                      console.log(event.target.value, "--------");
+                      var xx = Date().split(" ");
+                      var date = `${event.target.value} ${xx[4]}`;
+                      console.log(`${event.target.value} ${xx[4]}`);
+                      this.setState({ eventDate: event.target.value });
+                      this.setState({ date: date });
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="row mt-3 mb-3">
               <div className="col-sm-9 text-left userprofile-btn">
                 <OverlayTrigger
@@ -535,6 +570,7 @@ class AddSubCategoryPage extends Component {
             }}
           >
             <i class="fas fa-trash-alt"></i>
+
             {/* <i className="ki ki-close icon-nm"></i> */}
           </div>{" "}
           Remove Images &nbsp;&nbsp;&nbsp;

@@ -91,7 +91,6 @@ function Login(props) {
           setDevMode("Enable");
           setIsShowModel(true);
         }
-
       } else {
         enableLoading();
         login(values.email, values.password) //,"154.125.658.12","India Standard Time"
@@ -204,7 +203,7 @@ function Login(props) {
           //   </div>
           // </div>
           <div
-          className="alert alert-custom alert-notice alert-light-success fade show mb-5"
+            className="alert alert-custom alert-notice alert-light-success fade show mb-5"
             role="alert"
           >
             <div className="alert-text">Dev Mode {devMode} Successfully!</div>

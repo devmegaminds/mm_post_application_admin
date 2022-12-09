@@ -522,6 +522,7 @@ AddCategoryPage = reduxForm({
 })(AddCategoryPage);
 
 function mapStateToProps(state) {
+  console.log(state.auth.GetCategoryInfoByIDResponse,'=====');
   return {
     initialValues: {
       inCategoryId:
