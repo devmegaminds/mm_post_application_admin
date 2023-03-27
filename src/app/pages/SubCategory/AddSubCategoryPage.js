@@ -14,7 +14,10 @@ import ImageUplaodComponents from "../../components/ImageUplaod";
 import AddThumbnailImage from "../ThumbnailImage/AddThumbnailImage";
 import { DateTimePicker } from "../../components/DatePicker";
 import moment from "moment";
-const baseURL = "http://megaminds-001-site12.itempurl.com";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
+var baseURL = "";
+
 const renderFields = ({
   input,
   label,
@@ -37,6 +40,7 @@ const renderFields = ({
     )}
   </div>
 );
+
 const renderCheckboxField = ({
   input,
   label,
@@ -105,7 +109,7 @@ class AddSubCategoryPage extends Component {
       inCategoryId: categoryId,
       inCreatedBy: this.state.currentUserData.inAdminUserId,
       inDisplayPriority: this.state.priority,
-      dtEvenetDate: this.state.date,
+      dtEvenetDate: this.state.eventDate,
     };
     console.log(data, "----");
     this.props.AddSubCategory(data);
@@ -147,8 +151,11 @@ class AddSubCategoryPage extends Component {
             var oldPriority =
               nextProps.GetSubCategoryInfoByIdResponse.data[0]
                 .inDisplayPriority;
-            console.log(oldPriority, "OLD");
+            var responseDate =
+              nextProps.GetSubCategoryInfoByIdResponse.data[0].dtEvenetDate;
+            var evenetDate = moment(responseDate).format("YYYY-MM-DD");
             this.setState({ priority: oldPriority });
+            this.setState({ eventDate: evenetDate });
           }
         }
       }
@@ -188,6 +195,7 @@ class AddSubCategoryPage extends Component {
       ) {
         if (nextProps.getImageBySubCategoryResponse.statusCode == 200) {
           var x = nextProps.getImageBySubCategoryResponse.data;
+          console.log(nextProps.getImageBySubCategoryResponse,'-=-=-=');
           this.setState({ imageData: x });
         }
       }
@@ -226,8 +234,13 @@ class AddSubCategoryPage extends Component {
     });
   };
   componentDidMount() {
+    var devMode = localStorage.getItem("devMode");
+    baseURL =
+      devMode == "On"
+        ? "http://megaminds-001-site4.itempurl.com"
+        : "https://feelbrandliveapi.megaminds.live";
+    // console.log("------------", `${BASE_URL}Authentication/login`, "---------");
     const script = document.createElement("script");
-
     script.src = "./asd";
     script.async = true;
 
@@ -263,6 +276,7 @@ class AddSubCategoryPage extends Component {
     var id = window.location.href.split("/").pop();
     var data = {
       inSubCategroyId: id,
+      inPageNo: 10000,
     };
     this.props.GetImageBySubCategory(data);
   };
@@ -342,6 +356,7 @@ class AddSubCategoryPage extends Component {
       [key]: value,
     });
   };
+  
   render() {
     var $this = this;
     // const columns = [
@@ -361,6 +376,34 @@ class AddSubCategoryPage extends Component {
       var categoryId = this.state.categoryId;
       return <Redirect to={`/AddCategoryPage/${categoryId}`} />;
     }
+    const defaultSorted = [
+      {
+        dataField: "stTags",
+        order: "asc",
+      },
+    ];
+
+    const sizePerPageList = [
+      { text: "10", value: 10 },
+      { text: "5", value: 5 },
+      { text: "3", value: 3 },
+    ];
+
+    const pagination = paginationFactory({
+      page: 1,
+      sizePerPage: 100,
+      showTotal: true,
+      alwaysShowAllBtns: true,
+      onPageChange: function(page, sizePerPage) {
+        console.log("page", page);
+        console.log("sizePerPage", sizePerPage);
+      },
+      onSizePerPageChange: function(page, sizePerPage) {
+        console.log("page", page);
+        console.log("sizePerPage", sizePerPage);
+      },
+    });
+
     var thumbnailImage = this.state.thumbnailImage;
     var sub = this.state.subCategoryId;
     var Id = this.state.categoryId;
@@ -444,20 +487,12 @@ class AddSubCategoryPage extends Component {
                     onChange={(event) => {
                       console.log(event.target.value, "--------");
                       this.setState({ eventDate: event.target.value });
-
                     }}
-                  /> */}
-                  {/* <input
-                    type="date"
-                    class="form-control"
-                    readonly
-                    value="05/20/2017"
-                    id="kt_datepicker_3"
                   /> */}
                   <input
                     class="form-control"
                     type="date"
-                    name="expiration date"
+                    name="dtEvenetDate"
                     value={this.state.eventDate}
                     onChange={(event) => {
                       console.log(event.target.value, "--------");
@@ -609,6 +644,11 @@ function mapStateToProps(state) {
         state.auth.GetSubCategoryInfoByIdResponse != undefined &&
         state.auth.GetSubCategoryInfoByIdResponse.data != undefined
           ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.inDisplayPriority
+          : "",
+      dtEvenetDate:
+        state.auth.GetSubCategoryInfoByIdResponse != undefined &&
+        state.auth.GetSubCategoryInfoByIdResponse.data != undefined
+          ? state.auth.GetSubCategoryInfoByIdResponse.data[0]?.dtEvenetDate
           : "",
     },
     // insuranceTypeResponse: state.auth.insuranceTypeResponse,

@@ -20,7 +20,7 @@ import {
   Col,
 } from "reactstrap";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-const baseURL = "http://megaminds-001-site12.itempurl.com";
+var baseURL = "";
 
 const renderdisableField = ({
   input,
@@ -155,6 +155,11 @@ class ViewUserPage extends Component {
   }
 
   componentDidMount() {
+    var devMode = localStorage.getItem("devMode");
+    baseURL =
+      devMode == "On"
+        ? "http://megaminds-001-site4.itempurl.com"
+        : "https://feelbrandliveapi.megaminds.live";
     var id = window.location.href.split("/").pop();
     if (id != "view") {
       this.setState({ isGettingTags: true });

@@ -11,7 +11,7 @@ export function login(email, password) {
   const BASE_URL =
     devMode == "Enable"
       ? "http://megaminds-001-site4.itempurl.com/api/"
-      : "http://megaminds-001-site12.itempurl.com/api/";
+      : "https://feelbrandliveapi.megaminds.live/api/";
   console.log("------------", `${BASE_URL}Authentication/login`, "---------");
   var data = {
     stEmail: email,
@@ -32,7 +32,7 @@ export function register(email, firstname, lastname, contactnumber, password) {
   const BASE_URL =
     devMode == "On"
       ? "http://megaminds-001-site4.itempurl.com/api/"
-      : "http://megaminds-001-site12.itempurl.com/api/";
+      : "https://feelbrandliveapi.megaminds.live/api/";
   console.log("------------", `${BASE_URL}Authentication/login`, "---------");
   var data = {
     inAdminUserId: 0,

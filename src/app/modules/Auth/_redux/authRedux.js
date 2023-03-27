@@ -195,8 +195,7 @@ console.log(devMode,'-=-=-=-=-==-=-=-=-=-=ßððððððß');
   const BASE_URL =
     devMode == "Enable"
       ? "http://megaminds-001-site4.itempurl.com/api/"
-      : "http://megaminds-001-site12.itempurl.com/api/";
-// const BASE_URL = "http://megaminds-001-site12.itempurl.com/api/";
+      : "https://feelbrandliveapi.megaminds.live/api/";
 // const BASE_URL = "http://localhost:4200/api/"
 
 const initialAuthState = {
@@ -2598,22 +2597,23 @@ const GetApplicationInfoByIDRequestedApi = async (payload) => {
 //#region Manage Sub Category
 const addSubCategoryRequestApi = async (payload) => {
   var data = payload.subCategory;
-  console.log(data, "????????????");
   const instance = await axios.create({});
   const options = {
     headers: {
       authorization: `Bearer ${
         JSON.parse(
           JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user
-        ).data.token
-      }`,
-    },
-  };
-  const respo = instance
+          ).data.token
+        }`,
+      },
+    };
+    const respo = instance
     .post(`${BASE_URL}SubCategory/addEditSubCategory`, data, options)
     .catch((e) => {
       return e.response;
     });
+
+    console.log(respo, "????????????");
   return respo;
 };
 

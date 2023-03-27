@@ -143,18 +143,17 @@ class ManageSubCategory extends Component {
       { dataField: "stLastName", text: "Last Name", sort: true },
       { dataField: "stContact", text: "Contact Number", sort: true },
       { dataField: "stEmail", text: "Email", sort: true },
-      // { dataField: 'flgIsActive', text: 'Is Active', sort: false },
-      {
-        dataField: "dtCreatedOn",
-        text: "Created Date",
-        sort: false,
-        formatter: (cell) => {
-          if (cell == null) {
-            return;
-          }
-          return moment(cell).format("MM/DD/YYYY");
-        },
-      },
+      // {
+      //   dataField: "dtCreatedOn",
+      //   text: "Created Date",
+      //   sort: false,
+      //   formatter: (cell) => {
+      //     if (cell == null) {
+      //       return;
+      //     }
+      //     return moment(cell).format("MM/DD/YYYY");
+      //   },
+      // },
       //#endregion
       {
         dataField: "link",

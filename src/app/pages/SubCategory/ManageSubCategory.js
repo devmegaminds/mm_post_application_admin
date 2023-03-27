@@ -24,7 +24,7 @@ import {
   imagesubcriber,
 } from "../../env/subBehaviour";
 import { idsubcriber } from "../../env/categoryId";
-const baseURL = "http://megaminds-001-site12.itempurl.com";
+// var baseURL = "";
 
 class ManageSubCategory extends Component {
   constructor(props) {
@@ -60,6 +60,11 @@ class ManageSubCategory extends Component {
     this.props.DeleteSubCategoryById(data);
   }
   componentDidMount() {
+    // var devMode = localStorage.getItem("devMode");
+    // baseURL =
+    //   devMode == "On"
+    //     ? "http://megaminds-001-site4.itempurl.com"
+    //     : "https://feelbrandliveapi.megaminds.live";
     this.setState({ isGettingSubCategory: true });
     this.props.GetSubCategory("");
     idsubcriber.subscribe((Id) => {
@@ -282,9 +287,19 @@ class ManageSubCategory extends Component {
     console.log("RRR");
     var $this = this;
     const columns = [
-    
       { dataField: "stSubCategoryName", text: "Sub Category", sort: true },
       { dataField: "stCategoryName", text: "Category" },
+      {
+        dataField: "dtEvenetDate",
+        text: "Evenet Date",
+        sort: true,
+        formatter: (cell) => {
+          if (cell == null) {
+            return;
+          }
+          return moment(cell).format("DD/MM/YYYY");
+        },
+      },
       {
         dataField: "inDisplayPriority",
         text: "Display Priority",
@@ -305,17 +320,17 @@ class ManageSubCategory extends Component {
           );
         },
       },
-      {
-        dataField: "dtCreatedOn",
-        text: "Created Date",
-        sort: false,
-        formatter: (cell) => {
-          if (cell == null) {
-            return;
-          }
-          return moment(cell).format("MM/DD/YYYY");
-        },
-      },
+      // {
+      //   dataField: "dtCreatedOn",
+      //   text: "Created Date",
+      //   sort: false,
+      //   formatter: (cell) => {
+      //     if (cell == null) {
+      //       return;
+      //     }
+      //     return moment(cell).format("MM/DD/YYYY");
+      //   },
+      // },
       {
         dataField: "link",
         text: "Is Active",
@@ -429,7 +444,7 @@ class ManageSubCategory extends Component {
     ];
     const pagination = paginationFactory({
       page: 1,
-      sizePerPage: 10,
+      sizePerPage: 100,
       showTotal: true,
       alwaysShowAllBtns: true,
       onPageChange: function(page, sizePerPage) {

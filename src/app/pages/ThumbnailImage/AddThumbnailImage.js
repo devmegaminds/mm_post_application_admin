@@ -9,7 +9,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ImageUplaodComponents from "../../components/ImageUplaod";
 import { imagesubcriber } from "../../env/subBehaviour";
 import { idsubcriber } from "../../env/categoryId";
-const baseURL = "http://megaminds-001-site12.itempurl.com";
+const baseURL = "https://feelbrandliveapi.megaminds.live";
 
 const renderFields = ({
   input,
@@ -100,6 +100,11 @@ class AddThumbnailImage extends Component {
   }
 
   componentDidMount() {
+    // var devMode = localStorage.getItem("devMode");
+    // baseURL =
+    //   devMode == "On"
+    //     ? "http://megaminds-001-site4.itempurl.com"
+    //     : "https://feelbrandliveapi.megaminds.live";
     imagesubcriber.subscribe((x) => {
       this.setState({ image: x });
     });

@@ -9,7 +9,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ManageSubCategory from "../SubCategory/ManageSubCategory";
 import ManageUploadCategoryImage from "../Image/ManageUploadCategoryImage";
 import { idsubcriber } from "../../env/categoryId";
-const baseURL = "http://megaminds-001-site12.itempurl.com";
+const baseURL = "https://feelbrandliveapi.megaminds.live";
 
 const renderFields = ({
   input,
@@ -241,7 +241,13 @@ class AddCategoryPage extends Component {
       showModal: false,
     });
   };
+
   componentDidMount() {
+    // var devMode = localStorage.getItem("devMode");
+    // baseURL =
+    //   devMode == "On"
+    //     ? "http://megaminds-001-site4.itempurl.com"
+    //     : "https://feelbrandliveapi.megaminds.live";
     var id = window.location.href.split("/").pop();
     idsubcriber.next(id);
     // console.log()
@@ -262,6 +268,7 @@ class AddCategoryPage extends Component {
     this.props.CheckCategoryPriority();
     this.getImage();
   }
+
   ConfirmationSweetAlert(index, image, msg) {
     let getAlert = "";
     getAlert = () => (
@@ -522,7 +529,7 @@ AddCategoryPage = reduxForm({
 })(AddCategoryPage);
 
 function mapStateToProps(state) {
-  console.log(state.auth.GetCategoryInfoByIDResponse,'=====');
+  console.log(state.auth.GetCategoryInfoByIDResponse, "=====");
   return {
     initialValues: {
       inCategoryId:

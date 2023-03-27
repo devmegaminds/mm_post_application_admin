@@ -6,7 +6,7 @@ import { imagesubcriber } from '../../../pages/Extra/subBehaviour';
 
 
 
-const BASE_URL = "http://megaminds-001-site12.itempurl.com/api/"
+const BASE_URL = "https://feelbrandliveapi.megaminds.live/api/"
 // const BASE_URL = "http://localhost:4200/api/"
 
 class ImageUploadTest extends Component {
