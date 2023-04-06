@@ -82,7 +82,7 @@ export function UserProfileDropdown() {
 
             </span>
             <span className="symbol symbol-35 symbol-light-success">
-              <span className="symbol-label font-size-h5 font-weight-bold">
+              <span className="symbol-label font-size-h5 font-weight-bold" style={{width:'auto', paddingLeft:20,paddingRight:20}}>
                 {JSON.parse(localStorage.getItem("persist:v713-demo1-auth")) != null ? JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user != undefined ?
                   JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.stFirstName != undefined ? JSON.parse(JSON.parse(localStorage.getItem("persist:v713-demo1-auth")).user).data.stFirstName : "D" : "D" : "D"}
 
