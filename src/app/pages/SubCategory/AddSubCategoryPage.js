@@ -97,7 +97,6 @@ class AddSubCategoryPage extends Component {
   }
   onSubmit = (formValues) => {
     var categoryId = this.state.categoryId;
-    console.log(categoryId);
     this.setState({ isLoading: true });
     var data = {
       inSubCategoryId:
@@ -111,7 +110,6 @@ class AddSubCategoryPage extends Component {
       inDisplayPriority: this.state.priority,
       dtEvenetDate: this.state.eventDate,
     };
-    console.log(data, "----");
     this.props.AddSubCategory(data);
     // }
   };
@@ -195,7 +193,7 @@ class AddSubCategoryPage extends Component {
       ) {
         if (nextProps.getImageBySubCategoryResponse.statusCode == 200) {
           var x = nextProps.getImageBySubCategoryResponse.data;
-          console.log(nextProps.getImageBySubCategoryResponse,'-=-=-=');
+          console.log(nextProps.getImageBySubCategoryResponse, "-=-=-=");
           this.setState({ imageData: x });
         }
       }
@@ -356,7 +354,7 @@ class AddSubCategoryPage extends Component {
       [key]: value,
     });
   };
-  
+
   render() {
     var $this = this;
     // const columns = [

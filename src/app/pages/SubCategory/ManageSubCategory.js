@@ -106,20 +106,13 @@ class ManageSubCategory extends Component {
           // this.setState({ subcategoryData: nextProps.GetSubCategoryResponse.data })
           var data = nextProps.GetSubCategoryResponse.data;
           var categoryId = this.state.categoryId;
-          console.log(
-            categoryId,
-            "inCategoryIdinCategoryIdinCategoryIdinCategoryIdinCategoryId"
-          );
           let subCategory = [];
           for (let i = 0; i < data.length; i++) {
             if (data[i].inCategoryId == categoryId) {
               subCategory.push(data[i]);
             }
           }
-          console.log(subCategory, "ASFASFASFASDFASFASFASDFA");
           this.setState({ subcategoryData: subCategory });
-
-          console.log(subCategory);
         }
       }
     }
@@ -264,23 +257,7 @@ class ManageSubCategory extends Component {
       flgIsActive: e.target.checked ? 1 : 0,
     };
     this.props.UpdateSubCategoryStatus(data);
-    // this.SuccessFailSweetAlert("Change status successfully", "success");
-    // if (document.getElementById('chk1').checked) {
-    // if (document.getElementById('chk1').checked) {
-    // var isActive = 1
-    // var x = row.inCategoryId
-    // console.log(x, "LLLLLL");
-    // this.setState({ isChecked: true })
-    // var data = {
-    //     inCategoryId: x,
-    //     flgIsActive: isActive
-    // }
-    // console.log("Checked");
-    // } else {
-    //     var isActive = 0
-    //     console.log("UnChecked");
-    //     this.setState({ isChecked: true })
-    // }
+  
   }
 
   render() {
